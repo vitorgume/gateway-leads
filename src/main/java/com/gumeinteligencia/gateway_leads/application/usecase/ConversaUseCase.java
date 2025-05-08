@@ -1,0 +1,49 @@
+package com.gumeinteligencia.gateway_leads.application.usecase;
+
+import com.gumeinteligencia.gateway_leads.application.exceptions.ConversaJaExistenteParaClienteException;
+import com.gumeinteligencia.gateway_leads.application.exceptions.ConversaNaoEncontrada;
+import com.gumeinteligencia.gateway_leads.application.gateways.ConversaGateway;
+import com.gumeinteligencia.gateway_leads.domain.Cliente;
+import com.gumeinteligencia.gateway_leads.domain.Conversa;
+import com.gumeinteligencia.gateway_leads.domain.MensagemColeta;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class ConversaUseCase {
+
+    private final ConversaGateway gateway;
+
+
+    public Conversa consultarPorCliente(Cliente cliente) {
+        Optional<Conversa> conversa = gateway.consultarPorCliente(cliente);
+
+        if(conversa.isEmpty()) {
+            throw new ConversaNaoEncontrada();
+        }
+
+        return conversa.get();
+    }
+
+    public void criar(Cliente cliente) {
+        Optional<Conversa> conversaOptional = gateway.consultarPorCliente(cliente);
+
+        conversaOptional
+                .ifPresent(
+                        conversa -> {throw new ConversaJaExistenteParaClienteException();}
+                );
+
+        Conversa novaConversa = Conversa.builder()
+                .dataCriacao(LocalDateTime.now())
+                .cliente(cliente)
+                .mensagemColeta(new MensagemColeta())
+                .finalizada(false)
+                .build();
+
+        gateway.salvar(novaConversa);
+    }
+}
