@@ -1,6 +1,6 @@
 package com.gumeinteligencia.gateway_leads.infrastructure.mapper;
 
-import com.gumeinteligencia.gateway_leads.domain.Conversa;
+import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.infrastructure.repository.entity.ConversaEntity;
 
 public class ConversaMapper {

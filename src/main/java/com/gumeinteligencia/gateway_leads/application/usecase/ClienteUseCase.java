@@ -25,4 +25,8 @@ public class ClienteUseCase {
 
         return gateway.salvar(novoCliente);
     }
+
+    public void salvar(Cliente cliente) {
+        gateway.salvar(cliente);
+    }
 }

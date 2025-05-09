@@ -12,5 +12,5 @@ import lombok.*;
 @ToString
 public class Endereco {
     private String municipio;
-    private String UF;
+    private String estado;
 }

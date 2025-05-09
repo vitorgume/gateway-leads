@@ -1,8 +1,7 @@
 package com.gumeinteligencia.gateway_leads.infrastructure.repository.entity;
 
-import com.gumeinteligencia.gateway_leads.domain.Cliente;
-import com.gumeinteligencia.gateway_leads.domain.MensagemColeta;
-import com.gumeinteligencia.gateway_leads.domain.Vendedor;
+import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
+import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,5 +35,10 @@ public class ConversaEntity {
     @Embedded
     @Column(name = "mensagem_coleta")
     private MensagemColeta mensagemColeta;
+
+    @Embedded
+    @Column(name = "mensagem_direcionamento")
+    private MensagemDirecionamento mensagemDirecionamento;
+
     private Boolean finalizada;
 }

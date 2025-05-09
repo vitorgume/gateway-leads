@@ -1,4 +1,4 @@
-package com.gumeinteligencia.gateway_leads.domain;
+package com.gumeinteligencia.gateway_leads.domain.conversa;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
@@ -13,10 +13,12 @@ import lombok.ToString;
 public class MensagemColeta {
     private boolean coletaNome;
     private boolean coletaSegmento;
-    private boolean coletaEndereco;
+    private boolean coletaMunicipio;
+    private boolean coletaEstado;
 
     public MensagemColeta() {
-        this.coletaEndereco = false;
+        this.coletaEstado = false;
+        this.coletaMunicipio = false;
         this.coletaSegmento = false;
         this.coletaNome = false;
     }

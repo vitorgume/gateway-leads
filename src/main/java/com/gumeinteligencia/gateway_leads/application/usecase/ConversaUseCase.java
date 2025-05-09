@@ -4,12 +4,13 @@ import com.gumeinteligencia.gateway_leads.application.exceptions.ConversaJaExist
 import com.gumeinteligencia.gateway_leads.application.exceptions.ConversaNaoEncontrada;
 import com.gumeinteligencia.gateway_leads.application.gateways.ConversaGateway;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
-import com.gumeinteligencia.gateway_leads.domain.Conversa;
-import com.gumeinteligencia.gateway_leads.domain.MensagemColeta;
+import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
+import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,7 +30,7 @@ public class ConversaUseCase {
         return conversa.get();
     }
 
-    public void criar(Cliente cliente) {
+    public Conversa criar(Cliente cliente) {
         Optional<Conversa> conversaOptional = gateway.consultarPorCliente(cliente);
 
         conversaOptional
@@ -44,6 +45,14 @@ public class ConversaUseCase {
                 .finalizada(false)
                 .build();
 
-        gateway.salvar(novaConversa);
+        return gateway.salvar(novaConversa);
+    }
+
+    public void salvar(Conversa conversa) {
+        gateway.salvar(conversa);
+    }
+
+    public List<Conversa> listarNaoFinalizados() {
+        return gateway.listarNaoFinalizados();
     }
 }

@@ -1,6 +1,6 @@
 package com.gumeinteligencia.gateway_leads.entrypoint.mapper.mapper;
 
-import com.gumeinteligencia.gateway_leads.domain.Mensagem;
+import com.gumeinteligencia.gateway_leads.domain.conversa.Mensagem;
 import com.gumeinteligencia.gateway_leads.entrypoint.controller.dto.MensagemDto;
 
 public class MensagemMapper {
