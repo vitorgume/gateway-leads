@@ -6,6 +6,7 @@ import com.gumeinteligencia.gateway_leads.application.gateways.ConversaGateway;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
+import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,7 @@ public class ConversaUseCase {
                 .cliente(cliente)
                 .mensagemColeta(new MensagemColeta())
                 .finalizada(false)
+                .mensagemDirecionamento(new MensagemDirecionamento())
                 .build();
 
         return gateway.salvar(novaConversa);

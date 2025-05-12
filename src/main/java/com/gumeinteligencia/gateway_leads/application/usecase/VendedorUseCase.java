@@ -7,6 +7,7 @@ import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -19,15 +20,17 @@ public class VendedorUseCase {
     private final Random random = new Random();
 
     private final List<String> cidadesProximas = List.of(
-            "Cianorte",
-            "Paiçandu",
-            "Sarandi",
-            "Iguatemi",
-            "Mandaguaçu"
+            "cianorte",
+            "paicandu",
+            "sarandi",
+            "iguatemi",
+            "mandaguacu"
     );
 
 
     public Vendedor escolherVendedor(Cliente cliente) {
+        String municipioNormalizado = normalize(cliente.getEndereco().getMunicipio());
+
         if(cliente.getSegmento().getCodigo() == 0) {
             return this.consultarVendedor("Nilza");
         }
@@ -36,7 +39,7 @@ public class VendedorUseCase {
             return this.consultarVendedor("Mariana");
         }
 
-        if(cidadesProximas.contains(cliente.getEndereco().getMunicipio())) {
+        if(cidadesProximas.contains(municipioNormalizado)) {
             return this.consultarVendedor("Samara");
         }
 
@@ -80,5 +83,12 @@ public class VendedorUseCase {
 
     public Vendedor cadastrar(Vendedor vendedor) {
         return gateway.salvar(vendedor);
+    }
+
+    private static String normalize(String input) {
+        return Normalizer.normalize(input, Normalizer.Form.NFD)
+                .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "") // remove acentos
+                .replaceAll("\\s+", "") // remove espaços
+                .toLowerCase();
     }
 }

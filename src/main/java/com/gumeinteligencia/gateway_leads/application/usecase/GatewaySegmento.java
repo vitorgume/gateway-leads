@@ -7,13 +7,13 @@ public class GatewaySegmento {
         String mensagemFormatada = mensagem.toLowerCase();
 
         return switch (mensagemFormatada) {
-            case "saude" -> Segmento.SAUDE;
-            case "arquitetura" -> Segmento.ARQUITETURA;
-            case "engenharia" -> Segmento.ENGENHARIA;
-            case "varejo" -> Segmento.VAREJO;
-            case "industria" -> Segmento.INDUSTRIA;
-            case "alimentos" -> Segmento.ALIMENTOS;
-            case "celular" -> Segmento.CELULAR;
+            case "1" -> Segmento.SAUDE;
+            case "2" -> Segmento.CELULAR;
+            case "3" -> Segmento.ARQUITETURA;
+            case "4" -> Segmento.ENGENHARIA;
+            case "5" -> Segmento.VAREJO;
+            case "6" -> Segmento.INDUSTRIA;
+            case "7" -> Segmento.ALIMENTOS;
             default -> Segmento.OUTROS;
         };
     }

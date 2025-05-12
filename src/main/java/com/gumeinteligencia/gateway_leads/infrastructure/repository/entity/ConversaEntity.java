@@ -40,5 +40,7 @@ public class ConversaEntity {
     @Column(name = "mensagem_direcionamento")
     private MensagemDirecionamento mensagemDirecionamento;
 
+    private LocalDateTime ultimaMensagem;
+
     private Boolean finalizada;
 }

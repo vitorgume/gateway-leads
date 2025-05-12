@@ -25,8 +25,9 @@ public class GatewayMensagemUseCase {
 
             if(conversa.getFinalizada()) {
                 chatUseCase.direcionarVendedor(cliente, conversa);
+            } else {
+                chatUseCase.coletarInformacoes(mensagem, cliente, conversa);
             }
-            chatUseCase.coletarInformacoes(mensagem, cliente, conversa);
         } else {
             Cliente novoCliente = Cliente.builder().telefone(mensagem.getTelefone()).build();
             Cliente cliente = clienteuseCase.cadastrar(novoCliente);

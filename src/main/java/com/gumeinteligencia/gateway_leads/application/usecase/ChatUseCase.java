@@ -23,6 +23,7 @@ public class ChatUseCase {
     private final VendedorUseCase vendedorUseCase;
 
     public void direcionarVendedor(Cliente cliente, Conversa conversa) {
+        mensagemUseCase.enviarMensagem(BuilderMensagens.boasVindas());
         mensagemUseCase.enviarMensagem(BuilderMensagens.direcionamentoOutroContato(conversa.getVendedor().getNome()));
         mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente, "Recontato");
     }

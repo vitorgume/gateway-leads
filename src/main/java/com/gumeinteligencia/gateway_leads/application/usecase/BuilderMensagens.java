@@ -12,16 +12,16 @@ public class BuilderMensagens {
 
     public static String coletaSegmento() {
         return """
-                Digite seu segmento:
+                Escolha seu segmento:
                 
-                - Saúde
-                - Celulares
-                - Arquitetura
-                - Engenharia
-                - Varejo
-                - Industria
-                - Alimentos
-                - Outros
+                1 - Saúde
+                2 - Celulares
+                3 - Arquitetura
+                4 - Engenharia
+                5 - Varejo
+                6 - Industria
+                7 - Alimentos
+                8 - Outros
                 """;
     }
 
