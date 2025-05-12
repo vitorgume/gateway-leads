@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -50,11 +51,15 @@ public class ConversaUseCase {
         return gateway.salvar(novaConversa);
     }
 
-    public void salvar(Conversa conversa) {
-        gateway.salvar(conversa);
+    public Conversa salvar(Conversa conversa) {
+        return gateway.salvar(conversa);
     }
 
     public List<Conversa> listarNaoFinalizados() {
         return gateway.listarNaoFinalizados();
+    }
+
+    public void deletar(UUID id) {
+        gateway.deletar(id);
     }
 }

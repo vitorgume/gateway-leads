@@ -5,6 +5,7 @@ import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface ConversaGateway {
     Optional<Conversa> consultarPorCliente(Cliente cliente);
@@ -12,4 +13,6 @@ public interface ConversaGateway {
     Conversa salvar(Conversa novaConversa);
 
     List<Conversa> listarNaoFinalizados();
+
+    void deletar(UUID id);
 }

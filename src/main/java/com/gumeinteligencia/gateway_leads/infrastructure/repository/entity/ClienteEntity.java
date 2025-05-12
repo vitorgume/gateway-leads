@@ -1,6 +1,6 @@
 package com.gumeinteligencia.gateway_leads.infrastructure.repository.entity;
 
-import com.gumeinteligencia.gateway_leads.domain.Endereco;
+import com.gumeinteligencia.gateway_leads.domain.Regiao;
 import com.gumeinteligencia.gateway_leads.domain.Segmento;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,8 +24,8 @@ public class ClienteEntity {
     private String nome;
     private String telefone;
 
-    @Embedded
-    private Endereco endereco;
+    @Enumerated(EnumType.ORDINAL)
+    private Regiao regiao;
 
     @Enumerated(EnumType.ORDINAL)
     private Segmento segmento;

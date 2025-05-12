@@ -1,9 +1,10 @@
 package com.gumeinteligencia.gateway_leads.application.usecase;
 
+import com.gumeinteligencia.gateway_leads.domain.Regiao;
 import com.gumeinteligencia.gateway_leads.domain.Segmento;
 
-public class GatewaySegmento {
-    public static Segmento gateway(String mensagem) {
+public class GatewayEnum {
+    public static Segmento gatewaySegmento(String mensagem) {
         String mensagemFormatada = mensagem.toLowerCase();
 
         return switch (mensagemFormatada) {
@@ -15,6 +16,16 @@ public class GatewaySegmento {
             case "6" -> Segmento.INDUSTRIA;
             case "7" -> Segmento.ALIMENTOS;
             default -> Segmento.OUTROS;
+        };
+    }
+
+    public static Regiao gatewayRegiao(String mensagem) {
+        String mensagemFormatada = mensagem.toLowerCase();
+
+        return switch (mensagemFormatada) {
+            case "1" -> Regiao.MARINGA;
+            case "2" -> Regiao.REGIAO_MARINGA;
+            default -> Regiao.OUTRA;
         };
     }
 }

@@ -39,4 +39,9 @@ public class MensagemDataProvider implements MensagemGateway {
         // Requisição para enviar contato
         log.info("{}. Nome: {}, Telefone: {}", mensagem, cliente.getNome(), cliente.getTelefone());
     }
+
+    @Override
+    public void enviarContatoFinanceiro(Cliente cliente) {
+        log.info("Contato financeiro. Nome: {}, Telefone: {}", cliente.getNome(), cliente.getTelefone());
+    }
 }

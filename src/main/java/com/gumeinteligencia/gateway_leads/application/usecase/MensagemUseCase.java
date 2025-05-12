@@ -19,4 +19,8 @@ public class MensagemUseCase {
     public void enviarContatoVendedor(Vendedor vendedor, Cliente cliente, String mensagem) {
         gateway.enviarContato(vendedor, cliente, mensagem);
     }
+
+    public void enviarContatoFinanceiro(Cliente cliente) {
+        gateway.enviarContatoFinanceiro(cliente);
+    }
 }

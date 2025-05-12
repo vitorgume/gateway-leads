@@ -9,7 +9,7 @@ public class ClienteMapper {
                 .id(entity.getId())
                 .nome(entity.getNome())
                 .telefone(entity.getTelefone())
-                .endereco(entity.getEndereco())
+                .regiao(entity.getRegiao())
                 .segmento(entity.getSegmento())
                 .build();
     }
@@ -19,7 +19,7 @@ public class ClienteMapper {
                 .id(domain.getId())
                 .nome(domain.getNome())
                 .telefone(domain.getTelefone())
-                .endereco(domain.getEndereco())
+                .regiao(domain.getRegiao())
                 .segmento(domain.getSegmento())
                 .build();
     }

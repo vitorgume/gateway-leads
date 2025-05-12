@@ -6,6 +6,20 @@ public class BuilderMensagens {
         return "Olá ! Muito obrigado pela sua mensagem para a Neoprint !";
     }
 
+    public static String direcionaSetor() {
+        return """
+                Qual departamento deseja conversa ?
+                
+                1 - Financeiro
+                2 - Comercial
+                0 - Encerrar atendimento
+                """;
+    }
+
+    public static String direcinamnetoFinanceiro() {
+        return "Muito bem ! Agora você será redirecionado para a Patrícia, responsável pelo nosso financeiro. Em alguns minutos elá entrará em contato com você. Até ...";
+    }
+
     public static String coletaNome() {
         return "Muito bem, antes de continuar seu atendimento, poderia me informa seu nome ?";
     }
@@ -25,12 +39,14 @@ public class BuilderMensagens {
                 """;
     }
 
-    public static String coletaEnderecoMunicipio() {
-        return "Poderia me informa seu município ?";
-    }
-
-    public static String coletaEnderecoEstado() {
-        return "E por último seu estado ?";
+    public static String coletaRegiao() {
+            return """
+                    Poderia me informa sua região ?
+                    
+                    1 - Maringá
+                    2 - Região de Maringá
+                    3 - Outras
+                    """;
     }
 
     public static String direcionamentoPrimeiroContato(String nomeCliente, String nomeVendedor) {
@@ -39,8 +55,11 @@ public class BuilderMensagens {
     }
 
     public static String direcionamentoOutroContato(String nomeVendedor) {
-        return "Identifiquei que você já estava em conversa com o(a) " + nomeVendedor + ", vou repessar você novamente " +
-                "para o vendedor.";
+            return "Identifiquei que você já estava em conversa com o(a) " + nomeVendedor + ", vou repessar você novamente " +
+                    "para o vendedor.";
     }
 
+    public static String atendimentoEncerrado() {
+        return "Atendimento encerrado. Até logo...";
+    }
 }

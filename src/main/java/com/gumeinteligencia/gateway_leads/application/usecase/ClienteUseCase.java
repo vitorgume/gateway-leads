@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +27,11 @@ public class ClienteUseCase {
         return gateway.salvar(novoCliente);
     }
 
-    public void salvar(Cliente cliente) {
-        gateway.salvar(cliente);
+    public Cliente salvar(Cliente cliente) {
+        return gateway.salvar(cliente);
+    }
+
+    public void deletar(UUID id) {
+        gateway.deletar(id);
     }
 }

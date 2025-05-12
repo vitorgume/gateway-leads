@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class ConversaDataProvider implements ConversaGateway {
     private final String MENSAGEM_ERRO_CONSULTAR_POR_CLIENTE = "Erro ao consultar conversa pelo cliente.";
     private final String MENSAMGE_ERRO_SALVAR = "Erro ao salvar conversa.";
     private final String MENSAGEM_ERRO_LISTAR_NAO_FINALIZADOS = "Erro ao listar conversas não finalizadas.";
+    private final String MENSAGEM_ERRO_DELETAR = "Erro ao deletar conversa pelo id.";
 
     @Override
     public Optional<Conversa> consultarPorCliente(Cliente cliente) {
@@ -65,5 +67,15 @@ public class ConversaDataProvider implements ConversaGateway {
         }
 
         return conversaEntities.stream().map(ConversaMapper::paraDomain).toList();
+    }
+
+    @Override
+    public void deletar(UUID id) {
+        try {
+            repository.deleteById(id);
+        } catch (Exception ex) {
+            log.error(MENSAGEM_ERRO_DELETAR, ex);
+            throw new DataProviderException(MENSAGEM_ERRO_DELETAR, ex.getCause());
+        }
     }
 }

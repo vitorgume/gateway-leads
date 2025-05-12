@@ -13,6 +13,6 @@ public class Cliente {
     private UUID id;
     private String nome;
     private String telefone;
-    private Endereco endereco;
+    private Regiao regiao;
     private Segmento segmento;
 }

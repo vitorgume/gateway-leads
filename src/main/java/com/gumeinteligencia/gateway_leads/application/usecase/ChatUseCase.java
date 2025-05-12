@@ -1,7 +1,6 @@
 package com.gumeinteligencia.gateway_leads.application.usecase;
 
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
-import com.gumeinteligencia.gateway_leads.domain.Endereco;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Mensagem;
@@ -23,7 +22,6 @@ public class ChatUseCase {
     private final VendedorUseCase vendedorUseCase;
 
     public void direcionarVendedor(Cliente cliente, Conversa conversa) {
-        mensagemUseCase.enviarMensagem(BuilderMensagens.boasVindas());
         mensagemUseCase.enviarMensagem(BuilderMensagens.direcionamentoOutroContato(conversa.getVendedor().getNome()));
         mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente, "Recontato");
     }
@@ -31,13 +29,7 @@ public class ChatUseCase {
     public void coletarInformacoes(Mensagem mensagem, Cliente cliente, Conversa conversa) {
         MensagemColeta mensagemColeta = conversa.getMensagemColeta();
 
-        if(!mensagemColeta.isColetaNome()) {
-            mensagemUseCase.enviarMensagem(BuilderMensagens.boasVindas());
-            mensagemUseCase.enviarMensagem(BuilderMensagens.coletaNome());
-            conversa.getMensagemColeta().setColetaNome(true);
-            conversa.setUltimaMensagem(LocalDateTime.now());
-            conversaUseCase.salvar(conversa);
-        } else if (!mensagemColeta.isColetaSegmento()) {
+         if (!mensagemColeta.isColetaSegmento()) {
             cliente.setNome(mensagem.getMensagem());
             mensagemUseCase.enviarMensagem(BuilderMensagens.coletaSegmento());
             conversa.getMensagemColeta().setColetaSegmento(true);
@@ -45,21 +37,14 @@ public class ChatUseCase {
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
         } else if (!mensagemColeta.isColetaMunicipio()) {
-            cliente.setSegmento(GatewaySegmento.gateway(mensagem.getMensagem()));
-            mensagemUseCase.enviarMensagem(BuilderMensagens.coletaEnderecoMunicipio());
+            cliente.setSegmento(GatewayEnum.gatewaySegmento(mensagem.getMensagem()));
+            mensagemUseCase.enviarMensagem(BuilderMensagens.coletaRegiao());
             conversa.getMensagemColeta().setColetaMunicipio(true);
             conversa.setUltimaMensagem(LocalDateTime.now());
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
-        } else if (!mensagemColeta.isColetaEstado()) {
-            cliente.setEndereco(Endereco.builder().municipio(mensagem.getMensagem().toLowerCase()).build());
-            mensagemUseCase.enviarMensagem(BuilderMensagens.coletaEnderecoEstado());
-            conversa.getMensagemColeta().setColetaEstado(true);
-            conversa.setUltimaMensagem(LocalDateTime.now());
-            conversaUseCase.salvar(conversa);
-            clienteUseCase.salvar(cliente);
         } else {
-            cliente.getEndereco().setEstado(mensagem.getMensagem());
+            cliente.setRegiao(GatewayEnum.gatewayRegiao(mensagem.getMensagem()));
             Vendedor vendedor = vendedorUseCase.escolherVendedor(cliente);
             conversa.setVendedor(vendedor);
             conversa.setFinalizada(true);
