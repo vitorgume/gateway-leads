@@ -6,14 +6,12 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Segmento {
-    SAUDE(0, "saude"),
-    ARQUITETURA(1, "arquitetura"),
-    ENGENHARIA(2, "engenharia"),
-    VAREJO(3, "varejo"),
-    INDUSTRIA(4, "industria"),
-    ALIMENTOS(5, "alimentos"),
-    CELULAR(6, "celular"),
-    OUTROS(7, "outros");
+    MEDICINA_SAUDE(1, "Medicina e Saúde"),
+    BOUTIQUE_LOJAS(2, "Boutique e Lojas"),
+    ENGENHARIA_ARQUITETURA(3, "Engenharia e Arquitetura"),
+    ALIMENTOS(4, "Alimentos"),
+    CELULARES(5, "Celulares"),
+    OUTROS(6, "Outros");
 
     private final int codigo;
     private final String descricao;

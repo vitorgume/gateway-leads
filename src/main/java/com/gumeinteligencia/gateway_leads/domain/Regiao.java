@@ -6,9 +6,9 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Regiao {
-    MARINGA(0, "Maringá"),
-    REGIAO_MARINGA(1, "Região de Maringá"),
-    OUTRA(2, "Outras regiões");
+    MARINGA(1, "Maringá"),
+    REGIAO_MARINGA(2, "Região de Maringá"),
+    OUTRA(3, "Outras regiões");
 
     private final int codigo;
     private final String descricao;

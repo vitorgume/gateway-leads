@@ -8,13 +8,11 @@ public class GatewayEnum {
         String mensagemFormatada = mensagem.toLowerCase();
 
         return switch (mensagemFormatada) {
-            case "1" -> Segmento.SAUDE;
-            case "2" -> Segmento.CELULAR;
-            case "3" -> Segmento.ARQUITETURA;
-            case "4" -> Segmento.ENGENHARIA;
-            case "5" -> Segmento.VAREJO;
-            case "6" -> Segmento.INDUSTRIA;
-            case "7" -> Segmento.ALIMENTOS;
+            case "1" -> Segmento.MEDICINA_SAUDE;
+            case "2" -> Segmento.BOUTIQUE_LOJAS;
+            case "3" -> Segmento.ENGENHARIA_ARQUITETURA;
+            case "4" -> Segmento.ALIMENTOS;
+            case "5" -> Segmento.CELULARES;
             default -> Segmento.OUTROS;
         };
     }

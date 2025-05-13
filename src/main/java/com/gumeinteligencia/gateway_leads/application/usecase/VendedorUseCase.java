@@ -21,26 +21,26 @@ public class VendedorUseCase {
 
     public Vendedor escolherVendedor(Cliente cliente) {
 
-        if(cliente.getSegmento().getCodigo() == 0) {
+        if(cliente.getSegmento().getCodigo() == 1) {
             return this.consultarVendedor("Nilza");
         }
 
-        if(cliente.getSegmento().getCodigo() == 6) {
+        if(cliente.getSegmento().getCodigo() == 5) {
             return this.consultarVendedor("Mariana");
         }
 
-        if(cliente.getRegiao().getCodigo() == 1 || cliente.getRegiao().getCodigo() == 2) {
+        if(cliente.getRegiao().getCodigo() == 2 || cliente.getRegiao().getCodigo() == 3) {
             return this.consultarVendedor("Samara");
         }
 
-        if(cliente.getSegmento().getCodigo() == 1 || cliente.getSegmento().getCodigo() == 2) {
+        if(cliente.getSegmento().getCodigo() == 3) {
             String vendedor = this.roletaVendedoresNilza();
             return this.consultarVendedor(vendedor);
-        } else if (cliente.getSegmento().getCodigo() != 7) {
+        } else if (cliente.getSegmento().getCodigo() != 6) {
+            return this.consultarVendedor("Mariana");
+        } else {
             String vendedor = this.roletaVendedores();
             return this.consultarVendedor(vendedor);
-        } else {
-            return this.consultarVendedor("Mariana");
         }
     }
 

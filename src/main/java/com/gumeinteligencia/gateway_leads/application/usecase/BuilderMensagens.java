@@ -3,16 +3,18 @@ package com.gumeinteligencia.gateway_leads.application.usecase;
 public class BuilderMensagens {
 
     public static String boasVindas() {
-        return "Olá ! Muito obrigado pela sua mensagem para a Neoprint !";
+        return "Olá! Muito obrigado pelo interesse em conversar com a Neoprint, será um prazer ajudá-la(o)!";
     }
 
     public static String direcionaSetor() {
         return """
-                Qual departamento deseja conversa ?
+                Por favor, escolha a opção que melhor atende à sua necessidade:
                 
-                1 - Financeiro
-                2 - Comercial
-                0 - Encerrar atendimento
+                1️⃣ - Financeiro
+                2️⃣ - Comercial
+                0️⃣ - Encerrar atendimento
+                
+                💬 Por favor, informe o número correspondente à sua escolha.
                 """;
     }
 
@@ -21,27 +23,25 @@ public class BuilderMensagens {
     }
 
     public static String coletaNome() {
-        return "Muito bem, antes de continuar seu atendimento, poderia me informa seu nome ?";
+        return "Antes de continuar seu atendimento, me informa seu nome, por favor ? ";
     }
 
     public static String coletaSegmento() {
         return """
-                Escolha seu segmento:
+                Por favor, qual o seu segmento de atuação?
                 
-                1 - Saúde
-                2 - Celulares
-                3 - Arquitetura
-                4 - Engenharia
-                5 - Varejo
-                6 - Industria
-                7 - Alimentos
-                8 - Outros
+                1️⃣ - Medicina e Saúde
+                2️⃣ - Boutique e Lojas
+                3️⃣ - Engenharia e Arquitetura
+                4️⃣ - Alimentos
+                5️⃣ - Celulares
+                6️⃣ - Outros
                 """;
     }
 
     public static String coletaRegiao() {
             return """
-                    Poderia me informa sua região ?
+                    Por favor, Me informa sua região ?
                     
                     1 - Maringá
                     2 - Região de Maringá
@@ -50,7 +50,7 @@ public class BuilderMensagens {
     }
 
     public static String direcionamentoPrimeiroContato(String nomeCliente, String nomeVendedor) {
-        return "Muito obrigado pelas informações " + nomeCliente + " ! Agora você será redirecionado para o(a) "
+        return "Muito obrigado pelas informações ! Agora você será redirecionado para o(a) "
                 + nomeVendedor + ", em alguns minutos ele(a) entrará em contato com você ! Até...";
     }
 
