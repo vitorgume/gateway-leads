@@ -25,54 +25,79 @@ public class GatewayMensagemUseCase {
             Cliente cliente = clienteOptional.get();
             Conversa conversa = conversaUseCase.consultarPorCliente(cliente);
 
-            if(!conversa.getMensagemColeta().isColetaNome()) {
-                cliente.setNome(mensagem.getMensagem());
-                conversa.getMensagemColeta().setColetaNome(true);
-                clienteuseCase.salvar(cliente);
-                mensagemUseCase.enviarMensagem(BuilderMensagens.direcionaSetor());
-            } else {
-                if(conversa.getMensagemDirecionamento().getOpcaoEscolha().isBlank()) {
-                    if(mensagem.getMensagem().equals("1")) {
-                        mensagemUseCase.enviarMensagem(BuilderMensagens.direcinamnetoFinanceiro());
-                        mensagemUseCase.enviarContatoFinanceiro(cliente);
-                        conversa.getMensagemDirecionamento().setOpcaoEscolha("1");
-                        conversa = conversaUseCase.salvar(conversa);
-                    } else if (mensagem.getMensagem().equals("2")){
-                        conversa.getMensagemDirecionamento().setOpcaoEscolha("2");
-                        conversa = conversaUseCase.salvar(conversa);
-                        chatUseCase.coletarInformacoes(mensagem, cliente, conversa);
-                    } else {
-                        mensagemUseCase.enviarMensagem(BuilderMensagens.atendimentoEncerrado());
-                        clienteuseCase.deletar(cliente.getId());
-                        conversaUseCase.deletar(conversa.getId());
-                    }
-                } else if (conversa.getMensagemDirecionamento().getOpcaoEscolha().equals("1")) {
+
+            if(!conversa.getFinalizada()) {
+                if(!conversa.getMensagemDirecionamento().isColetaNome()) {
                     cliente.setNome(mensagem.getMensagem());
                     conversa.getMensagemDirecionamento().setColetaNome(true);
-                    conversa.setFinalizada(true);
-                    cliente = clienteuseCase.salvar(cliente);
-                    mensagemUseCase.enviarMensagem(BuilderMensagens.direcinamnetoFinanceiro());
-                    mensagemUseCase.enviarContatoFinanceiro(cliente);
-                }
-
-                if(conversa.getFinalizada()) {
-                    if(conversa.getVendedor() == null) {
+                    clienteuseCase.salvar(cliente);
+                    mensagemUseCase.enviarMensagem(BuilderMensagens.direcionaSetor());
+                    conversaUseCase.salvar(conversa);
+                } else {
+                    if(conversa.getMensagemDirecionamento().isEscolhaComercial()) {
+                        chatUseCase.coletarInformacoes(mensagem, cliente, conversa);
+                    } else if (mensagem.getMensagem().equals("0")) {
+                        mensagemUseCase.enviarMensagem(BuilderMensagens.atendimentoEncerrado());
+                        conversaUseCase.deletar(conversa.getId());
+                        clienteuseCase.deletar(cliente.getId());
+                    } else if (mensagem.getMensagem().equals("2")){
+                        conversa.getMensagemDirecionamento().setEscolhaComercial(true);
+                        conversa = conversaUseCase.salvar(conversa);
+                        chatUseCase.coletarInformacoes(mensagem, cliente, conversa);
+                    } else if (mensagem.getMensagem().equals("1")) {
                         mensagemUseCase.enviarMensagem(BuilderMensagens.direcinamnetoFinanceiro());
                         mensagemUseCase.enviarContatoFinanceiro(cliente);
-                    } else {
-                        chatUseCase.direcionarVendedor(cliente, conversa);
+                        conversa.setFinalizada(true);
+                        conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);
+                        conversaUseCase.salvar(conversa);
                     }
-                } else if (conversa.getMensagemDirecionamento().getOpcaoEscolha().equals("2")) {
-                    chatUseCase.coletarInformacoes(mensagem, cliente, conversa);
+                }
+            } else {
+                if(!conversa.getMensagemDirecionamento().isMensagemInicial()) {
+                    mensagemUseCase.enviarMensagem(BuilderMensagens.boasVindas());
+                    mensagemUseCase.enviarMensagem(BuilderMensagens.direcionaSetor());
+                    conversa.getMensagemDirecionamento().setMensagemInicial(true);
+                    conversaUseCase.salvar(conversa);
+                } else {
+                    if(mensagem.getMensagem().equals("1") && !conversa.getMensagemDirecionamento().isEscolhaComercialRecontato()) {
+                        if (conversa.getMensagemDirecionamento().isEscolhaFinanceiro()) {
+                            mensagemUseCase.enviarMensagem(BuilderMensagens.direcionamentoOutroContatoFinanceiro());
+                            mensagemUseCase.enviarContatoFinanceiro(cliente);
+                            conversa.getMensagemDirecionamento().setMensagemInicial(false);
+                            conversaUseCase.salvar(conversa);
+                        } else {
+                            mensagemUseCase.enviarMensagem(BuilderMensagens.direcinamnetoFinanceiro());
+                            mensagemUseCase.enviarContatoFinanceiro(cliente);
+                            conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);
+                            conversa.getMensagemDirecionamento().setMensagemInicial(false);
+                            conversaUseCase.salvar(conversa);
+                        }
+                    } else if (mensagem.getMensagem().equals("0")) {
+                        mensagemUseCase.enviarMensagem(BuilderMensagens.atendimentoEncerrado());
+                        conversaUseCase.deletar(conversa.getId());
+                        clienteuseCase.deletar(cliente.getId());
+                    } else {
+                        if(conversa.getMensagemDirecionamento().isEscolhaComercial()) {
+                            mensagemUseCase.enviarMensagem(BuilderMensagens.direcionamentoOutroContato(conversa.getVendedor().getNome()));
+                            mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente, "Recontato");
+                            conversa.getMensagemDirecionamento().setEscolhaComercial(true);
+                            conversa.getMensagemDirecionamento().setMensagemInicial(false);
+                            conversaUseCase.salvar(conversa);
+                        } else {
+                            chatUseCase.coletarInformacoes(mensagem, cliente, conversa);
+                            conversa.getMensagemDirecionamento().setEscolhaComercialRecontato(true);
+                            conversaUseCase.salvar(conversa);
+                        }
+                    }
                 }
             }
+
         } else {
             Cliente novoCliente = Cliente.builder().telefone(mensagem.getTelefone()).build();
             Cliente cliente = clienteuseCase.cadastrar(novoCliente);
             Conversa conversa = conversaUseCase.criar(cliente);
             mensagemUseCase.enviarMensagem(BuilderMensagens.boasVindas());
             mensagemUseCase.enviarMensagem(BuilderMensagens.coletaNome());
-            conversaUseCase.salvar(conversa);
         }
 
         return "";

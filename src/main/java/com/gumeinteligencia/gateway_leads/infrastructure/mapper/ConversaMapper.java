@@ -11,6 +11,7 @@ public class ConversaMapper {
                 .cliente(ClienteMapper.paraDomain(entity.getCliente()))
                 .dataCriacao(entity.getDataCriacao())
                 .mensagemColeta(entity.getMensagemColeta())
+                .mensagemDirecionamento(entity.getMensagemDirecionamento())
                 .finalizada(entity.getFinalizada())
                 .build();
 
@@ -35,6 +36,7 @@ public class ConversaMapper {
                 .cliente(ClienteMapper.paraEntity(domain.getCliente()))
                 .dataCriacao(domain.getDataCriacao())
                 .mensagemColeta(domain.getMensagemColeta())
+                .mensagemDirecionamento(domain.getMensagemDirecionamento())
                 .finalizada(domain.getFinalizada())
                 .build();
 

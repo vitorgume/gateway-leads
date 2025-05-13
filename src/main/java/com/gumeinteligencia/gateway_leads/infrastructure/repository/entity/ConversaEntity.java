@@ -33,11 +33,9 @@ public class ConversaEntity {
     private LocalDateTime dataCriacao;
 
     @Embedded
-    @Column(name = "mensagem_coleta")
     private MensagemColeta mensagemColeta;
 
     @Embedded
-    @Column(name = "mensagem_direcionamento")
     private MensagemDirecionamento mensagemDirecionamento;
 
     private LocalDateTime ultimaMensagem;

@@ -62,4 +62,8 @@ public class BuilderMensagens {
     public static String atendimentoEncerrado() {
         return "Atendimento encerrado. Até logo...";
     }
+
+    public static String direcionamentoOutroContatoFinanceiro() {
+        return "Identifiquei que você já estava em conversa com a Patrícia, vou repassar você novamente para ela.";
+    }
 }

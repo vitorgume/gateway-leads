@@ -30,12 +30,10 @@ public class ChatUseCase {
         MensagemColeta mensagemColeta = conversa.getMensagemColeta();
 
          if (!mensagemColeta.isColetaSegmento()) {
-            cliente.setNome(mensagem.getMensagem());
             mensagemUseCase.enviarMensagem(BuilderMensagens.coletaSegmento());
             conversa.getMensagemColeta().setColetaSegmento(true);
             conversa.setUltimaMensagem(LocalDateTime.now());
             conversaUseCase.salvar(conversa);
-            clienteUseCase.salvar(cliente);
         } else if (!mensagemColeta.isColetaMunicipio()) {
             cliente.setSegmento(GatewayEnum.gatewaySegmento(mensagem.getMensagem()));
             mensagemUseCase.enviarMensagem(BuilderMensagens.coletaRegiao());
@@ -53,6 +51,12 @@ public class ChatUseCase {
             mensagemUseCase.enviarContatoVendedor(vendedor, cliente, "Contato novo");
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
+
+            if(conversa.getMensagemDirecionamento().isEscolhaComercialRecontato()) {
+                conversa.getMensagemDirecionamento().setMensagemInicial(false);
+                conversa.getMensagemDirecionamento().setEscolhaComercial(true);
+                conversaUseCase.salvar(conversa);
+            }
         }
     }
 

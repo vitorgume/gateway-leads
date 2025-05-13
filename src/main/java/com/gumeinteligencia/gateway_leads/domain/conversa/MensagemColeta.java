@@ -11,7 +11,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class MensagemColeta {
-    private boolean coletaNome;
     private boolean coletaSegmento;
     private boolean coletaMunicipio;
     private boolean coletaEstado;
@@ -20,6 +19,5 @@ public class MensagemColeta {
         this.coletaEstado = false;
         this.coletaMunicipio = false;
         this.coletaSegmento = false;
-        this.coletaNome = false;
     }
 }
