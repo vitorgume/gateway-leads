@@ -29,4 +29,6 @@ public class ClienteEntity {
 
     @Enumerated(EnumType.ORDINAL)
     private Segmento segmento;
+
+    private Boolean inativo;
 }

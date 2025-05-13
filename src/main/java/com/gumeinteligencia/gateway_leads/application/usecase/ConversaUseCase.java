@@ -46,6 +46,7 @@ public class ConversaUseCase {
                 .mensagemColeta(new MensagemColeta())
                 .finalizada(false)
                 .mensagemDirecionamento(new MensagemDirecionamento())
+                .encerrada(false)
                 .build();
 
         return gateway.salvar(novaConversa);
@@ -59,7 +60,22 @@ public class ConversaUseCase {
         return gateway.listarNaoFinalizados();
     }
 
-    public void deletar(UUID id) {
-        gateway.deletar(id);
+    public void encerrar(UUID id) {
+        Conversa conversa = consultarPorId(id);
+
+        conversa.setEncerrada(true);
+
+        gateway.salvar(conversa);
+    }
+
+    private Conversa consultarPorId(UUID id) {
+        Optional<Conversa> conversa = gateway.consultarPorId(id);
+
+        if(conversa.isEmpty()) {
+            throw new ConversaNaoEncontrada();
+        }
+
+        return conversa.get();
     }
 }
+

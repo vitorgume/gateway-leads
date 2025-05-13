@@ -36,6 +36,7 @@ public class BuilderMensagens {
                 4️⃣ - Alimentos
                 5️⃣ - Celulares
                 6️⃣ - Outros
+                0️⃣ - Encerrar atendimento
                 """;
     }
 
@@ -43,13 +44,14 @@ public class BuilderMensagens {
             return """
                     Por favor, Me informa sua região ?
                     
-                    1 - Maringá
-                    2 - Região de Maringá
-                    3 - Outras
+                    1️⃣ - Maringá
+                    2️⃣ - Região de Maringá
+                    3️⃣ - Outras
+                    0️⃣ - Encerrar atendimento
                     """;
     }
 
-    public static String direcionamentoPrimeiroContato(String nomeCliente, String nomeVendedor) {
+    public static String direcionamentoPrimeiroContato(String nomeVendedor) {
         return "Muito obrigado pelas informações ! Agora você será redirecionado para o(a) "
                 + nomeVendedor + ", em alguns minutos ele(a) entrará em contato com você ! Até...";
     }

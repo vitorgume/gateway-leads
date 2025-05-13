@@ -12,13 +12,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GatewayMensagemUseCase {
 
-    private final ClienteUseCase clienteuseCase;
+    private final ClienteUseCase clienteUseCase;
     private final ConversaUseCase conversaUseCase;
     private final ChatUseCase chatUseCase;
     private final MensagemUseCase mensagemUseCase;
 
     public String gateway(Mensagem mensagem) {
-        Optional<Cliente> clienteOptional = clienteuseCase.consultarPorTelefone(mensagem.getTelefone());
+        Optional<Cliente> clienteOptional = clienteUseCase.consultarPorTelefone(mensagem.getTelefone());
 
 
         if(clienteOptional.isPresent()) {
@@ -30,16 +30,14 @@ public class GatewayMensagemUseCase {
                 if(!conversa.getMensagemDirecionamento().isColetaNome()) {
                     cliente.setNome(mensagem.getMensagem());
                     conversa.getMensagemDirecionamento().setColetaNome(true);
-                    clienteuseCase.salvar(cliente);
+                    clienteUseCase.salvar(cliente);
                     mensagemUseCase.enviarMensagem(BuilderMensagens.direcionaSetor());
                     conversaUseCase.salvar(conversa);
                 } else {
                     if(conversa.getMensagemDirecionamento().isEscolhaComercial()) {
                         chatUseCase.coletarInformacoes(mensagem, cliente, conversa);
                     } else if (mensagem.getMensagem().equals("0")) {
-                        mensagemUseCase.enviarMensagem(BuilderMensagens.atendimentoEncerrado());
-                        conversaUseCase.deletar(conversa.getId());
-                        clienteuseCase.deletar(cliente.getId());
+                        chatUseCase.encerrarAtendimento(conversa, cliente);
                     } else if (mensagem.getMensagem().equals("2")){
                         conversa.getMensagemDirecionamento().setEscolhaComercial(true);
                         conversa = conversaUseCase.salvar(conversa);
@@ -74,8 +72,8 @@ public class GatewayMensagemUseCase {
                         }
                     } else if (mensagem.getMensagem().equals("0")) {
                         mensagemUseCase.enviarMensagem(BuilderMensagens.atendimentoEncerrado());
-                        conversaUseCase.deletar(conversa.getId());
-                        clienteuseCase.deletar(cliente.getId());
+                        conversaUseCase.encerrar(conversa.getId());
+                        clienteUseCase.inativar(cliente.getId());
                     } else {
                         if(conversa.getMensagemDirecionamento().isEscolhaComercial()) {
                             mensagemUseCase.enviarMensagem(BuilderMensagens.direcionamentoOutroContato(conversa.getVendedor().getNome()));
@@ -93,9 +91,9 @@ public class GatewayMensagemUseCase {
             }
 
         } else {
-            Cliente novoCliente = Cliente.builder().telefone(mensagem.getTelefone()).build();
-            Cliente cliente = clienteuseCase.cadastrar(novoCliente);
-            Conversa conversa = conversaUseCase.criar(cliente);
+            Cliente novoCliente = Cliente.builder().telefone(mensagem.getTelefone()).inativo(false).build();
+            Cliente cliente = clienteUseCase.cadastrar(novoCliente);
+            conversaUseCase.criar(cliente);
             mensagemUseCase.enviarMensagem(BuilderMensagens.boasVindas());
             mensagemUseCase.enviarMensagem(BuilderMensagens.coletaNome());
         }

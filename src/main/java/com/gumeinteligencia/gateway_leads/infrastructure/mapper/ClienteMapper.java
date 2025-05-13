@@ -11,6 +11,7 @@ public class ClienteMapper {
                 .telefone(entity.getTelefone())
                 .regiao(entity.getRegiao())
                 .segmento(entity.getSegmento())
+                .inativo(entity.getInativo())
                 .build();
     }
 
@@ -21,6 +22,7 @@ public class ClienteMapper {
                 .telefone(domain.getTelefone())
                 .regiao(domain.getRegiao())
                 .segmento(domain.getSegmento())
+                .inativo(domain.getInativo())
                 .build();
     }
 }

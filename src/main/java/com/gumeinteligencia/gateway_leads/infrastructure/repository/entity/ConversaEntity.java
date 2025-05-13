@@ -41,4 +41,6 @@ public class ConversaEntity {
     private LocalDateTime ultimaMensagem;
 
     private Boolean finalizada;
+
+    private Boolean encerrada;
 }

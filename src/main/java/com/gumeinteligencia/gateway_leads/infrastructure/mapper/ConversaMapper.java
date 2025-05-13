@@ -13,6 +13,7 @@ public class ConversaMapper {
                 .mensagemColeta(entity.getMensagemColeta())
                 .mensagemDirecionamento(entity.getMensagemDirecionamento())
                 .finalizada(entity.getFinalizada())
+                .encerrada(entity.getEncerrada())
                 .build();
 
         if(entity.getVendedor() != null) {
@@ -38,6 +39,7 @@ public class ConversaMapper {
                 .mensagemColeta(domain.getMensagemColeta())
                 .mensagemDirecionamento(domain.getMensagemDirecionamento())
                 .finalizada(domain.getFinalizada())
+                .encerrada(domain.getEncerrada())
                 .build();
 
         if(domain.getVendedor() != null) {

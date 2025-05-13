@@ -10,7 +10,7 @@ import java.util.UUID;
 @Builder
 @ToString
 public class Vendedor {
-    private UUID id;
+    private Long id;
     private String nome;
     private String telefone;
 }

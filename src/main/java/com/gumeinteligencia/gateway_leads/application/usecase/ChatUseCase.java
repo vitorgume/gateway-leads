@@ -29,12 +29,17 @@ public class ChatUseCase {
     public void coletarInformacoes(Mensagem mensagem, Cliente cliente, Conversa conversa) {
         MensagemColeta mensagemColeta = conversa.getMensagemColeta();
 
-         if (!mensagemColeta.isColetaSegmento()) {
+        if (!mensagemColeta.isColetaSegmento()) {
             mensagemUseCase.enviarMensagem(BuilderMensagens.coletaSegmento());
             conversa.getMensagemColeta().setColetaSegmento(true);
             conversa.setUltimaMensagem(LocalDateTime.now());
             conversaUseCase.salvar(conversa);
         } else if (!mensagemColeta.isColetaMunicipio()) {
+
+            if (mensagem.getMensagem().equals("0")) {
+                this.encerrarAtendimento(conversa, cliente);
+            }
+
             cliente.setSegmento(GatewayEnum.gatewaySegmento(mensagem.getMensagem()));
             mensagemUseCase.enviarMensagem(BuilderMensagens.coletaRegiao());
             conversa.getMensagemColeta().setColetaMunicipio(true);
@@ -42,12 +47,17 @@ public class ChatUseCase {
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
         } else {
+
+            if (mensagem.getMensagem().equals("0")) {
+                this.encerrarAtendimento(conversa, cliente);
+            }
+
             cliente.setRegiao(GatewayEnum.gatewayRegiao(mensagem.getMensagem()));
             Vendedor vendedor = vendedorUseCase.escolherVendedor(cliente);
             conversa.setVendedor(vendedor);
             conversa.setFinalizada(true);
             mensagemUseCase.enviarMensagem(
-                    BuilderMensagens.direcionamentoPrimeiroContato(cliente.getNome(), vendedor.getNome()));
+                    BuilderMensagens.direcionamentoPrimeiroContato(vendedor.getNome()));
             mensagemUseCase.enviarContatoVendedor(vendedor, cliente, "Contato novo");
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
@@ -86,5 +96,11 @@ public class ChatUseCase {
                         );
             });
         }
+    }
+
+    public void encerrarAtendimento(Conversa conversa, Cliente cliente) {
+        mensagemUseCase.enviarMensagem(BuilderMensagens.atendimentoEncerrado());
+        conversaUseCase.encerrar(conversa.getId());
+        clienteUseCase.inativar(cliente.getId());
     }
 }
