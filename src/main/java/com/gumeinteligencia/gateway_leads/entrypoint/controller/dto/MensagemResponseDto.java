@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @ToString
 @Builder
-public class MensagemDto {
-    private String telefone;
-    private String mensagem;
+public class MensagemResponseDto {
+    private String phone;
+    private TextoDto text;
 }

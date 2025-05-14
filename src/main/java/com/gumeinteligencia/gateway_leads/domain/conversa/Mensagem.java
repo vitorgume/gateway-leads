@@ -9,6 +9,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @ToString
+@NoArgsConstructor
 public class Mensagem {
     private UUID id;
     private String telefone;

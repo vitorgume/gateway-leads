@@ -15,7 +15,9 @@ public class GatewayLeadsApplication {
 		System.setProperty("URL_BD", dotenv.get("URL_BD"));
 		System.setProperty("USER_BD", dotenv.get("USER_BD"));
 		System.setProperty("PASSWORD_BD", dotenv.get("PASSWORD_BD"));
-		System.setProperty("WHATSAPP_CHAVE_API", dotenv.get("WHASTAPP_CHAVE_API"));
+		System.setProperty("WHASTAPP_CLIENT_TOKEN", dotenv.get("WHASTAPP_CLIENT_TOKEN"));
+		System.setProperty("WHASTAPP_TOKEN", dotenv.get("WHASTAPP_TOKEN"));
+		System.setProperty("WHASTAPP_INSTANCE_ID", dotenv.get("WHASTAPP_INSTANCE_ID"));
 
 		SpringApplication.run(GatewayLeadsApplication.class, args);
 	}

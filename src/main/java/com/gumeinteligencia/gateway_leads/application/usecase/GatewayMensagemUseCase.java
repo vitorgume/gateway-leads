@@ -28,10 +28,15 @@ public class GatewayMensagemUseCase {
 
             if(!conversa.getFinalizada()) {
                 if(!conversa.getMensagemDirecionamento().isColetaNome()) {
+                    Mensagem mensagemEnvio = Mensagem.builder()
+                            .mensagem(BuilderMensagens.direcionaSetor())
+                            .telefone(cliente.getTelefone())
+                            .build();
+
                     cliente.setNome(mensagem.getMensagem());
                     conversa.getMensagemDirecionamento().setColetaNome(true);
                     clienteUseCase.salvar(cliente);
-                    mensagemUseCase.enviarMensagem(BuilderMensagens.direcionaSetor());
+                    mensagemUseCase.enviarMensagem(mensagemEnvio);
                     conversaUseCase.salvar(conversa);
                 } else {
                     if(conversa.getMensagemDirecionamento().isEscolhaComercial()) {
@@ -43,7 +48,12 @@ public class GatewayMensagemUseCase {
                         conversa = conversaUseCase.salvar(conversa);
                         chatUseCase.coletarInformacoes(mensagem, cliente, conversa);
                     } else if (mensagem.getMensagem().equals("1")) {
-                        mensagemUseCase.enviarMensagem(BuilderMensagens.direcinamnetoFinanceiro());
+                        Mensagem mensagemEnvio = Mensagem.builder()
+                                .mensagem(BuilderMensagens.direcinamnetoFinanceiro())
+                                .telefone(cliente.getTelefone())
+                                .build();
+
+                        mensagemUseCase.enviarMensagem(mensagemEnvio);
                         mensagemUseCase.enviarContatoFinanceiro(cliente);
                         conversa.setFinalizada(true);
                         conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);
@@ -52,31 +62,64 @@ public class GatewayMensagemUseCase {
                 }
             } else {
                 if(!conversa.getMensagemDirecionamento().isMensagemInicial()) {
-                    mensagemUseCase.enviarMensagem(BuilderMensagens.boasVindas());
-                    mensagemUseCase.enviarMensagem(BuilderMensagens.direcionaSetor());
+                    Mensagem mensagemEnvio1 = Mensagem.builder()
+                            .mensagem(BuilderMensagens.boasVindas())
+                            .telefone(cliente.getTelefone())
+                            .build();
+
+                    Mensagem mensagemEnvio2 = Mensagem.builder()
+                            .mensagem(BuilderMensagens.direcionaSetor())
+                            .telefone(cliente.getTelefone())
+                            .build();
+
+                    mensagemUseCase.enviarMensagem(mensagemEnvio1);
+                    mensagemUseCase.enviarMensagem(mensagemEnvio2);
                     conversa.getMensagemDirecionamento().setMensagemInicial(true);
                     conversaUseCase.salvar(conversa);
                 } else {
                     if(mensagem.getMensagem().equals("1") && !conversa.getMensagemDirecionamento().isEscolhaComercialRecontato()) {
                         if (conversa.getMensagemDirecionamento().isEscolhaFinanceiro()) {
-                            mensagemUseCase.enviarMensagem(BuilderMensagens.direcionamentoOutroContatoFinanceiro());
+
+                            Mensagem mensagemEnvio = Mensagem.builder()
+                                    .mensagem(BuilderMensagens.direcionamentoOutroContatoFinanceiro())
+                                    .telefone(cliente.getTelefone())
+                                    .build();
+
+
+                            mensagemUseCase.enviarMensagem(mensagemEnvio);
                             mensagemUseCase.enviarContatoFinanceiro(cliente);
                             conversa.getMensagemDirecionamento().setMensagemInicial(false);
                             conversaUseCase.salvar(conversa);
                         } else {
-                            mensagemUseCase.enviarMensagem(BuilderMensagens.direcinamnetoFinanceiro());
+                            Mensagem mensagemEnvio = Mensagem.builder()
+                                    .mensagem(BuilderMensagens.direcinamnetoFinanceiro())
+                                    .telefone(cliente.getTelefone())
+                                    .build();
+
+                            mensagemUseCase.enviarMensagem(mensagemEnvio);
                             mensagemUseCase.enviarContatoFinanceiro(cliente);
                             conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);
                             conversa.getMensagemDirecionamento().setMensagemInicial(false);
                             conversaUseCase.salvar(conversa);
                         }
                     } else if (mensagem.getMensagem().equals("0")) {
-                        mensagemUseCase.enviarMensagem(BuilderMensagens.atendimentoEncerrado());
+                        Mensagem mensagemEnvio = Mensagem.builder()
+                                .mensagem(BuilderMensagens.atendimentoEncerrado())
+                                .telefone(cliente.getTelefone())
+                                .build();
+
+                        mensagemUseCase.enviarMensagem(mensagemEnvio);
                         conversaUseCase.encerrar(conversa.getId());
                         clienteUseCase.inativar(cliente.getId());
                     } else {
                         if(conversa.getMensagemDirecionamento().isEscolhaComercial()) {
-                            mensagemUseCase.enviarMensagem(BuilderMensagens.direcionamentoOutroContato(conversa.getVendedor().getNome()));
+
+                            Mensagem mensagemEnvio = Mensagem.builder()
+                                    .mensagem(BuilderMensagens.direcionamentoOutroContato(conversa.getVendedor().getNome()))
+                                    .telefone(cliente.getTelefone())
+                                    .build();
+
+                            mensagemUseCase.enviarMensagem(mensagemEnvio);
                             mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente, "Recontato");
                             conversa.getMensagemDirecionamento().setEscolhaComercial(true);
                             conversa.getMensagemDirecionamento().setMensagemInicial(false);
@@ -94,8 +137,19 @@ public class GatewayMensagemUseCase {
             Cliente novoCliente = Cliente.builder().telefone(mensagem.getTelefone()).inativo(false).build();
             Cliente cliente = clienteUseCase.cadastrar(novoCliente);
             conversaUseCase.criar(cliente);
-            mensagemUseCase.enviarMensagem(BuilderMensagens.boasVindas());
-            mensagemUseCase.enviarMensagem(BuilderMensagens.coletaNome());
+
+            Mensagem mensagemEnvio1 = Mensagem.builder()
+                    .mensagem(BuilderMensagens.boasVindas())
+                    .telefone(cliente.getTelefone())
+                    .build();
+
+            Mensagem mensagemEnvio2 = Mensagem.builder()
+                    .mensagem(BuilderMensagens.coletaNome())
+                    .telefone(cliente.getTelefone())
+                    .build();
+
+            mensagemUseCase.enviarMensagem(mensagemEnvio1);
+            mensagemUseCase.enviarMensagem(mensagemEnvio2);
         }
 
         return "";
