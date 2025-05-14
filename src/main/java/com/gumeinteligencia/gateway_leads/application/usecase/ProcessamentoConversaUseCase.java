@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ChatUseCase {
+public class ProcessamentoConversaUseCase {
 
     private final ClienteUseCase clienteUseCase;
     private final ConversaUseCase conversaUseCase;
@@ -57,34 +57,6 @@ public class ChatUseCase {
                 conversa.getMensagemDirecionamento().setEscolhaComercial(true);
                 conversaUseCase.salvar(conversa);
             }
-        }
-    }
-
-    @Scheduled(cron = "0 * * * * *")
-    public void verificaAusenciaDeMensagem() {
-        List<Conversa> conversas = conversaUseCase.listarNaoFinalizados();
-
-        LocalDateTime agora = LocalDateTime.now();
-
-        List<Conversa> conversasAtrasadas = conversas.stream()
-                .filter(conversa ->
-                        conversa.getUltimaMensagem().plusMinutes(10).isBefore(agora)
-                )
-                .toList();
-
-
-        if(!conversasAtrasadas.isEmpty()) {
-            conversasAtrasadas.forEach(conversa -> {
-                conversa.setFinalizada(true);
-                conversaUseCase.salvar(conversa);
-                Vendedor vendedor = vendedorUseCase.consultarVendedor("Mariana");
-                mensagemUseCase
-                        .enviarContatoVendedor(
-                                vendedor,
-                                conversa.getCliente(),
-                                "Contato inativo por mais de 10 minutos"
-                        );
-            });
         }
     }
 
@@ -153,6 +125,34 @@ public class ChatUseCase {
                     conversaUseCase.salvar(conversa);
                 }
             }
+        }
+    }
+
+    @Scheduled(cron = "0 * * * * *")
+    public void verificaAusenciaDeMensagem() {
+        List<Conversa> conversas = conversaUseCase.listarNaoFinalizados();
+
+        LocalDateTime agora = LocalDateTime.now();
+
+        List<Conversa> conversasAtrasadas = conversas.stream()
+                .filter(conversa ->
+                        conversa.getUltimaMensagem().plusMinutes(10).isBefore(agora)
+                )
+                .toList();
+
+
+        if(!conversasAtrasadas.isEmpty()) {
+            conversasAtrasadas.forEach(conversa -> {
+                conversa.setFinalizada(true);
+                conversaUseCase.salvar(conversa);
+                Vendedor vendedor = vendedorUseCase.consultarVendedor("Mariana");
+                mensagemUseCase
+                        .enviarContatoVendedor(
+                                vendedor,
+                                conversa.getCliente(),
+                                "Contato inativo por mais de 10 minutos"
+                        );
+            });
         }
     }
 }

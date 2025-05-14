@@ -10,11 +10,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class GatewayMensagemUseCase {
+public class ProcessarMensagemUseCase {
 
     private final ClienteUseCase clienteuseCase;
     private final ConversaUseCase conversaUseCase;
-    private final ChatUseCase chatUseCase;
+    private final ProcessamentoConversaUseCase processamentoConversaUseCase;
     private final MensagemUseCase mensagemUseCase;
 
     public String gateway(Mensagem mensagem) {
@@ -35,9 +35,9 @@ public class GatewayMensagemUseCase {
 
 
         if(!conversa.getFinalizada()) {
-            chatUseCase.conversaFinalizada(conversa, cliente, mensagem);
+            processamentoConversaUseCase.conversaFinalizada(conversa, cliente, mensagem);
         } else {
-            chatUseCase.conversaNaoFinalizada(conversa, cliente, mensagem);
+            processamentoConversaUseCase.conversaNaoFinalizada(conversa, cliente, mensagem);
         }
     }
 
