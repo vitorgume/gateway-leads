@@ -1,5 +1,6 @@
-package com.gumeinteligencia.gateway_leads.application.usecase;
+package com.gumeinteligencia.gateway_leads.application.usecase.conversa;
 
+import com.gumeinteligencia.gateway_leads.application.usecase.*;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
@@ -26,7 +27,7 @@ public class ProcessamentoConversaUseCase {
         mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente, "Recontato");
     }
 
-    public void coletarInformacoes(Mensagem mensagem, Cliente cliente, Conversa conversa) {
+    public void processarEtapaDeColeta(Mensagem mensagem, Cliente cliente, Conversa conversa) {
         MensagemColeta mensagemColeta = conversa.getMensagemColeta();
 
          if (!mensagemColeta.isColetaSegmento()) {
@@ -60,7 +61,7 @@ public class ProcessamentoConversaUseCase {
         }
     }
 
-    public void conversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
+    public void processarConversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         if(!conversa.getMensagemDirecionamento().isColetaNome()) {
             cliente.setNome(mensagem.getMensagem());
             conversa.getMensagemDirecionamento().setColetaNome(true);
@@ -69,7 +70,7 @@ public class ProcessamentoConversaUseCase {
             conversaUseCase.salvar(conversa);
         } else {
             if(conversa.getMensagemDirecionamento().isEscolhaComercial()) {
-                this.coletarInformacoes(mensagem, cliente, conversa);
+                this.processarEtapaDeColeta(mensagem, cliente, conversa);
             } else if (mensagem.getMensagem().equals("0")) {
                 mensagemUseCase.enviarMensagem(BuilderMensagens.atendimentoEncerrado());
                 conversaUseCase.deletar(conversa.getId());
@@ -77,7 +78,7 @@ public class ProcessamentoConversaUseCase {
             } else if (mensagem.getMensagem().equals("2")){
                 conversa.getMensagemDirecionamento().setEscolhaComercial(true);
                 conversa = conversaUseCase.salvar(conversa);
-                this.coletarInformacoes(mensagem, cliente, conversa);
+                this.processarEtapaDeColeta(mensagem, cliente, conversa);
             } else if (mensagem.getMensagem().equals("1")) {
                 mensagemUseCase.enviarMensagem(BuilderMensagens.direcinamnetoFinanceiro());
                 mensagemUseCase.enviarContatoFinanceiro(cliente);
@@ -88,7 +89,7 @@ public class ProcessamentoConversaUseCase {
         }
     }
 
-    public void conversaNaoFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
+    public void processarConversaNaoFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         if(!conversa.getMensagemDirecionamento().isMensagemInicial()) {
             mensagemUseCase.enviarMensagem(BuilderMensagens.boasVindas());
             mensagemUseCase.enviarMensagem(BuilderMensagens.direcionaSetor());
@@ -120,39 +121,11 @@ public class ProcessamentoConversaUseCase {
                     conversa.getMensagemDirecionamento().setMensagemInicial(false);
                     conversaUseCase.salvar(conversa);
                 } else {
-                    this.coletarInformacoes(mensagem, cliente, conversa);
+                    this.processarEtapaDeColeta(mensagem, cliente, conversa);
                     conversa.getMensagemDirecionamento().setEscolhaComercialRecontato(true);
                     conversaUseCase.salvar(conversa);
                 }
             }
-        }
-    }
-
-    @Scheduled(cron = "0 * * * * *")
-    public void verificaAusenciaDeMensagem() {
-        List<Conversa> conversas = conversaUseCase.listarNaoFinalizados();
-
-        LocalDateTime agora = LocalDateTime.now();
-
-        List<Conversa> conversasAtrasadas = conversas.stream()
-                .filter(conversa ->
-                        conversa.getUltimaMensagem().plusMinutes(10).isBefore(agora)
-                )
-                .toList();
-
-
-        if(!conversasAtrasadas.isEmpty()) {
-            conversasAtrasadas.forEach(conversa -> {
-                conversa.setFinalizada(true);
-                conversaUseCase.salvar(conversa);
-                Vendedor vendedor = vendedorUseCase.consultarVendedor("Mariana");
-                mensagemUseCase
-                        .enviarContatoVendedor(
-                                vendedor,
-                                conversa.getCliente(),
-                                "Contato inativo por mais de 10 minutos"
-                        );
-            });
         }
     }
 }

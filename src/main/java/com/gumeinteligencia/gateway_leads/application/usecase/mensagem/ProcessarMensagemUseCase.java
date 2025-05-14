@@ -1,49 +1,47 @@
-package com.gumeinteligencia.gateway_leads.application.usecase;
+package com.gumeinteligencia.gateway_leads.application.usecase.mensagem;
 
+import com.gumeinteligencia.gateway_leads.application.usecase.*;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.ProcessamentoConversaUseCase;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Mensagem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class ProcessarMensagemUseCase {
 
-    private final ClienteUseCase clienteuseCase;
+    private final ClienteUseCase clienteUseCase;
     private final ConversaUseCase conversaUseCase;
     private final ProcessamentoConversaUseCase processamentoConversaUseCase;
     private final MensagemUseCase mensagemUseCase;
 
     public String gateway(Mensagem mensagem) {
-        Optional<Cliente> clienteOptional = clienteuseCase.consultarPorTelefone(mensagem.getTelefone());
-
-
-        if(clienteOptional.isPresent()) {
-            fluxoConversaExistente(clienteOptional.get(), mensagem);
-        } else {
-            fluxoConversaNaoExistente(mensagem);
-        }
+        clienteUseCase
+                .consultarPorTelefone(mensagem.getTelefone())
+                .ifPresentOrElse(
+                        cliente -> processarConversaExistente(cliente, mensagem),
+                        () -> iniciarNovaConversa(mensagem)
+                );
 
         return "";
     }
 
-    private void fluxoConversaExistente(Cliente cliente, Mensagem mensagem) {
+    private void processarConversaExistente(Cliente cliente, Mensagem mensagem) {
         Conversa conversa = conversaUseCase.consultarPorCliente(cliente);
 
 
         if(!conversa.getFinalizada()) {
-            processamentoConversaUseCase.conversaFinalizada(conversa, cliente, mensagem);
+            processamentoConversaUseCase.processarConversaFinalizada(conversa, cliente, mensagem);
         } else {
-            processamentoConversaUseCase.conversaNaoFinalizada(conversa, cliente, mensagem);
+            processamentoConversaUseCase.processarConversaNaoFinalizada(conversa, cliente, mensagem);
         }
     }
 
-    private void fluxoConversaNaoExistente(Mensagem mensagem) {
+    private void iniciarNovaConversa(Mensagem mensagem) {
         Cliente novoCliente = Cliente.builder().telefone(mensagem.getTelefone()).build();
-        Cliente cliente = clienteuseCase.cadastrar(novoCliente);
+        Cliente cliente = clienteUseCase.cadastrar(novoCliente);
         conversaUseCase.criar(cliente);
         mensagemUseCase.enviarMensagem(BuilderMensagens.boasVindas());
         mensagemUseCase.enviarMensagem(BuilderMensagens.coletaNome());
