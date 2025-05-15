@@ -62,7 +62,7 @@ public class MensagemDataProvider implements MensagemGateway {
     public void enviarContato(Vendedor vendedor, Cliente cliente, String mensagem) {
         ContatoRequestDto body = ContatoRequestDto.builder()
                 .phone(cliente.getTelefone())
-                .contactName(cliente.getNome())
+                .contactName(cliente.getNome() + " " + cliente.getSegmento().getDescricao())
                 .contactPhone(cliente.getTelefone())
                 .build();
 
