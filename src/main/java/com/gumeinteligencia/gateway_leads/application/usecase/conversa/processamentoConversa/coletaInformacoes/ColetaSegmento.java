@@ -1,4 +1,4 @@
-package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa;
+package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.coletaInformacoes;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.BuilderMensagens;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;

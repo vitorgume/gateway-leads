@@ -1,16 +1,15 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.*;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.coletaInformacoes.*;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoFinalizado.*;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.*;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
-import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Mensagem;
-import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -19,16 +18,11 @@ public class ProcessamentoConversaUseCase {
     private final ClienteUseCase clienteUseCase;
     private final ConversaUseCase conversaUseCase;
     private final MensagemUseCase mensagemUseCase;
-    private final VendedorUseCase vendedorUseCase;
+    private final ColetaInformacoesUseCase coletaInformacoesUseCase;
+    private final ProcessamentoNaoFinalizadoUseCase processamentoNaoFinalizadoUseCase;
+    private final ProcessamentoFinalizadoUseCase processamentoFinalizadoUseCase;
 
-    public void direcionarVendedor(Cliente cliente, Conversa conversa) {
-        mensagemUseCase.enviarMensagem(BuilderMensagens.direcionamentoOutroContato(conversa.getVendedor().getNome()));
-        mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente, "Recontato");
-    }
-
-
-
-    public void processarConversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
+    public void processarConversaNaoFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         if(!conversa.getMensagemDirecionamento().isColetaNome()) {
             cliente.setNome(mensagem.getMensagem());
             conversa.getMensagemDirecionamento().setColetaNome(true);
@@ -36,63 +30,42 @@ public class ProcessamentoConversaUseCase {
             mensagemUseCase.enviarMensagem(BuilderMensagens.direcionaSetor());
             conversaUseCase.salvar(conversa);
         } else {
+            ProcessoNaoFinalizadoType processoNaoFinalizadoType = null;
+
             if(conversa.getMensagemDirecionamento().isEscolhaComercial()) {
-                this.processarEtapaDeColeta(mensagem, cliente, conversa);
+                coletaInformacoesUseCase.processarEtapaDeColeta(mensagem, cliente, conversa);
             } else if (mensagem.getMensagem().equals("0")) {
-                mensagemUseCase.enviarMensagem(BuilderMensagens.atendimentoEncerrado());
-                conversaUseCase.deletar(conversa.getId());
-                clienteUseCase.deletar(cliente.getId());
+                processoNaoFinalizadoType = new ProcessaEncerramento(mensagemUseCase, conversaUseCase, clienteUseCase);
             } else if (mensagem.getMensagem().equals("2")){
-                conversa.getMensagemDirecionamento().setEscolhaComercial(true);
-                conversa = conversaUseCase.salvar(conversa);
-                this.processarEtapaDeColeta(mensagem, cliente, conversa);
+                processoNaoFinalizadoType = new ProcessaEscolhaComercial(conversaUseCase, coletaInformacoesUseCase);
             } else if (mensagem.getMensagem().equals("1")) {
-                mensagemUseCase.enviarMensagem(BuilderMensagens.direcinamnetoFinanceiro());
-                mensagemUseCase.enviarContatoFinanceiro(cliente);
-                conversa.setFinalizada(true);
-                conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);
-                conversaUseCase.salvar(conversa);
+                processoNaoFinalizadoType = new ProcessaEscolhaFinanceiro(mensagemUseCase, conversaUseCase);
             }
+
+            ProcessoNaoFinalizadoType processoNaoFinalizadoTypeSetado = processamentoNaoFinalizadoUseCase.setProcessoFinalizadoType(processoNaoFinalizadoType);
+            processoNaoFinalizadoTypeSetado.processar(conversa, cliente, mensagem);
         }
     }
 
-    public void processarConversaNaoFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
+    public void processarConversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         if(!conversa.getMensagemDirecionamento().isMensagemInicial()) {
             mensagemUseCase.enviarMensagem(BuilderMensagens.boasVindas());
             mensagemUseCase.enviarMensagem(BuilderMensagens.direcionaSetor());
             conversa.getMensagemDirecionamento().setMensagemInicial(true);
             conversaUseCase.salvar(conversa);
         } else {
+            ProcessoFinalizadoType processoFinalizoType;
+
             if(mensagem.getMensagem().equals("1") && !conversa.getMensagemDirecionamento().isEscolhaComercialRecontato()) {
-                if (conversa.getMensagemDirecionamento().isEscolhaFinanceiro()) {
-                    mensagemUseCase.enviarMensagem(BuilderMensagens.direcionamentoOutroContatoFinanceiro());
-                    mensagemUseCase.enviarContatoFinanceiro(cliente);
-                    conversa.getMensagemDirecionamento().setMensagemInicial(false);
-                    conversaUseCase.salvar(conversa);
-                } else {
-                    mensagemUseCase.enviarMensagem(BuilderMensagens.direcinamnetoFinanceiro());
-                    mensagemUseCase.enviarContatoFinanceiro(cliente);
-                    conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);
-                    conversa.getMensagemDirecionamento().setMensagemInicial(false);
-                    conversaUseCase.salvar(conversa);
-                }
+                processoFinalizoType = new DirecionamentoFinanceiro(mensagemUseCase, conversaUseCase);
             } else if (mensagem.getMensagem().equals("0")) {
-                mensagemUseCase.enviarMensagem(BuilderMensagens.atendimentoEncerrado());
-                conversaUseCase.deletar(conversa.getId());
-                clienteUseCase.deletar(cliente.getId());
+                processoFinalizoType = new DirecionamentoEncerramento(mensagemUseCase, conversaUseCase, clienteUseCase);
             } else {
-                if(conversa.getMensagemDirecionamento().isEscolhaComercial()) {
-                    mensagemUseCase.enviarMensagem(BuilderMensagens.direcionamentoOutroContato(conversa.getVendedor().getNome()));
-                    mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente, "Recontato");
-                    conversa.getMensagemDirecionamento().setEscolhaComercial(true);
-                    conversa.getMensagemDirecionamento().setMensagemInicial(false);
-                    conversaUseCase.salvar(conversa);
-                } else {
-                    this.processarEtapaDeColeta(mensagem, cliente, conversa);
-                    conversa.getMensagemDirecionamento().setEscolhaComercialRecontato(true);
-                    conversaUseCase.salvar(conversa);
-                }
+               processoFinalizoType = new DirecionamentoComercial(mensagemUseCase, conversaUseCase, coletaInformacoesUseCase);
             }
+
+            ProcessoFinalizadoType processoFinalizadoTypeSetado = processamentoFinalizadoUseCase.setProcessoFinalizadoType(processoFinalizoType);
+            processoFinalizadoTypeSetado.processar(conversa, cliente, mensagem);
         }
     }
 }

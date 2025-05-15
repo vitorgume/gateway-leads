@@ -33,9 +33,9 @@ public class ProcessarMensagemUseCase {
 
 
         if(!conversa.getFinalizada()) {
-            processamentoConversaUseCase.processarConversaFinalizada(conversa, cliente, mensagem);
-        } else {
             processamentoConversaUseCase.processarConversaNaoFinalizada(conversa, cliente, mensagem);
+        } else {
+            processamentoConversaUseCase.processarConversaFinalizada(conversa, cliente, mensagem);
         }
     }
 
