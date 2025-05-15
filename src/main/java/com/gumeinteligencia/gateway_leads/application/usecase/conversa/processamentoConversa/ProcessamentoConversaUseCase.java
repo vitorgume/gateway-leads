@@ -1,4 +1,4 @@
-package com.gumeinteligencia.gateway_leads.application.usecase.conversa;
+package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.*;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
@@ -7,20 +7,21 @@ import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Mensagem;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Setter
 public class ProcessamentoConversaUseCase {
 
     private final ClienteUseCase clienteUseCase;
     private final ConversaUseCase conversaUseCase;
     private final MensagemUseCase mensagemUseCase;
     private final VendedorUseCase vendedorUseCase;
+    private ColetaType coletaType;
 
     public void direcionarVendedor(Cliente cliente, Conversa conversa) {
         mensagemUseCase.enviarMensagem(BuilderMensagens.direcionamentoOutroContato(conversa.getVendedor().getNome()));
@@ -30,35 +31,15 @@ public class ProcessamentoConversaUseCase {
     public void processarEtapaDeColeta(Mensagem mensagem, Cliente cliente, Conversa conversa) {
         MensagemColeta mensagemColeta = conversa.getMensagemColeta();
 
-         if (!mensagemColeta.isColetaSegmento()) {
-            mensagemUseCase.enviarMensagem(BuilderMensagens.coletaSegmento());
-            conversa.getMensagemColeta().setColetaSegmento(true);
-            conversa.setUltimaMensagem(LocalDateTime.now());
-            conversaUseCase.salvar(conversa);
-        } else if (!mensagemColeta.isColetaMunicipio()) {
-            cliente.setSegmento(GatewayEnum.gatewaySegmento(mensagem.getMensagem()));
-            mensagemUseCase.enviarMensagem(BuilderMensagens.coletaRegiao());
-            conversa.getMensagemColeta().setColetaMunicipio(true);
-            conversa.setUltimaMensagem(LocalDateTime.now());
-            conversaUseCase.salvar(conversa);
-            clienteUseCase.salvar(cliente);
-        } else {
-            cliente.setRegiao(GatewayEnum.gatewayRegiao(mensagem.getMensagem()));
-            Vendedor vendedor = vendedorUseCase.escolherVendedor(cliente);
-            conversa.setVendedor(vendedor);
-            conversa.setFinalizada(true);
-            mensagemUseCase.enviarMensagem(
-                    BuilderMensagens.direcionamentoPrimeiroContato(cliente.getNome(), vendedor.getNome()));
-            mensagemUseCase.enviarContatoVendedor(vendedor, cliente, "Contato novo");
-            conversaUseCase.salvar(conversa);
-            clienteUseCase.salvar(cliente);
+        this.coletaType.coleta(conversa, cliente, mensagem);
 
-            if(conversa.getMensagemDirecionamento().isEscolhaComercialRecontato()) {
-                conversa.getMensagemDirecionamento().setMensagemInicial(false);
-                conversa.getMensagemDirecionamento().setEscolhaComercial(true);
-                conversaUseCase.salvar(conversa);
-            }
-        }
+//        if (!mensagemColeta.isColetaSegmento()) {
+//
+//        } else if (!mensagemColeta.isColetaMunicipio()) {
+//
+//        } else {
+//
+//        }
     }
 
     public void processarConversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
