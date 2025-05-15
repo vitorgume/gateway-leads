@@ -14,33 +14,19 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-@Setter
 public class ProcessamentoConversaUseCase {
 
     private final ClienteUseCase clienteUseCase;
     private final ConversaUseCase conversaUseCase;
     private final MensagemUseCase mensagemUseCase;
     private final VendedorUseCase vendedorUseCase;
-    private ColetaType coletaType;
 
     public void direcionarVendedor(Cliente cliente, Conversa conversa) {
         mensagemUseCase.enviarMensagem(BuilderMensagens.direcionamentoOutroContato(conversa.getVendedor().getNome()));
         mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente, "Recontato");
     }
 
-    public void processarEtapaDeColeta(Mensagem mensagem, Cliente cliente, Conversa conversa) {
-        MensagemColeta mensagemColeta = conversa.getMensagemColeta();
 
-        this.coletaType.coleta(conversa, cliente, mensagem);
-
-//        if (!mensagemColeta.isColetaSegmento()) {
-//
-//        } else if (!mensagemColeta.isColetaMunicipio()) {
-//
-//        } else {
-//
-//        }
-    }
 
     public void processarConversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         if(!conversa.getMensagemDirecionamento().isColetaNome()) {
