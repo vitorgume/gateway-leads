@@ -7,10 +7,12 @@ import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.EscolhaMensagem;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ProcessaEscolhaComercial implements ProcessoNaoFinalizadoType {
 
     private final ConversaUseCase conversaUseCase;
@@ -18,9 +20,11 @@ public class ProcessaEscolhaComercial implements ProcessoNaoFinalizadoType {
 
     @Override
     public void processar(Conversa conversa, Cliente cliente, Mensagem mensagem) {
+        log.info("Processando escolha comercial de uma conversa não finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         conversa.getMensagemDirecionamento().setEscolhaComercial(true);
         conversa = conversaUseCase.salvar(conversa);
         this.coletaInformacoesUseCase.processarEtapaDeColeta(mensagem, cliente, conversa);
+        log.info("Processamento de escolha comercial de uma conversa não finalizada concluido com sucesso. Conversa: {}", conversa);
     }
 
     @Override

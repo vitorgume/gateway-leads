@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface VendedorRepository extends JpaRepository<VendedorEntity, UUID> {
+public interface VendedorRepository extends JpaRepository<VendedorEntity, Long> {
     Optional<VendedorEntity> findByNome(String nome);
 
     @Query("SELECT v FROM Vendedor v WHERE v.nome <> 'Nilza'")

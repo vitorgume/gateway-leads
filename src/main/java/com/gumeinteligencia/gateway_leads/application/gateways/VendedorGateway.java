@@ -13,4 +13,6 @@ public interface VendedorGateway {
     List<Vendedor> listarSemNilza();
 
     Vendedor salvar(Vendedor vendedor);
+
+    void deletar(Long id);
 }

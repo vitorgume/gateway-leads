@@ -1,4 +1,4 @@
-package com.gumeinteligencia.gateway_leads.entrypoint.mapper.mapper;
+package com.gumeinteligencia.gateway_leads.entrypoint.mapper;
 
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import com.gumeinteligencia.gateway_leads.entrypoint.controller.dto.MensagemDto;

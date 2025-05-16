@@ -9,10 +9,12 @@ import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class FinalizaColeta implements ColetaType{
 
     private final VendedorUseCase vendedorUseCase;
@@ -23,11 +25,12 @@ public class FinalizaColeta implements ColetaType{
 
     @Override
     public void coleta(Conversa conversa, Cliente cliente, Mensagem mensagem) {
+        log.info("Finalizando coleta de informações. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         cliente.setRegiao(GatewayEnum.gatewayRegiao(mensagem.getMensagem()));
         Vendedor vendedor = vendedorUseCase.escolherVendedor(cliente);
         conversa.setVendedor(vendedor);
         conversa.setFinalizada(true);
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, null));
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, null), cliente.getTelefone());
         mensagemUseCase.enviarContatoVendedor(vendedor, cliente, "Contato novo");
         conversaUseCase.salvar(conversa);
         clienteUseCase.salvar(cliente);
@@ -37,6 +40,8 @@ public class FinalizaColeta implements ColetaType{
             conversa.getMensagemDirecionamento().setEscolhaComercial(true);
             conversaUseCase.salvar(conversa);
         }
+
+        log.info("Finalização de coleta de informações concluida com sucesso. Conversa: {}, Cliente: {}", conversa, cliente);
     }
 
     @Override

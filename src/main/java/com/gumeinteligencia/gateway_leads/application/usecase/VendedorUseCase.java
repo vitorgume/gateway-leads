@@ -74,4 +74,8 @@ public class VendedorUseCase {
     public Vendedor cadastrar(Vendedor vendedor) {
         return gateway.salvar(vendedor);
     }
+
+    public void deletar(Long id) {
+        gateway.deletar(id);
+    }
 }

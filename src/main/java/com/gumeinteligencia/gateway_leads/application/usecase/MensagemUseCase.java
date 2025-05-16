@@ -3,6 +3,7 @@ package com.gumeinteligencia.gateway_leads.application.usecase;
 import com.gumeinteligencia.gateway_leads.application.gateways.MensagemGateway;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,12 @@ public class MensagemUseCase {
 
     private final MensagemGateway gateway;
 
-    public void enviarMensagem(String mensagem) {
+    public void enviarMensagem(String textoMensagem, String telefone) {
+        Mensagem mensagem = Mensagem.builder()
+                .mensagem(textoMensagem)
+                .telefone(telefone)
+                .build();
+
         gateway.enviar(mensagem);
     }
 

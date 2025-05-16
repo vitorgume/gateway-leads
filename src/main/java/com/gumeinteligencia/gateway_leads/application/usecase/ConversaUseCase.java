@@ -8,6 +8,7 @@ import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,19 +18,26 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ConversaUseCase {
 
     private final ConversaGateway gateway;
 
 
     public Conversa consultarPorCliente(Cliente cliente) {
-        Optional<Conversa> conversa = gateway.consultarPorCliente(cliente);
+        log.info("Consultando coversa pelo cliente. Cliente: {}", cliente);
 
-        if(conversa.isEmpty()) {
+        Optional<Conversa> conversaOptional = gateway.consultarPorCliente(cliente);
+
+        if(conversaOptional.isEmpty()) {
             throw new ConversaNaoEncontrada();
         }
 
-        return conversa.get();
+        Conversa conversa = conversaOptional.get();
+
+        log.info("Conversa consultada com sucesso. Conversa: {}", conversa);
+
+        return conversa;
     }
 
     public Conversa criar(Cliente cliente) {

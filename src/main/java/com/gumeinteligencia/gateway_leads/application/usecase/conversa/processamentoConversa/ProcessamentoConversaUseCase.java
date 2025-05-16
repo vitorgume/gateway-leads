@@ -15,10 +15,12 @@ import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProcessamentoConversaUseCase {
 
     private final ClienteUseCase clienteUseCase;
@@ -30,11 +32,12 @@ public class ProcessamentoConversaUseCase {
     private final MensagemBuilder mensagemBuilder;
 
     public void processarConversaNaoFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
+        log.info("Processando mensagem de uma conversa não finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         if(!conversa.getMensagemDirecionamento().isColetaNome()) {
             cliente.setNome(mensagem.getMensagem());
             conversa.getMensagemDirecionamento().setColetaNome(true);
             clienteUseCase.salvar(cliente);
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null));
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null), cliente.getTelefone());
             conversaUseCase.salvar(conversa);
         } else {
 
@@ -45,12 +48,15 @@ public class ProcessamentoConversaUseCase {
             strategy.processar(conversa, cliente, mensagem);
 
         }
+
+        log.info("Mensagem de uma conversa não finalizada processada com sucesso.");
     }
 
     public void processarConversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
+        log.info("Processando uma mensagem de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         if(!conversa.getMensagemDirecionamento().isMensagemInicial()) {
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null));
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null));
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null), cliente.getTelefone());
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null), cliente.getTelefone());
             conversa.getMensagemDirecionamento().setMensagemInicial(true);
             conversaUseCase.salvar(conversa);
         } else {
@@ -58,5 +64,6 @@ public class ProcessamentoConversaUseCase {
 
             strategy.processar(conversa, cliente, mensagem);
         }
+        log.info("Mensagem de uma conversa finalizada processada com sucesso.");
     }
 }

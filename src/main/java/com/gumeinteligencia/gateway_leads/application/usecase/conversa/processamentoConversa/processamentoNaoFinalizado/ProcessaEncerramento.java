@@ -10,10 +10,12 @@ import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.EscolhaMensagem;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ProcessaEncerramento implements ProcessoNaoFinalizadoType {
 
     private final MensagemUseCase mensagemUseCase;
@@ -23,9 +25,11 @@ public class ProcessaEncerramento implements ProcessoNaoFinalizadoType {
 
     @Override
     public void processar(Conversa conversa, Cliente cliente, Mensagem mensagem) {
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ATENDIMENTO_ENCERRADO, null));
+        log.info("Processando escolha de encerramento de uma conversa não finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ATENDIMENTO_ENCERRADO, null), cliente.getTelefone());
         conversaUseCase.deletar(conversa.getId());
         clienteUseCase.deletar(cliente.getId());
+        log.info("Processamento de escolha de encerramento de uma conversa não finalizada concluido com sucesso.");
     }
 
     @Override

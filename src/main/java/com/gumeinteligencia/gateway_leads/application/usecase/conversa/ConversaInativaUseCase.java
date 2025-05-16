@@ -6,6 +6,7 @@ import com.gumeinteligencia.gateway_leads.application.usecase.VendedorUseCase;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ConversaInativaUseCase {
 
     private final ConversaUseCase conversaUseCase;
@@ -22,6 +24,7 @@ public class ConversaInativaUseCase {
 
     @Scheduled(cron = "0 * * * * *")
     public void verificaAusenciaDeMensagem() {
+        log.info();
         List<Conversa> conversas = conversaUseCase.listarNaoFinalizados();
 
         LocalDateTime agora = LocalDateTime.now();

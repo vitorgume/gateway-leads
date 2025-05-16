@@ -2,7 +2,7 @@ package com.gumeinteligencia.gateway_leads.entrypoint.controller;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.ProcessarMensagemUseCase;
 import com.gumeinteligencia.gateway_leads.entrypoint.controller.dto.MensagemDto;
-import com.gumeinteligencia.gateway_leads.entrypoint.mapper.mapper.MensagemMapper;
+import com.gumeinteligencia.gateway_leads.entrypoint.mapper.MensagemMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +19,6 @@ public class MensagemController {
 
     @PostMapping
     public ResponseEntity<String> receberMensagem(@RequestBody MensagemDto novaMensagem) {
-        return ResponseEntity.ok(processarMensagemUseCase.gateway(MensagemMapper.paraDomain(novaMensagem)));
+        return ResponseEntity.ok(processarMensagemUseCase.processarNovaMensagem(MensagemMapper.paraDomain(novaMensagem)));
     }
 }

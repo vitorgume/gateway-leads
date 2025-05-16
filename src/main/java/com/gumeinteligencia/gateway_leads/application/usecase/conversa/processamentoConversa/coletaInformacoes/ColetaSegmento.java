@@ -11,10 +11,13 @@ import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ColetaSegmento implements ColetaType{
 
     private final MensagemUseCase mensagemUseCase;
@@ -23,10 +26,12 @@ public class ColetaSegmento implements ColetaType{
 
     @Override
     public void coleta(Conversa conversa, Cliente cliente, Mensagem mensagem) {
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_SEGMENTO, null));
+        log.info("Coletando segmento. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_SEGMENTO, null), cliente.getTelefone());
         conversa.getMensagemColeta().setColetaSegmento(true);
         conversa.setUltimaMensagem(LocalDateTime.now());
         conversaUseCase.salvar(conversa);
+        log.info("Coleta de segmento concluida com sucesso. Conversa: {}, Cliente: {}", conversa, cliente);
     }
 
     @Override
