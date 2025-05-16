@@ -2,9 +2,11 @@ package com.gumeinteligencia.gateway_leads.application.usecase.mensagem;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.*;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.ProcessamentoConversaUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
-import com.gumeinteligencia.gateway_leads.domain.conversa.Mensagem;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ public class ProcessarMensagemUseCase {
     private final ConversaUseCase conversaUseCase;
     private final ProcessamentoConversaUseCase processamentoConversaUseCase;
     private final MensagemUseCase mensagemUseCase;
+    private final MensagemBuilder mensagemBuilder;
 
     public String gateway(Mensagem mensagem) {
         clienteUseCase
@@ -43,8 +46,8 @@ public class ProcessarMensagemUseCase {
         Cliente novoCliente = Cliente.builder().telefone(mensagem.getTelefone()).build();
         Cliente cliente = clienteUseCase.cadastrar(novoCliente);
         conversaUseCase.criar(cliente);
-        mensagemUseCase.enviarMensagem(BuilderMensagens.boasVindas());
-        mensagemUseCase.enviarMensagem(BuilderMensagens.coletaNome());
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null));
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_NOME, null));
     }
 
 

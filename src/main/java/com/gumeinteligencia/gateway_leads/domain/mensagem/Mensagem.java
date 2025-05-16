@@ -1,4 +1,4 @@
-package com.gumeinteligencia.gateway_leads.domain.conversa;
+package com.gumeinteligencia.gateway_leads.domain.mensagem;
 
 import lombok.*;
 

@@ -1,0 +1,21 @@
+package com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens;
+
+import com.gumeinteligencia.gateway_leads.application.exceptions.EscolhaNaoIdentificadoException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+@RequiredArgsConstructor
+public class MensagemFactory {
+
+    private final List<MensagemType> mensagens;
+
+    public MensagemType create(TipoMensagem tipo) {
+        return mensagens.stream()
+                .filter(mensagem -> mensagem.getTipoMensagem() == tipo.getCodigo())
+                .findFirst()
+                .orElseThrow(EscolhaNaoIdentificadoException::new);
+    }
+}

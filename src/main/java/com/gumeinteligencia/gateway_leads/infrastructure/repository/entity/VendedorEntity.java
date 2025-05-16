@@ -16,9 +16,9 @@ import java.util.UUID;
 public class VendedorEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_vendedor")
-    private UUID id;
+    private Long id;
     private String nome;
     private String telefone;
 }
