@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 public enum EscolhaMensagem {
     ESCOLHA_ENCERRAMENTO(0, "Encerramento"),
-    ESCOLHA_FINANCEIRO(1, "Financeiro"),
-    ESCOLHA_COMERCIAL(2, "Comercial");
+    ESCOLHA_FINANCEIRO(2, "Financeiro"),
+    ESCOLHA_COMERCIAL(1, "Comercial");
 
     private final Integer codigo;
     private final String descricao;

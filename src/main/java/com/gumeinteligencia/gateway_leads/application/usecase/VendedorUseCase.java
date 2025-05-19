@@ -29,19 +29,19 @@ public class VendedorUseCase {
             return this.consultarVendedor("Mariana");
         }
 
-        if(cliente.getRegiao().getCodigo() == 2 || cliente.getRegiao().getCodigo() == 3) {
+        if(cliente.getRegiao().getCodigo() == 2) {
             return this.consultarVendedor("Samara");
         }
 
+        String vendedor;
+
         if(cliente.getSegmento().getCodigo() == 3) {
-            String vendedor = this.roletaVendedoresNilza();
-            return this.consultarVendedor(vendedor);
-        } else if (cliente.getSegmento().getCodigo() != 6) {
-            return this.consultarVendedor("Mariana");
+            vendedor = this.roletaVendedoresNilza();
         } else {
-            String vendedor = this.roletaVendedores();
-            return this.consultarVendedor(vendedor);
+            vendedor = this.roletaVendedores();
         }
+
+        return this.consultarVendedor(vendedor);
     }
 
     private String roletaVendedores() {

@@ -15,8 +15,10 @@ public enum TipoMensagem {
     DIRECIONAR_PRIMEIRO_CONTATO(6, "Mensagem de direcionamento do primeiro contato."),
     DIRECIONAR_OUTRO_CONTATO_COMERCIAL(7, "Mensagem de direcionamento de outro contato do comercial."),
     ATENDIMENTO_ENCERRADO(8, "Mensagem de atendimento encerrado."),
-    DIRECIONAR_OUTRO_CONTATO_FINANCEIRO(9, "Mensagem de direcionamento de outro contato do financeiro.");
+    DIRECIONAR_OUTRO_CONTATO_FINANCEIRO(9, "Mensagem de direcionamento de outro contato do financeiro."),
+    DADOS_CONTATO_VENDEDOR(10, "Mensagem com os dados do contato enviado para o vendedor."),
+    ESCOLHA_INVALIDA(11, "Mensagem para quando o usuário fizer uma escolha invalida das opções.");
 
-    private final int codigo;
+    private final Integer codigo;
     private final String descricao;
 }

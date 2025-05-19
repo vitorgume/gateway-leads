@@ -25,12 +25,12 @@ public class DirecionamentoFinanceiro implements ProcessoFinalizadoType{
     public void processar(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando escolha finanaceiro de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         if (conversa.getMensagemDirecionamento().isEscolhaFinanceiro()) {
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_FINANCEIRO, null), cliente.getTelefone());
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_FINANCEIRO, null, null), cliente.getTelefone());
             mensagemUseCase.enviarContatoFinanceiro(cliente);
             conversa.getMensagemDirecionamento().setMensagemInicial(false);
             conversaUseCase.salvar(conversa);
         } else {
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_FINANACEIRO, null), cliente.getTelefone());
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_FINANACEIRO, null, null), cliente.getTelefone());
             mensagemUseCase.enviarContatoFinanceiro(cliente);
             conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);
             conversa.getMensagemDirecionamento().setMensagemInicial(false);

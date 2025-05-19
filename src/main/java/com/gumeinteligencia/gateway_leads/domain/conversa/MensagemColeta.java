@@ -12,12 +12,10 @@ import lombok.ToString;
 @ToString
 public class MensagemColeta {
     private boolean coletaSegmento;
-    private boolean coletaMunicipio;
-    private boolean coletaEstado;
+    private boolean coletaRegiao;
 
     public MensagemColeta() {
-        this.coletaEstado = false;
-        this.coletaMunicipio = false;
+        this.coletaRegiao = false;
         this.coletaSegmento = false;
     }
 }

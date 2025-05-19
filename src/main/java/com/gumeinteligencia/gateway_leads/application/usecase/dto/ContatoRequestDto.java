@@ -1,14 +1,12 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
+@ToString
 public class ContatoRequestDto {
     private String phone;
     private String contactName;

@@ -14,7 +14,7 @@ public class MensagemFactory {
 
     public MensagemType create(TipoMensagem tipo) {
         return mensagens.stream()
-                .filter(mensagem -> mensagem.getTipoMensagem() == tipo.getCodigo())
+                .filter(mensagem -> mensagem.getTipoMensagem().equals(tipo.getCodigo()))
                 .findFirst()
                 .orElseThrow(EscolhaNaoIdentificadoException::new);
     }

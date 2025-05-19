@@ -10,11 +10,13 @@ import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@Order(3)
 public class FinalizaColeta implements ColetaType{
 
     private final VendedorUseCase vendedorUseCase;
@@ -30,7 +32,7 @@ public class FinalizaColeta implements ColetaType{
         Vendedor vendedor = vendedorUseCase.escolherVendedor(cliente);
         conversa.setVendedor(vendedor);
         conversa.setFinalizada(true);
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, null), cliente.getTelefone());
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, null, null), cliente.getTelefone());
         mensagemUseCase.enviarContatoVendedor(vendedor, cliente, "Contato novo");
         conversaUseCase.salvar(conversa);
         clienteUseCase.salvar(cliente);
@@ -46,6 +48,11 @@ public class FinalizaColeta implements ColetaType{
 
     @Override
     public boolean deveAplicar(MensagemColeta estado) {
-        return estado.isColetaSegmento() && estado.isColetaMunicipio();
+        return estado.isColetaSegmento() && estado.isColetaRegiao();
+    }
+
+    @Override
+    public TipoMensagem getTipoMensagem() {
+        return null;
     }
 }

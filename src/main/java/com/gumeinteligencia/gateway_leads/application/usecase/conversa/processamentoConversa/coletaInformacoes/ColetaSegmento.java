@@ -13,11 +13,13 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@Order(1)
 public class ColetaSegmento implements ColetaType{
 
     private final MensagemUseCase mensagemUseCase;
@@ -27,7 +29,7 @@ public class ColetaSegmento implements ColetaType{
     @Override
     public void coleta(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Coletando segmento. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_SEGMENTO, null), cliente.getTelefone());
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_SEGMENTO, null, null), cliente.getTelefone());
         conversa.getMensagemColeta().setColetaSegmento(true);
         conversa.setUltimaMensagem(LocalDateTime.now());
         conversaUseCase.salvar(conversa);
@@ -37,5 +39,10 @@ public class ColetaSegmento implements ColetaType{
     @Override
     public boolean deveAplicar(MensagemColeta estado) {
         return !estado.isColetaSegmento();
+    }
+
+    @Override
+    public TipoMensagem getTipoMensagem() {
+        return TipoMensagem.COLETA_SEGMENTO;
     }
 }

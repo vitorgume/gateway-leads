@@ -1,10 +1,11 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens;
+import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MensagemColetaSegmento implements MensagemType{
     @Override
-    public String getMensagem(String nomeVendedor) {
+    public String getMensagem(String nomeVendedor, Cliente cliente) {
         return """
                 Por favor, qual o seu segmento de atuação?
                 
@@ -18,7 +19,7 @@ public class MensagemColetaSegmento implements MensagemType{
     }
 
     @Override
-    public int getTipoMensagem() {
+    public Integer getTipoMensagem() {
         return TipoMensagem.COLETA_SEGMENTO.getCodigo();
     }
 }

@@ -4,14 +4,15 @@ import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MensagemDirecionarFinanceiro implements MensagemType{
+public class MensagemEscolhaInvalida implements MensagemType{
+
     @Override
     public String getMensagem(String nomeVendedor, Cliente cliente) {
-        return "Muito bem ! Agora você será redirecionado para a Patrícia, responsável pelo nosso financeiro. Em alguns minutos elá entrará em contato com você. Até ...";
+        return "Por favor, escolha uma opção válida.";
     }
 
     @Override
     public Integer getTipoMensagem() {
-        return TipoMensagem.DIRECIONAR_FINANACEIRO.getCodigo();
+        return TipoMensagem.ESCOLHA_INVALIDA.getCodigo();
     }
 }

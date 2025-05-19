@@ -6,6 +6,7 @@ import com.gumeinteligencia.gateway_leads.application.usecase.dto.MensagemReques
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
+import com.gumeinteligencia.gateway_leads.infrastructure.exceptions.DataProviderException;
 import com.gumeinteligencia.gateway_leads.infrastructure.mapper.ContatoMapper;
 import com.gumeinteligencia.gateway_leads.infrastructure.mapper.MensagemMapper;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,10 @@ public class MensagemDataProvider implements MensagemGateway {
     @Value("${neoprint.ura.whatsapp.client-token}")
     private final String clienteToken;
 
+    private final String MENSAGEM_ERRO_ENVIAR_MENSAGEM = "Erro ao enviar mensagem.";
+    private final String MENSAGEM_ERRO_ENVIAR_CONTATO = "Erro ao enviar contato.";
+    private final String MENSAGEM_ERRO_ENVIAR_CONTATO_FINANCEIRO = "Erro ao enviar contato financeiro.";
+
     public MensagemDataProvider(
             WebClient webClient,
             @Value("${neoprint.ura.whatsapp.token}") String token,
@@ -45,17 +50,21 @@ public class MensagemDataProvider implements MensagemGateway {
     public void enviar(Mensagem mensagem) {
         MensagemRequestDto body = MensagemMapper.paraRequestDto(mensagem);
 
-        String response = webClient
-                .post()
-                .uri("/instances/{idIsntance}/token/{token}/send-text", idInstance, token)
-                .header("Client-Token", clienteToken)
-                .bodyValue(body)
-                .retrieve()
-                .bodyToMono(String.class)
-                .doOnError(e -> log.error("Erro ao enviar mensagem: " + e.getMessage()))
-                .block();
-
-        log.info("Response envio de mensagem: {}", response);
+        log.info(body.toString());
+//        String response = webClient
+//                .post()
+//                .uri("/instances/{idIsntance}/token/{token}/send-text", idInstance, token)
+//                .header("Client-Token", clienteToken)
+//                .bodyValue(body)
+//                .retrieve()
+//                .bodyToMono(String.class)
+//                .doOnError(e -> {
+//                    log.error("Erro ao enviar mensagem.", e);
+//                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_MENSAGEM, e.getCause());
+//                })
+//                .block();
+//
+//        log.info("Response envio de mensagem: {}", response);
     }
 
 
@@ -63,35 +72,43 @@ public class MensagemDataProvider implements MensagemGateway {
     public void enviarContato(Vendedor vendedor, Cliente cliente, String mensagem) {
         ContatoRequestDto body = ContatoMapper.paraRequestDto(cliente, vendedor.getTelefone());
 
+        log.info(body.toString());
 
-        String response = webClient
-                .post()
-                .uri("/instances/{idInstance}/token/{token}/send-contact", idInstance, token)
-                .header("Client-Token", clienteToken)
-                .bodyValue(body)
-                .retrieve()
-                .bodyToMono(String.class)
-                .doOnError(e -> log.error("Erro ao enviar mensagem: " + e.getMessage()))
-                .block();
-
-        log.info("Response envio de mensagem: {}", response);
+//        String response = webClient
+//                .post()
+//                .uri("/instances/{idInstance}/token/{token}/send-contact", idInstance, token)
+//                .header("Client-Token", clienteToken)
+//                .bodyValue(body)
+//                .retrieve()
+//                .bodyToMono(String.class)
+//                .doOnError(e -> {
+//                    log.error("Erro ao enviar mensagem.", e);
+//                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_CONTATO, e.getCause());
+//                })
+//                .block();
+//
+//        log.info("Response envio de contato: {}", response);
     }
 
     @Override
     public void enviarContatoFinanceiro(Cliente cliente) {
         ContatoRequestDto body = ContatoMapper.paraRequestDto(cliente, "");
 
+        log.info(body.toString());
 
-        String response = webClient
-                .post()
-                .uri("/instances/{idInstance}/token/{token}/send-contact", idInstance, token)
-                .header("Client-Token", clienteToken)
-                .bodyValue(body)
-                .retrieve()
-                .bodyToMono(String.class)
-                .doOnError(e -> log.error("Erro ao enviar mensagem: " + e.getMessage()))
-                .block();
-
-        log.info("Response envio de mensagem: {}", response);
+//        String response = webClient
+//                .post()
+//                .uri("/instances/{idInstance}/token/{token}/send-contact", idInstance, token)
+//                .header("Client-Token", clienteToken)
+//                .bodyValue(body)
+//                .retrieve()
+//                .bodyToMono(String.class)
+//                .doOnError(e -> {
+//                    log.error("Erro ao enviar mensagem.", e);
+//                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_CONTATO_FINANCEIRO, e.getCause());
+//                })
+//                .block();
+//
+//        log.info("Response envio de contato financeiro: {}", response);
     }
 }

@@ -37,7 +37,7 @@ public class ProcessamentoConversaUseCase {
             cliente.setNome(mensagem.getMensagem());
             conversa.getMensagemDirecionamento().setColetaNome(true);
             clienteUseCase.salvar(cliente);
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null), cliente.getTelefone());
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null), cliente.getTelefone());
             conversaUseCase.salvar(conversa);
         } else {
 
@@ -55,8 +55,8 @@ public class ProcessamentoConversaUseCase {
     public void processarConversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando uma mensagem de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         if(!conversa.getMensagemDirecionamento().isMensagemInicial()) {
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null), cliente.getTelefone());
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null), cliente.getTelefone());
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null), cliente.getTelefone());
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null), cliente.getTelefone());
             conversa.getMensagemDirecionamento().setMensagemInicial(true);
             conversaUseCase.salvar(conversa);
         } else {

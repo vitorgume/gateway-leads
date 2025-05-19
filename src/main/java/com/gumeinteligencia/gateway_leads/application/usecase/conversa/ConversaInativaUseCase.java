@@ -24,14 +24,18 @@ public class ConversaInativaUseCase {
 
     @Scheduled(cron = "0 * * * * *")
     public void verificaAusenciaDeMensagem() {
-        log.info();
+        log.info("Verificando se existe alguma mensagem inativa por mais de 10 minutos");
         List<Conversa> conversas = conversaUseCase.listarNaoFinalizados();
 
         LocalDateTime agora = LocalDateTime.now();
 
         List<Conversa> conversasAtrasadas = conversas.stream()
-                .filter(conversa ->
-                        conversa.getUltimaMensagem().plusMinutes(10).isBefore(agora)
+                .filter(conversa -> {
+                            if(conversa.getUltimaMensagem() != null)
+                                return conversa.getUltimaMensagem().plusMinutes(10).isBefore(agora);
+
+                            return false;
+                        }
                 )
                 .toList();
 
@@ -49,5 +53,7 @@ public class ConversaInativaUseCase {
                         );
             });
         }
+
+        log.info("Verificação concluida com sucesso.");
     }
 }

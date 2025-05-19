@@ -24,7 +24,7 @@ public class ProcessaEscolhaFinanceiro implements ProcessoNaoFinalizadoType {
     @Override
     public void processar(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando escolha do financeiro de uma conversa não finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_FINANACEIRO, null), cliente.getTelefone());
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_FINANACEIRO, null, null), cliente.getTelefone());
         mensagemUseCase.enviarContatoFinanceiro(cliente);
         conversa.setFinalizada(true);
         conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);

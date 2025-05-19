@@ -58,8 +58,8 @@ public class ProcessarMensagemUseCase {
         Cliente novoCliente = Cliente.builder().telefone(mensagem.getTelefone()).build();
         Cliente cliente = clienteUseCase.cadastrar(novoCliente);
         conversaUseCase.criar(cliente);
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null), cliente.getTelefone());
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_NOME, null), cliente.getTelefone());
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null), cliente.getTelefone());
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_NOME, null, null), cliente.getTelefone());
 
         log.info("Conversa iniciada com sucesso.");
     }
