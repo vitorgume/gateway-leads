@@ -83,7 +83,7 @@ public class ConversaDataProvider implements ConversaGateway {
     @Override
     public void deletarPorTelefoneCliente(String telefone) {
         try {
-            repository.deletarPorTelefoneCliente(telefone);
+            repository.deleteByCliente_Telefone(telefone);
         } catch (Exception ex) {
             log.error(MENSAGEM_ERRO_DELETAR_TELEFONE_CLIENTE, ex);
             throw new DataProviderException(MENSAGEM_ERRO_DELETAR_TELEFONE_CLIENTE, ex.getCause());
