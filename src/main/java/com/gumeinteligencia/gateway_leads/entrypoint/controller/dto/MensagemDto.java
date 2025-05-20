@@ -8,6 +8,6 @@ import lombok.*;
 @ToString
 @Builder
 public class MensagemDto {
-    private String telefone;
-    private String mensagem;
+    private String phone;
+    private String message;
 }
