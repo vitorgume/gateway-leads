@@ -12,7 +12,9 @@ import java.time.Duration;
 public class WebClientConfig {
     @Bean
     public WebClient webClient(WebClient.Builder builder) {
-        return builder.clientConnector(new ReactorClientHttpConnector(HttpClient.create()
+        return builder
+                .baseUrl("https://api.z-api.io")
+                .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
                         .responseTimeout(Duration.ofSeconds(30))))
                 .build();
         }
