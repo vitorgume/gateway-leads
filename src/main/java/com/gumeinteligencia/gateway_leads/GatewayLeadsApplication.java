@@ -18,7 +18,6 @@ public class GatewayLeadsApplication {
 		System.setProperty("WHASTAPP_CLIENT_TOKEN", dotenv.get("WHASTAPP_CLIENT_TOKEN"));
 		System.setProperty("WHASTAPP_TOKEN", dotenv.get("WHASTAPP_TOKEN"));
 		System.setProperty("WHASTAPP_INSTANCE_ID", dotenv.get("WHASTAPP_INSTANCE_ID"));
-		System.setProperty("GCLOUD_ID_PROJETO", dotenv.get("GCLOUD_ID_PROJETO"));
 
 		SpringApplication.run(GatewayLeadsApplication.class, args);
 	}
