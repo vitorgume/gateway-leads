@@ -22,6 +22,7 @@ public class ClienteDataProvider implements ClienteGateway {
     private final String MENSAGEM_ERRO_CONSULTAR_POR_TELEFONE = "Erro ao consultar cliente pelo telefone.";
     private final String MENSAGEM_ERRO_SALVAR = "Erro ao salvar cliente.";
     private final String MENSAGEM_ERRO_DELETAR = "Erro ao deletar cliente pelo id.";
+    private final String MENSAGEM_ERRO_DELETAR_POR_TELEFONE = "Erro ao deletar cliente pelo telefone.";
 
     @Override
     public Optional<Cliente> consutlarPorTelfone(String telefone) {
@@ -58,6 +59,16 @@ public class ClienteDataProvider implements ClienteGateway {
         } catch (Exception ex) {
             log.error(MENSAGEM_ERRO_DELETAR, ex);
             throw new DataProviderException(MENSAGEM_ERRO_DELETAR, ex.getCause());
+        }
+    }
+
+    @Override
+    public void deletarPorTelefone(String telefone) {
+        try {
+            repository.deleteByTelefone(telefone);
+        } catch (Exception ex) {
+            log.error(MENSAGEM_ERRO_DELETAR_POR_TELEFONE, ex);
+            throw new DataProviderException(MENSAGEM_ERRO_DELETAR_POR_TELEFONE, ex.getCause());
         }
     }
 }

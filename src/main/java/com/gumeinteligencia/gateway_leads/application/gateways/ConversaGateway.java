@@ -15,4 +15,6 @@ public interface ConversaGateway {
     List<Conversa> listarNaoFinalizados();
 
     void deletar(UUID id);
+
+    void deletarPorTelefoneCliente(String telefone);
 }

@@ -34,4 +34,8 @@ public class ClienteUseCase {
     public void deletar(UUID id) {
         gateway.deletar(id);
     }
+
+    public void deletarPorTelefone(String telefone) {
+        gateway.deletarPorTelefone(telefone);
+    }
 }

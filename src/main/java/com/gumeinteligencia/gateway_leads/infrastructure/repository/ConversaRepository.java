@@ -16,4 +16,7 @@ public interface ConversaRepository extends JpaRepository<ConversaEntity, UUID> 
 
     @Query("SELECT c FROM Conversa c WHERE c.finalizada = false")
     List<ConversaEntity> listarNaoFinalizados();
+
+    @Query("DELETE FROM Conversa c WHERE c.cliente.telefone = :telefone")
+    void deletarPorTelefoneCliente(String telefone);
 }

@@ -70,4 +70,8 @@ public class ConversaUseCase {
     public void deletar(UUID id) {
         gateway.deletar(id);
     }
+
+    public void deletarPorTelefoneCliente(String telefone) {
+        gateway.deletarPorTelefoneCliente(telefone);
+    }
 }

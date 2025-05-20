@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface ClienteRepository extends JpaRepository<ClienteEntity, UUID> {
     Optional<ClienteEntity> findByTelefone(String telefone);
+
+    void deleteByTelefone(String telefone);
 }
