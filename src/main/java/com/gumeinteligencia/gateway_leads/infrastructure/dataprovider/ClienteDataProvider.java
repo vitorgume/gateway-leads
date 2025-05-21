@@ -22,14 +22,14 @@ public class ClienteDataProvider implements ClienteGateway {
     private final String MENSAGEM_ERRO_CONSULTAR_POR_TELEFONE = "Erro ao consultar cliente pelo telefone.";
     private final String MENSAGEM_ERRO_SALVAR = "Erro ao salvar cliente.";
     private final String MENSAGEM_ERRO_DELETAR = "Erro ao deletar cliente pelo id.";
-    private final String MENSAGEM_ERRO_DELETAR_POR_TELEFONE = "Erro ao deletar cliente pelo telefone.";
+    private final String MENSAGEM_ERRO_CONSULTAR_POR_ID = "Erro ao consultar por cliente pelo id.";
 
     @Override
     public Optional<Cliente> consutlarPorTelfone(String telefone) {
         Optional<ClienteEntity> clienteEntity;
 
         try {
-            clienteEntity = repository.findByTelefone(telefone);
+            clienteEntity = repository.findByTelefoneAndInativoFalse(telefone);
         } catch (Exception ex) {
             log.error(MENSAGEM_ERRO_CONSULTAR_POR_TELEFONE, ex);
             throw new DataProviderException(MENSAGEM_ERRO_CONSULTAR_POR_TELEFONE, ex.getCause());
@@ -63,12 +63,16 @@ public class ClienteDataProvider implements ClienteGateway {
     }
 
     @Override
-    public void deletarPorTelefone(String telefone) {
+    public Optional<Cliente> consultarPorId(UUID id) {
+        Optional<ClienteEntity> clienteEntity;
+
         try {
-            repository.deleteByTelefone(telefone);
+            clienteEntity = repository.findById(id);
         } catch (Exception ex) {
-            log.error(MENSAGEM_ERRO_DELETAR_POR_TELEFONE, ex);
-            throw new DataProviderException(MENSAGEM_ERRO_DELETAR_POR_TELEFONE, ex.getCause());
+            log.error(MENSAGEM_ERRO_CONSULTAR_POR_ID, ex);
+            throw new DataProviderException(MENSAGEM_ERRO_CONSULTAR_POR_ID, ex.getCause());
         }
+
+        return clienteEntity.map(ClienteMapper::paraDomain);
     }
 }

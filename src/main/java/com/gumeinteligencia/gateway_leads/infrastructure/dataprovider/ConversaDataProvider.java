@@ -26,7 +26,7 @@ public class ConversaDataProvider implements ConversaGateway {
     private final String MENSAMGE_ERRO_SALVAR = "Erro ao salvar conversa.";
     private final String MENSAGEM_ERRO_LISTAR_NAO_FINALIZADOS = "Erro ao listar conversas não finalizadas.";
     private final String MENSAGEM_ERRO_DELETAR = "Erro ao deletar conversa pelo id.";
-    private final String MENSAGEM_ERRO_DELETAR_TELEFONE_CLIENTE = "Erro ao deletar uma conversa pelo telefone do cliente.";
+    private final String MENSAGEM_ERRO_CONSULTAR_POR_ID = "Erro ao consultar conversa pelo seu id.";
 
     @Override
     public Optional<Conversa> consultarPorCliente(Cliente cliente) {
@@ -81,12 +81,16 @@ public class ConversaDataProvider implements ConversaGateway {
     }
 
     @Override
-    public void deletarPorTelefoneCliente(String telefone) {
+    public Optional<Conversa> consultarPorId(UUID id) {
+        Optional<ConversaEntity> conversaEntity;
+
         try {
-            repository.deleteByCliente_Telefone(telefone);
+            conversaEntity = repository.findById(id);
         } catch (Exception ex) {
-            log.error(MENSAGEM_ERRO_DELETAR_TELEFONE_CLIENTE, ex);
-            throw new DataProviderException(MENSAGEM_ERRO_DELETAR_TELEFONE_CLIENTE, ex.getCause());
+            log.error(MENSAGEM_ERRO_CONSULTAR_POR_ID, ex);
+            throw new DataProviderException(MENSAGEM_ERRO_CONSULTAR_POR_ID, ex.getCause());
         }
+
+        return conversaEntity.map(ConversaMapper::paraDomain);
     }
 }

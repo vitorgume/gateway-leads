@@ -27,8 +27,8 @@ public class DirecionamentoEncerramento implements ProcessoFinalizadoType{
     public void processar(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando escolha de encerramneto de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ATENDIMENTO_ENCERRADO, null, null), cliente.getTelefone());
-        conversaUseCase.deletar(conversa.getId());
-        clienteUseCase.deletar(cliente.getId());
+        conversaUseCase.encerrar(conversa.getId());
+        clienteUseCase.inativar(cliente.getId());
         log.info("Processamento de escolha de encerramento de uma conversa finalizada concluído com sucesso. Conversa:{}, Clinete: {}", conversa, cliente);
     }
 

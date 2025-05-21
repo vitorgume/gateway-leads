@@ -12,5 +12,5 @@ public interface ClienteGateway {
 
     void deletar(UUID id);
 
-    void deletarPorTelefone(String telefone);
+    Optional<Cliente> consultarPorId(UUID id);
 }

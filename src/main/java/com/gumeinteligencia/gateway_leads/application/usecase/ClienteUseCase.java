@@ -1,6 +1,7 @@
 package com.gumeinteligencia.gateway_leads.application.usecase;
 
 import com.gumeinteligencia.gateway_leads.application.exceptions.ClienteJaCadastradoException;
+import com.gumeinteligencia.gateway_leads.application.exceptions.ClienteNaoEncontradoException;
 import com.gumeinteligencia.gateway_leads.application.gateways.ClienteGateway;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import lombok.RequiredArgsConstructor;
@@ -31,11 +32,21 @@ public class ClienteUseCase {
         return gateway.salvar(cliente);
     }
 
-    public void deletar(UUID id) {
-        gateway.deletar(id);
+    public void inativar(UUID id) {
+        Cliente cliente = this.consultarPorId(id);
+
+        cliente.setInativo(true);
+
+        gateway.salvar(cliente);
     }
 
-    public void deletarPorTelefone(String telefone) {
-        gateway.deletarPorTelefone(telefone);
+    private Cliente consultarPorId(UUID id) {
+        Optional<Cliente> cliente = gateway.consultarPorId(id);
+
+        if(cliente.isEmpty()) {
+            throw new ClienteNaoEncontradoException();
+        }
+
+        return cliente.get();
     }
 }

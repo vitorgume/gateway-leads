@@ -15,4 +15,5 @@ public class Cliente {
     private String telefone;
     private Regiao regiao;
     private Segmento segmento;
+    private boolean inativo;
 }

@@ -30,8 +30,8 @@ public class FinalizaColeta implements ColetaType{
         log.info("Finalizando coleta de informações. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
 
         if(mensagem.getMensagem().equals("0")) {
-            conversaUseCase.deletar(conversa.getId());
-            clienteUseCase.deletar(cliente.getId());
+            conversaUseCase.encerrar(conversa.getId());
+            clienteUseCase.inativar(cliente.getId());
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ATENDIMENTO_ENCERRADO, null, null), cliente.getTelefone());
         } else {
             cliente.setRegiao(GatewayEnum.gatewayRegiao(mensagem.getMensagem()));

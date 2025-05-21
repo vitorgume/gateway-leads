@@ -16,5 +16,5 @@ public interface ConversaGateway {
 
     void deletar(UUID id);
 
-    void deletarPorTelefoneCliente(String telefone);
+    Optional<Conversa> consultarPorId(UUID id);
 }
