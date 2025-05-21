@@ -11,4 +11,6 @@ public interface ClienteGateway {
     Cliente salvar(Cliente novoCliente);
 
     void deletar(UUID id);
+
+    Optional<Cliente> consultarPorId(UUID id);
 }

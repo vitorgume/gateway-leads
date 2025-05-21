@@ -22,4 +22,5 @@ public class Conversa {
     private MensagemColeta mensagemColeta;
     private MensagemDirecionamento mensagemDirecionamento;
     private Boolean finalizada;
+    private Boolean encerrada;
 }
