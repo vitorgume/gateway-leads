@@ -10,9 +10,10 @@ public class MensagemColetaRegiao implements MensagemType{
         return """
                     Por favor, Me informa sua região ?
                     
-                    1 - Maringá
-                    2 - Região de Maringá
-                    3 - Outras
+                    1️⃣ - Maringá
+                    2️⃣ - Região de Maringá
+                    3️⃣ - Outras
+                    0️⃣ - Encerrar
                     """;
     }
 

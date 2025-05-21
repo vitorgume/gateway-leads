@@ -28,19 +28,26 @@ public class FinalizaColeta implements ColetaType{
     @Override
     public void coleta(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Finalizando coleta de informações. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
-        cliente.setRegiao(GatewayEnum.gatewayRegiao(mensagem.getMensagem()));
-        Vendedor vendedor = vendedorUseCase.escolherVendedor(cliente);
-        conversa.setVendedor(vendedor);
-        conversa.setFinalizada(true);
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, null, null), cliente.getTelefone());
-        mensagemUseCase.enviarContatoVendedor(vendedor, cliente, "Contato novo");
-        conversaUseCase.salvar(conversa);
-        clienteUseCase.salvar(cliente);
 
-        if(conversa.getMensagemDirecionamento().isEscolhaComercialRecontato()) {
-            conversa.getMensagemDirecionamento().setMensagemInicial(false);
-            conversa.getMensagemDirecionamento().setEscolhaComercial(true);
+        if(mensagem.getMensagem().equals("0")) {
+            conversaUseCase.deletar(conversa.getId());
+            clienteUseCase.deletar(cliente.getId());
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ATENDIMENTO_ENCERRADO, null, null), cliente.getTelefone());
+        } else {
+            cliente.setRegiao(GatewayEnum.gatewayRegiao(mensagem.getMensagem()));
+            Vendedor vendedor = vendedorUseCase.escolherVendedor(cliente);
+            conversa.setVendedor(vendedor);
+            conversa.setFinalizada(true);
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, null, null), cliente.getTelefone());
+            mensagemUseCase.enviarContatoVendedor(vendedor, cliente, "Contato novo");
             conversaUseCase.salvar(conversa);
+            clienteUseCase.salvar(cliente);
+
+            if(conversa.getMensagemDirecionamento().isEscolhaComercialRecontato()) {
+                conversa.getMensagemDirecionamento().setMensagemInicial(false);
+                conversa.getMensagemDirecionamento().setEscolhaComercial(true);
+                conversaUseCase.salvar(conversa);
+            }
         }
 
         log.info("Finalização de coleta de informações concluida com sucesso. Conversa: {}, Cliente: {}", conversa, cliente);
