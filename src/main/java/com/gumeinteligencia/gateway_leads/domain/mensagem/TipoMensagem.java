@@ -1,4 +1,4 @@
-package com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens;
+package com.gumeinteligencia.gateway_leads.domain.mensagem;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

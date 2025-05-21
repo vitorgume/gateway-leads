@@ -1,10 +1,13 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.coletaInformacoes;
 
 import com.gumeinteligencia.gateway_leads.application.exceptions.EscolhaNaoIdentificadoException;
+import com.gumeinteligencia.gateway_leads.application.usecase.MensagemUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,12 +18,28 @@ import org.springframework.stereotype.Service;
 public class ColetaInformacoesUseCase {
 
     private final ColetaFactory coletaFactory;
+    private final MensagemUseCase mensagemUseCase;
+    private final MensagemBuilder mensagemBuilder;
 
     public void processarEtapaDeColeta(Mensagem mensagem, Cliente cliente, Conversa conversa) {
         MensagemColeta mensagemColeta = conversa.getMensagemColeta();
 
-        ColetaType coletaType = coletaFactory.create(mensagemColeta);
+        try {
+            ColetaType coletaType = coletaFactory.create(mensagemColeta);
+            coletaType.coleta(conversa, cliente, mensagem);
+        } catch (EscolhaNaoIdentificadoException ex) {
+            log.warn("Opção inválida recebida. Reenviando mensagem anterior.");
 
-        coletaType.coleta(conversa, cliente, mensagem);
+            mensagemUseCase.enviarMensagem(
+                    mensagemBuilder.getMensagem(TipoMensagem.ESCOLHA_INVALIDA, null, null),
+                    cliente.getTelefone()
+            );
+
+            TipoMensagem ultimaMensagem = conversa.getUltimaMensagem();
+
+            if(ultimaMensagem != null) {
+                mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(ultimaMensagem, null, null), cliente.getTelefone());
+            }
+        }
     }
 }

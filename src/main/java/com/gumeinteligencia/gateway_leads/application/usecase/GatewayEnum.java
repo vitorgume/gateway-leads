@@ -1,5 +1,6 @@
 package com.gumeinteligencia.gateway_leads.application.usecase;
 
+import com.gumeinteligencia.gateway_leads.application.exceptions.EscolhaNaoIdentificadoException;
 import com.gumeinteligencia.gateway_leads.domain.Regiao;
 import com.gumeinteligencia.gateway_leads.domain.Segmento;
 
@@ -13,7 +14,8 @@ public class GatewayEnum {
             case "3" -> Segmento.ENGENHARIA_ARQUITETURA;
             case "4" -> Segmento.ALIMENTOS;
             case "5" -> Segmento.CELULARES;
-            default -> Segmento.OUTROS;
+            case "6" -> Segmento.OUTROS;
+            default -> throw new EscolhaNaoIdentificadoException();
         };
     }
 
@@ -23,7 +25,8 @@ public class GatewayEnum {
         return switch (mensagemFormatada) {
             case "1" -> Regiao.MARINGA;
             case "2" -> Regiao.REGIAO_MARINGA;
-            default -> Regiao.OUTRA;
+            case "3" -> Regiao.OUTRA;
+            default -> throw new EscolhaNaoIdentificadoException();
         };
     }
 }

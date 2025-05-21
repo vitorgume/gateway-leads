@@ -1,5 +1,6 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa;
 
+import com.gumeinteligencia.gateway_leads.application.exceptions.EscolhaNaoIdentificadoException;
 import com.gumeinteligencia.gateway_leads.application.usecase.ClienteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.MensagemUseCase;
@@ -10,7 +11,7 @@ import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processam
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.ProcessoNaoFinalizadoFactory;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.ProcessoNaoFinalizadoType;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
-import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.TipoMensagem;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
@@ -38,14 +39,29 @@ public class ProcessamentoConversaUseCase {
             conversa.getMensagemDirecionamento().setColetaNome(true);
             clienteUseCase.salvar(cliente);
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null), cliente.getTelefone());
+            conversa.setUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
             conversaUseCase.salvar(conversa);
         } else {
 
-            ProcessoNaoFinalizadoType strategy = conversa.getMensagemDirecionamento().isEscolhaComercial()
-                    ? new ProcessaColeta(coletaInformacoesUseCase)
-                    : processoNaoFinalizadoFactory.create(mensagem);
+            try {
+                ProcessoNaoFinalizadoType strategy = conversa.getMensagemDirecionamento().isEscolhaComercial()
+                        ? new ProcessaColeta(coletaInformacoesUseCase)
+                        : processoNaoFinalizadoFactory.create(mensagem);
 
-            strategy.processar(conversa, cliente, mensagem);
+                strategy.processar(conversa, cliente, mensagem);
+            } catch (EscolhaNaoIdentificadoException ex) {
+                log.warn("Opção inválida recebida. Reenviando mensagem anterior.");
+
+                mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ESCOLHA_INVALIDA, null, null), cliente.getTelefone());
+
+                TipoMensagem ultimaMensagem = conversa.getUltimaMensagem();
+
+                if(ultimaMensagem != null) {
+                    mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(ultimaMensagem, null, null), cliente.getTelefone());
+                }
+            }
+
+
 
         }
 

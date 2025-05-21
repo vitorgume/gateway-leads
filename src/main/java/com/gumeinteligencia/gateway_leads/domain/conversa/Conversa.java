@@ -3,6 +3,7 @@ package com.gumeinteligencia.gateway_leads.domain.conversa;
 
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,9 +19,10 @@ public class Conversa {
     private Cliente cliente;
     private Vendedor vendedor;
     private LocalDateTime dataCriacao;
-    private LocalDateTime ultimaMensagem;
+    private LocalDateTime dataUltimaMensagem;
     private MensagemColeta mensagemColeta;
     private MensagemDirecionamento mensagemDirecionamento;
     private Boolean finalizada;
     private Boolean encerrada;
+    private TipoMensagem ultimaMensagem;
 }

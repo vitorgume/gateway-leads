@@ -2,6 +2,7 @@ package com.gumeinteligencia.gateway_leads.infrastructure.repository.entity;
 
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,9 +39,12 @@ public class ConversaEntity {
     @Embedded
     private MensagemDirecionamento mensagemDirecionamento;
 
-    private LocalDateTime ultimaMensagem;
+    private LocalDateTime dataUltimaMensagem;
 
     private Boolean finalizada;
 
     private Boolean encerrada;
+
+    @Enumerated(EnumType.ORDINAL)
+    private TipoMensagem ultimaMensagem;
 }

@@ -2,7 +2,7 @@ package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processa
 
 import com.gumeinteligencia.gateway_leads.application.usecase.*;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
-import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.TipoMensagem;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
@@ -34,6 +34,8 @@ public class FinalizaColeta implements ColetaType{
             clienteUseCase.inativar(cliente.getId());
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ATENDIMENTO_ENCERRADO, null, null), cliente.getTelefone());
         } else {
+            conversa.setUltimaMensagem(TipoMensagem.COLETA_REGIAO);
+            conversaUseCase.salvar(conversa);
             cliente.setRegiao(GatewayEnum.gatewayRegiao(mensagem.getMensagem()));
             Vendedor vendedor = vendedorUseCase.escolherVendedor(cliente);
             conversa.setVendedor(vendedor);
