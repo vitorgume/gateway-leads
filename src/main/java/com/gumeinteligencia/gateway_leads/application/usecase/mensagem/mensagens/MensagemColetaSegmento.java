@@ -15,6 +15,7 @@ public class MensagemColetaSegmento implements MensagemType{
                 4️⃣ - Alimentos
                 5️⃣ - Celulares
                 6️⃣ - Outros
+                0️⃣ - Encerrar
                 """;
     }
 
