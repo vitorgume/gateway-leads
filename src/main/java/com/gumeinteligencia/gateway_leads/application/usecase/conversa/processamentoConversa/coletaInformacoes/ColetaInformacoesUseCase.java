@@ -32,13 +32,14 @@ public class ColetaInformacoesUseCase {
 
             mensagemUseCase.enviarMensagem(
                     mensagemBuilder.getMensagem(TipoMensagem.ESCOLHA_INVALIDA, null, null),
-                    cliente.getTelefone()
+                    cliente.getTelefone(),
+                    conversa
             );
 
             TipoMensagem ultimaMensagem = conversa.getUltimaMensagem();
 
             if(ultimaMensagem != null) {
-                mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(ultimaMensagem, null, null), cliente.getTelefone());
+                mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(ultimaMensagem, null, null), cliente.getTelefone(), conversa);
             }
         }
     }

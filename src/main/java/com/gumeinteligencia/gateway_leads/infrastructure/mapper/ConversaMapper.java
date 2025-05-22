@@ -15,6 +15,7 @@ public class ConversaMapper {
                 .finalizada(entity.getFinalizada())
                 .encerrada(entity.getEncerrada())
                 .ultimaMensagem(entity.getUltimaMensagem())
+                .dataUltimaMensagem(entity.getDataUltimaMensagem())
                 .build();
 
         if(entity.getVendedor() != null) {
@@ -42,6 +43,7 @@ public class ConversaMapper {
                 .finalizada(domain.getFinalizada())
                 .encerrada(domain.getEncerrada())
                 .ultimaMensagem(domain.getUltimaMensagem())
+                .dataUltimaMensagem(domain.getDataUltimaMensagem())
                 .build();
 
         if(domain.getVendedor() != null) {

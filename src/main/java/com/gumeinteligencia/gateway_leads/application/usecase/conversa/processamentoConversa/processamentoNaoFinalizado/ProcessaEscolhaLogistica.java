@@ -5,6 +5,7 @@ import com.gumeinteligencia.gateway_leads.application.usecase.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.EscolhaMensagem;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +23,19 @@ public class ProcessaEscolhaLogistica implements ProcessoNaoFinalizadoType{
 
     @Override
     public void processar(Conversa conversa, Cliente cliente, Mensagem mensagem) {
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_LOGISTICA, null, null), cliente.getTelefone());
-        mensagemUseCase.enviarContatoOutroSetor(cliente, SetorEnvioContato.LOGISTICA);
+        log.info("Processando escolha da logística de uma conversa não finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
 
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_LOGISTICA, null, null), cliente.getTelefone(), conversa);
+        mensagemUseCase.enviarContatoOutroSetor(cliente, SetorEnvioContato.LOGISTICA);
+        conversa.setFinalizada(true);
+        conversa.getMensagemDirecionamento().setEscolhaLogistica(true);
+        conversaUseCase.salvar(conversa);
+
+        log.info("Processamento de escolha da logística de uma conversa não finalizada concluida com sucesso. Conversa: {}", conversa);
     }
 
     @Override
     public Integer getTipoMensage() {
-        return 0;
+        return EscolhaMensagem.ESCOLHA_LOGISTICA.getCodigo();
     }
 }

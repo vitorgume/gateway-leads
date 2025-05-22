@@ -32,7 +32,7 @@ public class FinalizaColeta implements ColetaType{
         if(mensagem.getMensagem().equals("0")) {
             conversaUseCase.encerrar(conversa.getId());
             clienteUseCase.inativar(cliente.getId());
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ATENDIMENTO_ENCERRADO, null, null), cliente.getTelefone());
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ATENDIMENTO_ENCERRADO, null, null), cliente.getTelefone(), conversa);
         } else {
             conversa.setUltimaMensagem(TipoMensagem.COLETA_REGIAO);
             conversaUseCase.salvar(conversa);
@@ -40,7 +40,7 @@ public class FinalizaColeta implements ColetaType{
             Vendedor vendedor = vendedorUseCase.escolherVendedor(cliente);
             conversa.setVendedor(vendedor);
             conversa.setFinalizada(true);
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, null, null), cliente.getTelefone());
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, null, null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoVendedor(vendedor, cliente, "Contato novo");
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);

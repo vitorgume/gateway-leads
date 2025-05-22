@@ -7,8 +7,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum SetorEnvioContato {
 
-    FINANCEIRO(0),
-    LOGISTICA(1);
+    FINANCEIRO(0, "Financeiro"),
+    LOGISTICA(1, "Logistica");
 
     private final int codigo;
+    private final String descricao;
 }
