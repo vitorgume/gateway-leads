@@ -17,6 +17,7 @@ public class GatewayLeadsApplication {
 		System.setProperty("WHASTAPP_CLIENT_TOKEN", System.getenv("WHASTAPP_CLIENT_TOKEN"));
 		System.setProperty("WHASTAPP_TOKEN", System.getenv("WHASTAPP_TOKEN"));
 		System.setProperty("WHASTAPP_INSTANCE_ID", System.getenv("WHASTAPP_INSTANCE_ID"));
+		System.setProperty("FINANCEIRO_TELEFONE", System.getenv("FINANCEIRO_TELEFONE"));
 
 		TimeZone.setDefault(TimeZone.getTimeZone("America/Sao_Paulo"));
 

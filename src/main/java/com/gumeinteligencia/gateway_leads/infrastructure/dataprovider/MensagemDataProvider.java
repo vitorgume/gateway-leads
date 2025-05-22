@@ -30,6 +30,9 @@ public class MensagemDataProvider implements MensagemGateway {
     @Value("${neoprint.ura.whatsapp.client-token}")
     private final String clienteToken;
 
+    @Value("${neoprint.financeiro.telefone}")
+    private final String financeiroTelefone;
+
     private final String MENSAGEM_ERRO_ENVIAR_MENSAGEM = "Erro ao enviar mensagem.";
     private final String MENSAGEM_ERRO_ENVIAR_CONTATO = "Erro ao enviar contato.";
     private final String MENSAGEM_ERRO_ENVIAR_CONTATO_FINANCEIRO = "Erro ao enviar contato financeiro.";
@@ -38,12 +41,14 @@ public class MensagemDataProvider implements MensagemGateway {
             WebClient webClient,
             @Value("${neoprint.ura.whatsapp.token}") String token,
             @Value("${neoprint.ura.whatsapp.id-instance}") String idInstance,
-            @Value("${neoprint.ura.whatsapp.client-token}") String clienteToken
+            @Value("${neoprint.ura.whatsapp.client-token}") String clienteToken,
+            @Value("${neoprint.financeiro.telefone}") String financeiroTelefone
     ){
         this.webClient = webClient;
         this.token = token;
         this.idInstance = idInstance;
         this.clienteToken = clienteToken;
+        this.financeiroTelefone = financeiroTelefone;
     }
 
     @Override
@@ -92,7 +97,7 @@ public class MensagemDataProvider implements MensagemGateway {
 
     @Override
     public void enviarContatoFinanceiro(Cliente cliente) {
-        ContatoRequestDto body = ContatoMapper.paraRequestDto(cliente, "5544998748356");
+        ContatoRequestDto body = ContatoMapper.paraRequestDto(cliente, financeiroTelefone);
 
         log.info(body.toString());
 
