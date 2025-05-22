@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.util.retry.Retry;
+
+import java.time.Duration;
 
 @Component
 @Slf4j
@@ -63,8 +66,15 @@ public class MensagemDataProvider implements MensagemGateway {
                 .bodyValue(body)
                 .retrieve()
                 .bodyToMono(String.class)
+                .retryWhen(
+                        Retry.backoff(3, Duration.ofSeconds(2))
+                                .filter(throwable -> {
+                                    log.warn("Tentando novamente após erro ao enviar mensagem: {}", throwable.getMessage());
+                                    return true;
+                                })
+                )
                 .doOnError(e -> {
-                    log.error("Erro ao enviar mensagem.", e);
+                    log.error("Erro ao enviar mensagem após tentativas.", e);
                     throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_MENSAGEM, e.getCause());
                 })
                 .block();
