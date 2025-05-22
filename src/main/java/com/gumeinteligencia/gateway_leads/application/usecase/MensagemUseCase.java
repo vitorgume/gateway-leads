@@ -1,6 +1,7 @@
 package com.gumeinteligencia.gateway_leads.application.usecase;
 
 import com.gumeinteligencia.gateway_leads.application.gateways.MensagemGateway;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.SetorEnvioContato;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
@@ -42,9 +43,9 @@ public class MensagemUseCase {
         log.info("Contato enviado com sucesso para vendedor.");
     }
 
-    public void enviarContatoFinanceiro(Cliente cliente) {
+    public void enviarContatoOutroSetor(Cliente cliente, SetorEnvioContato setor) {
         log.info("Enviando contato para o financeiro. Cliente: {}", cliente);
-        gateway.enviarContatoFinanceiro(cliente);
+        gateway.enviarContatoFinanceiro(cliente, setor);
         log.info("Contato enviado com sucesso para financeiro.");
     }
 }

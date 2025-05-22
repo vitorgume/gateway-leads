@@ -14,6 +14,7 @@ public class MensagemDirecionarSetor implements MensagemType{
                 
                 1️⃣ - Comercial
                 2️⃣ - Financeiro
+                3️⃣ - Logística 
                 0️⃣ - Encerrar atendimento
                 
                 💬 Por favor, informe o número correspondente à sua escolha.

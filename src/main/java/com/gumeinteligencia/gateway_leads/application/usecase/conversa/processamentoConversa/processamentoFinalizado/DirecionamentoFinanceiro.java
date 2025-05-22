@@ -2,6 +2,7 @@ package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processa
 
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.MensagemUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.SetorEnvioContato;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
@@ -26,12 +27,12 @@ public class DirecionamentoFinanceiro implements ProcessoFinalizadoType{
         log.info("Processando escolha finanaceiro de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         if (conversa.getMensagemDirecionamento().isEscolhaFinanceiro()) {
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_FINANCEIRO, null, null), cliente.getTelefone());
-            mensagemUseCase.enviarContatoFinanceiro(cliente);
+            mensagemUseCase.enviarContatoOutroSetor(cliente, SetorEnvioContato.FINANCEIRO);
             conversa.getMensagemDirecionamento().setMensagemInicial(false);
             conversaUseCase.salvar(conversa);
         } else {
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_FINANACEIRO, null, null), cliente.getTelefone());
-            mensagemUseCase.enviarContatoFinanceiro(cliente);
+            mensagemUseCase.enviarContatoOutroSetor(cliente, SetorEnvioContato.FINANCEIRO);
             conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);
             conversa.getMensagemDirecionamento().setMensagemInicial(false);
             conversaUseCase.salvar(conversa);

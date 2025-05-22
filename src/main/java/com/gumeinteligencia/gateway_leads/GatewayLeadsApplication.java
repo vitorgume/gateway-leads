@@ -18,6 +18,8 @@ public class GatewayLeadsApplication {
 		System.setProperty("WHASTAPP_CLIENT_TOKEN", dotenv.get("WHASTAPP_CLIENT_TOKEN"));
 		System.setProperty("WHASTAPP_TOKEN", dotenv.get("WHASTAPP_TOKEN"));
 		System.setProperty("WHASTAPP_INSTANCE_ID", dotenv.get("WHASTAPP_INSTANCE_ID"));
+		System.setProperty("FINANCEIRO_TELEFONE", dotenv.get("FINANCEIRO_TELEFONE"));
+		System.setProperty("LOGISTICA_TELEFONE", dotenv.get("LOGISTICA_TELEFONE"));
 
 		SpringApplication.run(GatewayLeadsApplication.class, args);
 	}
