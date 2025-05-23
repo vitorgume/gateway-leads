@@ -3,7 +3,7 @@ package com.gumeinteligencia.gateway_leads.application.usecase.mensagem;
 import com.gumeinteligencia.gateway_leads.application.usecase.*;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.ProcessamentoConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
-import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.TipoMensagem;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
@@ -57,9 +57,9 @@ public class ProcessarMensagemUseCase {
 
         Cliente novoCliente = Cliente.builder().telefone(mensagem.getTelefone()).build();
         Cliente cliente = clienteUseCase.cadastrar(novoCliente);
-        conversaUseCase.criar(cliente);
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null), cliente.getTelefone());
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_NOME, null, null), cliente.getTelefone());
+        Conversa novaConversa = conversaUseCase.criar(cliente);
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null), cliente.getTelefone(), null);
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_NOME, null, null), cliente.getTelefone(), novaConversa);
 
         log.info("Conversa iniciada com sucesso.");
     }

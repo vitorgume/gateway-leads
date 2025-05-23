@@ -1,6 +1,7 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens;
 
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ public class MensagemDadosContatoVendedor implements MensagemType{
         StringBuilder mensagem = new StringBuilder();
         LocalDateTime dataHoje = LocalDateTime.now();
 
-        String horaMinutos = dataHoje.getHour() + ":" + dataHoje.getMinute();
+        String horaMinutos = String.format("%02d:%02d", dataHoje.getHour(), dataHoje.getMinute());
 
         mensagem.append("Dados do contato acima:\n");
         mensagem.append("Nome: ").append(cliente.getNome()).append("\n");

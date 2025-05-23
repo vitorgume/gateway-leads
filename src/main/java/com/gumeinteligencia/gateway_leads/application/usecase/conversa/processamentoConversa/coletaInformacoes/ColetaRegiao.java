@@ -2,7 +2,7 @@ package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processa
 
 import com.gumeinteligencia.gateway_leads.application.usecase.*;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
-import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.TipoMensagem;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
@@ -33,12 +33,14 @@ public class ColetaRegiao implements ColetaType{
         if(mensagem.getMensagem().equals("0")) {
             conversaUseCase.encerrar(conversa.getId());
             clienteUseCase.inativar(cliente.getId());
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ATENDIMENTO_ENCERRADO, null, null), cliente.getTelefone());
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ATENDIMENTO_ENCERRADO, null, null), cliente.getTelefone(), conversa);
         } else {
+            conversa.setUltimaMensagem(TipoMensagem.COLETA_SEGMENTO);
+            conversaUseCase.salvar(conversa);
             cliente.setSegmento(GatewayEnum.gatewaySegmento(mensagem.getMensagem()));
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_REGIAO, null, null), cliente.getTelefone());
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_REGIAO, null, null), cliente.getTelefone(), conversa);
             conversa.getMensagemColeta().setColetaRegiao(true);
-            conversa.setUltimaMensagem(LocalDateTime.now());
+            conversa.setDataUltimaMensagem(LocalDateTime.now());
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
         }

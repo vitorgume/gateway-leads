@@ -1,6 +1,7 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens;
 
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,6 +14,7 @@ public class MensagemDirecionarSetor implements MensagemType{
                 
                 1️⃣ - Comercial
                 2️⃣ - Financeiro
+                3️⃣ - Logística 
                 0️⃣ - Encerrar atendimento
                 
                 💬 Por favor, informe o número correspondente à sua escolha.

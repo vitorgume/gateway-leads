@@ -14,6 +14,8 @@ public class ConversaMapper {
                 .mensagemDirecionamento(entity.getMensagemDirecionamento())
                 .finalizada(entity.getFinalizada())
                 .encerrada(entity.getEncerrada())
+                .ultimaMensagem(entity.getUltimaMensagem())
+                .dataUltimaMensagem(entity.getDataUltimaMensagem())
                 .build();
 
         if(entity.getVendedor() != null) {
@@ -25,7 +27,7 @@ public class ConversaMapper {
         if(entity.getUltimaMensagem() == null) {
             conversaBuild.setUltimaMensagem(null);
         } else {
-            conversaBuild.setUltimaMensagem(entity.getUltimaMensagem());
+            conversaBuild.setDataUltimaMensagem(entity.getDataUltimaMensagem());
         }
 
         return conversaBuild;
@@ -40,6 +42,8 @@ public class ConversaMapper {
                 .mensagemDirecionamento(domain.getMensagemDirecionamento())
                 .finalizada(domain.getFinalizada())
                 .encerrada(domain.getEncerrada())
+                .ultimaMensagem(domain.getUltimaMensagem())
+                .dataUltimaMensagem(domain.getDataUltimaMensagem())
                 .build();
 
         if(domain.getVendedor() != null) {
@@ -51,7 +55,7 @@ public class ConversaMapper {
         if(domain.getUltimaMensagem() == null) {
             conversaBuild.setUltimaMensagem(null);
         } else {
-            conversaBuild.setUltimaMensagem(domain.getUltimaMensagem());
+            conversaBuild.setDataUltimaMensagem(domain.getDataUltimaMensagem());
         }
 
         return conversaBuild;

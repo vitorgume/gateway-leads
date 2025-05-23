@@ -1,6 +1,7 @@
 package com.gumeinteligencia.gateway_leads.infrastructure.dataprovider;
 
 import com.gumeinteligencia.gateway_leads.application.gateways.MensagemGateway;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.SetorEnvioContato;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.ContatoRequestDto;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.MensagemRequestDto;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
@@ -36,6 +37,10 @@ public class MensagemDataProvider implements MensagemGateway {
     @Value("${neoprint.financeiro.telefone}")
     private final String financeiroTelefone;
 
+    @Value("${neoprint.logistica.telefone}")
+    private final String logisticaTelefone;
+
+
     private final String MENSAGEM_ERRO_ENVIAR_MENSAGEM = "Erro ao enviar mensagem.";
     private final String MENSAGEM_ERRO_ENVIAR_CONTATO = "Erro ao enviar contato.";
     private final String MENSAGEM_ERRO_ENVIAR_CONTATO_FINANCEIRO = "Erro ao enviar contato financeiro.";
@@ -45,13 +50,15 @@ public class MensagemDataProvider implements MensagemGateway {
             @Value("${neoprint.ura.whatsapp.token}") String token,
             @Value("${neoprint.ura.whatsapp.id-instance}") String idInstance,
             @Value("${neoprint.ura.whatsapp.client-token}") String clienteToken,
-            @Value("${neoprint.financeiro.telefone}") String financeiroTelefone
+            @Value("${neoprint.financeiro.telefone}") String financeiroTelefone,
+            @Value("${neoprint.logistica.telefone}") String logisticaTelefone
     ){
         this.webClient = webClient;
         this.token = token;
         this.idInstance = idInstance;
         this.clienteToken = clienteToken;
         this.financeiroTelefone = financeiroTelefone;
+        this.logisticaTelefone = logisticaTelefone;
     }
 
     @Override
@@ -106,8 +113,15 @@ public class MensagemDataProvider implements MensagemGateway {
     }
 
     @Override
-    public void enviarContatoFinanceiro(Cliente cliente) {
-        ContatoRequestDto body = ContatoMapper.paraRequestDto(cliente, financeiroTelefone);
+    public void enviarContatoOutroSetor(Cliente cliente, SetorEnvioContato setor) {
+
+        ContatoRequestDto body;
+
+        if(setor.getCodigo() == 0) {
+            body = ContatoMapper.paraRequestDto(cliente, financeiroTelefone);
+        } else {
+            body = ContatoMapper.paraRequestDto(cliente, logisticaTelefone);
+        }
 
         log.info(body.toString());
 

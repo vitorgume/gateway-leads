@@ -1,14 +1,18 @@
 package com.gumeinteligencia.gateway_leads.application.usecase;
 
 import com.gumeinteligencia.gateway_leads.application.gateways.MensagemGateway;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.SetorEnvioContato;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
-import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.TipoMensagem;
+import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -17,9 +21,15 @@ public class MensagemUseCase {
 
     private final MensagemGateway gateway;
     private final MensagemBuilder mensagemBuilder;
+    private final ConversaUseCase conversaUseCase;
 
-    public void enviarMensagem(String textoMensagem, String telefone) {
+    public void enviarMensagem(String textoMensagem, String telefone, Conversa conversa) {
         log.info("Enviando mensagem. Texto: {}, Telefone: {}", textoMensagem, telefone);
+
+        if(conversa != null) {
+            conversa.setDataUltimaMensagem(LocalDateTime.now());
+            conversaUseCase.salvar(conversa);
+        }
 
         Mensagem mensagem = Mensagem.builder()
                 .mensagem(textoMensagem)
@@ -38,13 +48,13 @@ public class MensagemUseCase {
 
         gateway.enviarContato(vendedor, cliente, mensagem);
 
-        this.enviarMensagem(textoMensagem, vendedor.getTelefone());
+        this.enviarMensagem(textoMensagem, vendedor.getTelefone(), null);
         log.info("Contato enviado com sucesso para vendedor.");
     }
 
-    public void enviarContatoFinanceiro(Cliente cliente) {
-        log.info("Enviando contato para o financeiro. Cliente: {}", cliente);
-        gateway.enviarContatoFinanceiro(cliente);
-        log.info("Contato enviado com sucesso para financeiro.");
+    public void enviarContatoOutroSetor(Cliente cliente, SetorEnvioContato setor) {
+        log.info("Enviando contato para {}. Cliente: {}", setor.getDescricao() ,cliente);
+        gateway.enviarContatoOutroSetor(cliente, setor);
+        log.info("Contato enviado com sucesso para {}.", setor.getDescricao());
     }
 }

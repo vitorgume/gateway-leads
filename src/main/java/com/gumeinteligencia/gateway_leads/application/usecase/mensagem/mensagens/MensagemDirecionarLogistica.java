@@ -5,15 +5,15 @@ import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MensagemColetarNome implements MensagemType{
+public class MensagemDirecionarLogistica implements MensagemType {
 
     @Override
     public String getMensagem(String nomeVendedor, Cliente cliente) {
-        return "Antes de continuar seu atendimento, me informa seu nome, por favor ? ";
+        return "Muito bem ! Agora você será direcionado para a Gabriella, responsável pela nossa logística. Em alguns minutos elá entrará em contato com você. Até ...";
     }
 
     @Override
     public Integer getTipoMensagem() {
-        return TipoMensagem.COLETA_NOME.getCodigo();
+        return TipoMensagem.DIRECIONAR_LOGISTICA.getCodigo();
     }
 }

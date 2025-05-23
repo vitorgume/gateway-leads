@@ -1,4 +1,4 @@
-package com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens;
+package com.gumeinteligencia.gateway_leads.domain.mensagem;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +17,9 @@ public enum TipoMensagem {
     ATENDIMENTO_ENCERRADO(8, "Mensagem de atendimento encerrado."),
     DIRECIONAR_OUTRO_CONTATO_FINANCEIRO(9, "Mensagem de direcionamento de outro contato do financeiro."),
     DADOS_CONTATO_VENDEDOR(10, "Mensagem com os dados do contato enviado para o vendedor."),
-    ESCOLHA_INVALIDA(11, "Mensagem para quando o usuário fizer uma escolha invalida das opções.");
+    ESCOLHA_INVALIDA(11, "Mensagem para quando o usuário fizer uma escolha invalida das opções."),
+    DIRECIONAR_LOGISTICA(12, "Mensagem de direcionamento para logística."),
+    DIRECIONAR_OUTRO_CONTATO_LOGISTICA(13, "Mensagem de direcionamento de outro contato da logistica.");
 
     private final Integer codigo;
     private final String descricao;
