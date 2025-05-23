@@ -15,7 +15,7 @@ public class MensagemDirecionamento {
     private boolean escolhaComercial;
     private boolean escolhaComercialRecontato;
     private boolean coletaNome;
-    private boolean escolhaLogistica;
+    private Boolean escolhaLogistica;
 
 
     public MensagemDirecionamento() {
