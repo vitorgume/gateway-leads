@@ -64,8 +64,11 @@ public class ProcessarMensagemUseCase {
         Cliente novoCliente = Cliente.builder().telefone(mensagem.getTelefone()).build();
         Cliente cliente = clienteUseCase.cadastrar(novoCliente);
         Conversa novaConversa = conversaUseCase.criar(cliente);
+
         mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null), cliente.getTelefone(), null);
         mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_NOME, null, null), cliente.getTelefone(), novaConversa);
+
+        janelaInicialDeBloqueio.iniciarBloqueio(cliente.getTelefone());
 
         log.info("Conversa iniciada com sucesso.");
     }

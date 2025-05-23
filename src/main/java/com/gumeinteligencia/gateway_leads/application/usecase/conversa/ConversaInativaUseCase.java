@@ -50,8 +50,9 @@ public class ConversaInativaUseCase {
                         .enviarContatoVendedor(
                                 vendedor,
                                 conversa.getCliente(),
-                                "Contato inativo por mais de 10 minutos"
+                                null
                         );
+                mensagemUseCase.enviarMensagem("Contato inativo por mais de 10 minutos", vendedor.getTelefone(), null);
             });
         }
 
