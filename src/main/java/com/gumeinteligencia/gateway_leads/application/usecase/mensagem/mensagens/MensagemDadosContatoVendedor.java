@@ -16,10 +16,26 @@ public class MensagemDadosContatoVendedor implements MensagemType{
         String horaMinutos = String.format("%02d:%02d", dataHoje.getHour(), dataHoje.getMinute());
 
         mensagem.append("Dados do contato acima:\n");
-        mensagem.append("Nome: ").append(cliente.getNome()).append("\n");
-        mensagem.append("Segmento: ").append(cliente.getSegmento().getDescricao()).append("\n");
+
+        if(cliente.getNome() != null) {
+            mensagem.append("Nome: ").append(cliente.getNome()).append("\n");
+        } else {
+            mensagem.append("Nome: ").append("Nome não informado").append("\n");
+        }
+
+        if(cliente.getSegmento() != null) {
+            mensagem.append("Segmento: ").append(cliente.getSegmento().getDescricao()).append("\n");
+        } else {
+            mensagem.append("Segmento: ").append("Segmento não informado").append("\n");
+        }
+
         mensagem.append("Hora: ").append(horaMinutos).append("\n");
-        mensagem.append("Região: ").append(cliente.getRegiao().getDescricao());
+
+        if(cliente.getRegiao() != null) {
+            mensagem.append("Região: ").append(cliente.getRegiao().getDescricao());
+        } else {
+            mensagem.append("Região: ").append("Região não informada");
+        }
 
         return mensagem.toString();
     }

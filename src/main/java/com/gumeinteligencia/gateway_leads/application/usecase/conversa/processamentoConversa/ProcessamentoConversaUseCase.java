@@ -20,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -60,9 +62,12 @@ public class ProcessamentoConversaUseCase {
 
     public void processarConversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando uma mensagem de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
-        if(!conversa.getMensagemDirecionamento().isMensagemInicial()) {
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null), cliente.getTelefone(), conversa);
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null), cliente.getTelefone(), conversa);
+        if (!conversa.getMensagemDirecionamento().isMensagemInicial()) {
+            mensagemUseCase.enviarComEsperaDeJanela(cliente.getTelefone(), List.of(
+                    mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null),
+                    mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null)
+            ), conversa);
+
             conversa.getMensagemDirecionamento().setMensagemInicial(true);
             conversa.setUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
             conversaUseCase.salvar(conversa);

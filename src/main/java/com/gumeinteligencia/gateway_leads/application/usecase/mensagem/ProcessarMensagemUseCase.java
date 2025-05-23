@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -21,15 +23,9 @@ public class ProcessarMensagemUseCase {
     private final ProcessamentoConversaUseCase processamentoConversaUseCase;
     private final MensagemUseCase mensagemUseCase;
     private final MensagemBuilder mensagemBuilder;
-    private final JanelaInicialDeBloqueio janelaInicialDeBloqueio;
 
-    public String processarNovaMensagem(Mensagem mensagem) {
+    public void processarNovaMensagem(Mensagem mensagem) {
         log.info("Processando nova mensagem. Mensagem: {}", mensagem);
-
-        if (janelaInicialDeBloqueio.deveAguardar(mensagem.getTelefone())) {
-            log.info("Mensagem ignorada temporariamente por estar dentro da janela de bloqueio. Telefone: {}", mensagem.getTelefone());
-            return "";
-        }
 
         clienteUseCase
                 .consultarPorTelefone(mensagem.getTelefone())
@@ -39,8 +35,6 @@ public class ProcessarMensagemUseCase {
                 );
 
         log.info("Mensagem processada com sucesso.");
-
-        return "";
     }
 
     private void processarConversaExistente(Cliente cliente, Mensagem mensagem) {
@@ -65,17 +59,11 @@ public class ProcessarMensagemUseCase {
         Cliente cliente = clienteUseCase.cadastrar(novoCliente);
         Conversa novaConversa = conversaUseCase.criar(cliente);
 
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null), cliente.getTelefone(), null);
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_NOME, null, null), cliente.getTelefone(), novaConversa);
-
-        janelaInicialDeBloqueio.iniciarBloqueio(cliente.getTelefone());
+        mensagemUseCase.enviarComEsperaDeJanela(cliente.getTelefone(), List.of(
+                mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null),
+                mensagemBuilder.getMensagem(TipoMensagem.COLETA_NOME, null, null)
+        ), novaConversa);
 
         log.info("Conversa iniciada com sucesso.");
     }
-
-
-
-
-
-
 }

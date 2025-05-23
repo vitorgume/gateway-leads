@@ -1,5 +1,6 @@
 package com.gumeinteligencia.gateway_leads.entrypoint.controller;
 
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.JanelaInicialDeBloqueio;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.ProcessarMensagemUseCase;
 import com.gumeinteligencia.gateway_leads.entrypoint.controller.dto.MensagemDto;
 import com.gumeinteligencia.gateway_leads.entrypoint.mapper.MensagemMapper;
@@ -18,7 +19,8 @@ public class MensagemController {
     private final ProcessarMensagemUseCase processarMensagemUseCase;
 
     @PostMapping
-    public ResponseEntity<String> receberMensagem(@RequestBody MensagemDto novaMensagem) {
-        return ResponseEntity.ok(processarMensagemUseCase.processarNovaMensagem(MensagemMapper.paraDomain(novaMensagem)));
+    public ResponseEntity<Void> receberMensagem(@RequestBody MensagemDto novaMensagem) {
+        processarMensagemUseCase.processarNovaMensagem(MensagemMapper.paraDomain(novaMensagem));
+        return ResponseEntity.ok().build();
     }
 }
