@@ -26,7 +26,7 @@ public class DirecionamentoLogistica implements ProcessoFinalizadoType {
     public void processar(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando escolha da logística de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
 
-        if(conversa.getMensagemDirecionamento().isEscolhaLogistica()) {
+        if(conversa.getMensagemDirecionamento().getEscolhaLogistica()) {
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_LOGISTICA, null, null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoOutroSetor(cliente, SetorEnvioContato.LOGISTICA);
             conversa.getMensagemDirecionamento().setMensagemInicial(true);
