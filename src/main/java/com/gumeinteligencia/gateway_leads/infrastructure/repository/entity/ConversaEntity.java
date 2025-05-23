@@ -39,12 +39,12 @@ public class ConversaEntity {
     @Embedded
     private MensagemDirecionamento mensagemDirecionamento;
 
-    private LocalDateTime dataUltimaMensagem;
+    private LocalDateTime ultimaMensagem;
 
     private Boolean finalizada;
 
     private Boolean encerrada;
 
     @Enumerated(EnumType.ORDINAL)
-    private TipoMensagem ultimaMensagem;
+    private TipoMensagem tipoUltimaMensagem;
 }

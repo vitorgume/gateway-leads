@@ -14,8 +14,8 @@ public class ConversaMapper {
                 .mensagemDirecionamento(entity.getMensagemDirecionamento())
                 .finalizada(entity.getFinalizada())
                 .encerrada(entity.getEncerrada())
-                .ultimaMensagem(entity.getUltimaMensagem())
-                .dataUltimaMensagem(entity.getDataUltimaMensagem())
+                .ultimaMensagem(entity.getTipoUltimaMensagem())
+                .dataUltimaMensagem(entity.getUltimaMensagem())
                 .build();
 
         if(entity.getVendedor() != null) {
@@ -24,10 +24,10 @@ public class ConversaMapper {
             conversaBuild.setVendedor(null);
         }
 
-        if(entity.getUltimaMensagem() == null) {
+        if(entity.getTipoUltimaMensagem() == null) {
             conversaBuild.setUltimaMensagem(null);
         } else {
-            conversaBuild.setDataUltimaMensagem(entity.getDataUltimaMensagem());
+            conversaBuild.setDataUltimaMensagem(entity.getUltimaMensagem());
         }
 
         return conversaBuild;
@@ -42,8 +42,8 @@ public class ConversaMapper {
                 .mensagemDirecionamento(domain.getMensagemDirecionamento())
                 .finalizada(domain.getFinalizada())
                 .encerrada(domain.getEncerrada())
-                .ultimaMensagem(domain.getUltimaMensagem())
-                .dataUltimaMensagem(domain.getDataUltimaMensagem())
+                .tipoUltimaMensagem(domain.getUltimaMensagem())
+                .ultimaMensagem(domain.getDataUltimaMensagem())
                 .build();
 
         if(domain.getVendedor() != null) {
@@ -53,9 +53,9 @@ public class ConversaMapper {
         }
 
         if(domain.getUltimaMensagem() == null) {
-            conversaBuild.setUltimaMensagem(null);
+            conversaBuild.setTipoUltimaMensagem(null);
         } else {
-            conversaBuild.setDataUltimaMensagem(domain.getDataUltimaMensagem());
+            conversaBuild.setUltimaMensagem(domain.getDataUltimaMensagem());
         }
 
         return conversaBuild;
