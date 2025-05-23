@@ -102,7 +102,7 @@ public class MensagemDataProvider implements MensagemGateway {
     }
 
     @Override
-    public void enviarContatoFinanceiro(Cliente cliente, SetorEnvioContato setor) {
+    public void enviarContatoOutroSetor(Cliente cliente, SetorEnvioContato setor) {
 
         ContatoRequestDto body;
 

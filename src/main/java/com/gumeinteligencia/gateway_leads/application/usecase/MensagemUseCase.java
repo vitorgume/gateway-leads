@@ -54,7 +54,7 @@ public class MensagemUseCase {
 
     public void enviarContatoOutroSetor(Cliente cliente, SetorEnvioContato setor) {
         log.info("Enviando contato para {}. Cliente: {}", setor.getDescricao() ,cliente);
-        gateway.enviarContatoFinanceiro(cliente, setor);
+        gateway.enviarContatoOutroSetor(cliente, setor);
         log.info("Contato enviado com sucesso para {}.", setor.getDescricao());
     }
 }

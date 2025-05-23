@@ -5,6 +5,7 @@ import com.gumeinteligencia.gateway_leads.application.usecase.ClienteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.coletaInformacoes.ColetaInformacoesUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoFinalizado.DirecionamentoComercial;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoFinalizado.ProcessoFinalizadoFactory;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoFinalizado.ProcessoFinalizadoType;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.ProcessaColeta;
@@ -50,19 +51,8 @@ public class ProcessamentoConversaUseCase {
 
                 strategy.processar(conversa, cliente, mensagem);
             } catch (EscolhaNaoIdentificadoException ex) {
-                log.warn("Opção inválida recebida. Reenviando mensagem anterior.");
-
-                mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ESCOLHA_INVALIDA, null, null), cliente.getTelefone(), conversa);
-
-                TipoMensagem ultimaMensagem = conversa.getUltimaMensagem();
-
-                if(ultimaMensagem != null) {
-                    mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(ultimaMensagem, null, null), cliente.getTelefone(), conversa);
-                }
+                processaOpcaoInvalida(conversa, cliente);
             }
-
-
-
         }
 
         log.info("Mensagem de uma conversa não finalizada processada com sucesso.");
@@ -74,12 +64,37 @@ public class ProcessamentoConversaUseCase {
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null), cliente.getTelefone(), conversa);
             conversa.getMensagemDirecionamento().setMensagemInicial(true);
+            conversa.setUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
             conversaUseCase.salvar(conversa);
         } else {
-            ProcessoFinalizadoType strategy = processoFinalizadoFactory.create(mensagem);
 
-            strategy.processar(conversa, cliente, mensagem);
+            try {
+                ProcessoFinalizadoType strategy;
+
+                if(conversa.getMensagemDirecionamento().isEscolhaComercialRecontato() && !conversa.getMensagemDirecionamento().isEscolhaComercial()) {
+                    strategy = new DirecionamentoComercial(mensagemUseCase, conversaUseCase, coletaInformacoesUseCase, mensagemBuilder);
+                } else {
+                    strategy = processoFinalizadoFactory.create(mensagem);
+                }
+
+                strategy.processar(conversa, cliente, mensagem);
+            } catch (EscolhaNaoIdentificadoException ex) {
+                processaOpcaoInvalida(conversa, cliente);
+            }
+
         }
         log.info("Mensagem de uma conversa finalizada processada com sucesso.");
+    }
+
+    private void processaOpcaoInvalida(Conversa conversa, Cliente cliente) {
+        log.warn("Opção inválida recebida. Reenviando mensagem anterior.");
+
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ESCOLHA_INVALIDA, null, null), cliente.getTelefone(), conversa);
+
+        TipoMensagem ultimaMensagem = conversa.getUltimaMensagem();
+
+        if(ultimaMensagem != null) {
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(ultimaMensagem, null, null), cliente.getTelefone(), conversa);
+        }
     }
 }
