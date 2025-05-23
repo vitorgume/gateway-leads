@@ -21,9 +21,15 @@ public class ProcessarMensagemUseCase {
     private final ProcessamentoConversaUseCase processamentoConversaUseCase;
     private final MensagemUseCase mensagemUseCase;
     private final MensagemBuilder mensagemBuilder;
+    private final JanelaInicialDeBloqueio janelaInicialDeBloqueio;
 
     public String processarNovaMensagem(Mensagem mensagem) {
         log.info("Processando nova mensagem. Mensagem: {}", mensagem);
+
+        if (janelaInicialDeBloqueio.deveAguardar(mensagem.getTelefone())) {
+            log.info("Mensagem ignorada temporariamente por estar dentro da janela de bloqueio. Telefone: {}", mensagem.getTelefone());
+            return "";
+        }
 
         clienteUseCase
                 .consultarPorTelefone(mensagem.getTelefone())
