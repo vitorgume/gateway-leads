@@ -40,7 +40,7 @@ public class ProcessamentoConversaUseCase {
             conversa.getMensagemDirecionamento().setColetaNome(true);
             clienteUseCase.salvar(cliente);
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null), cliente.getTelefone(), conversa);
-            conversa.setUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
+            conversa.setTipoUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
             conversaUseCase.salvar(conversa);
         } else {
 
@@ -64,7 +64,7 @@ public class ProcessamentoConversaUseCase {
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null), cliente.getTelefone(), conversa);
             conversa.getMensagemDirecionamento().setMensagemInicial(true);
-            conversa.setUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
+            conversa.setTipoUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
             conversaUseCase.salvar(conversa);
         } else {
 
@@ -91,7 +91,7 @@ public class ProcessamentoConversaUseCase {
 
         mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ESCOLHA_INVALIDA, null, null), cliente.getTelefone(), conversa);
 
-        TipoMensagem ultimaMensagem = conversa.getUltimaMensagem();
+        TipoMensagem ultimaMensagem = conversa.getTipoUltimaMensagem();
 
         if(ultimaMensagem != null) {
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(ultimaMensagem, null, null), cliente.getTelefone(), conversa);

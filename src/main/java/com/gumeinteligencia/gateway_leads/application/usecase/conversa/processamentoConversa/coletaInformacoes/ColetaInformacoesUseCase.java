@@ -36,7 +36,7 @@ public class ColetaInformacoesUseCase {
                     conversa
             );
 
-            TipoMensagem ultimaMensagem = conversa.getUltimaMensagem();
+            TipoMensagem ultimaMensagem = conversa.getTipoUltimaMensagem();
 
             if(ultimaMensagem != null) {
                 mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(ultimaMensagem, null, null), cliente.getTelefone(), conversa);

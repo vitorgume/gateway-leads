@@ -27,7 +27,7 @@ public class MensagemUseCase {
         log.info("Enviando mensagem. Texto: {}, Telefone: {}", textoMensagem, telefone);
 
         if(conversa != null) {
-            conversa.setDataUltimaMensagem(LocalDateTime.now());
+            conversa.setUltimaMensagem(LocalDateTime.now());
             conversaUseCase.salvar(conversa);
         }
 

@@ -32,8 +32,8 @@ public class ConversaInativaUseCase {
 
         List<Conversa> conversasAtrasadas = conversas.stream()
                 .filter(conversa -> {
-                            if(conversa.getUltimaMensagem() != null)
-                                return conversa.getDataUltimaMensagem().plusMinutes(10).isBefore(agora);
+                            if(conversa.getTipoUltimaMensagem() != null)
+                                return conversa.getUltimaMensagem().plusMinutes(10).isBefore(agora);
 
                             return false;
                         }
