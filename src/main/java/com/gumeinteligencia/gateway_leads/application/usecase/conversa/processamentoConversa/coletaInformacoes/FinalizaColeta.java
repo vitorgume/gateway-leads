@@ -40,7 +40,7 @@ public class FinalizaColeta implements ColetaType{
             Vendedor vendedor = vendedorUseCase.escolherVendedor(cliente);
             conversa.setVendedor(vendedor);
             conversa.setFinalizada(true);
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, null, null), cliente.getTelefone(), conversa);
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, vendedor.getNome(), null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoVendedor(vendedor, cliente, "Contato novo");
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
