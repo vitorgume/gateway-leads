@@ -32,9 +32,15 @@ public class MensagemDadosContatoVendedor implements MensagemType{
         mensagem.append("Hora: ").append(horaMinutos).append("\n");
 
         if(cliente.getRegiao() != null) {
-            mensagem.append("Região: ").append(cliente.getRegiao().getDescricao());
+            mensagem.append("Região: ").append(cliente.getRegiao().getDescricao()).append("\n");
         } else {
-            mensagem.append("Região: ").append("Região não informada");
+            mensagem.append("Região: ").append("Região não informada").append("\n");
+        }
+
+        if(cliente.getTelefone() != null) {
+            mensagem.append("Telefone: ").append(cliente.getTelefone());
+        } else {
+            mensagem.append("Telefone: ").append("Telefone não informado");
         }
 
         return mensagem.toString();

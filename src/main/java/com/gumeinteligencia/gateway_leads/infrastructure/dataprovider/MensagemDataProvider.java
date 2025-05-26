@@ -3,6 +3,7 @@ package com.gumeinteligencia.gateway_leads.infrastructure.dataprovider;
 import com.gumeinteligencia.gateway_leads.application.gateways.MensagemGateway;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.SetorEnvioContato;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.ContatoRequestDto;
+import com.gumeinteligencia.gateway_leads.application.usecase.dto.DocumentoRequestDto;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.MensagemRequestDto;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
@@ -40,10 +41,14 @@ public class MensagemDataProvider implements MensagemGateway {
     @Value("${neoprint.logistica.telefone}")
     private final String logisticaTelefone;
 
+    @Value("${neoprint.gerencia.telefone}")
+    private final String gerenciaTelefone;
+
 
     private final String MENSAGEM_ERRO_ENVIAR_MENSAGEM = "Erro ao enviar mensagem.";
     private final String MENSAGEM_ERRO_ENVIAR_CONTATO = "Erro ao enviar contato.";
     private final String MENSAGEM_ERRO_ENVIAR_CONTATO_FINANCEIRO = "Erro ao enviar contato financeiro.";
+    private final String MENSAGEM_ERRO_ENVIAR_RELATORIO = "Erro ao enviar relatóro.";
 
     public MensagemDataProvider(
             WebClient webClient,
@@ -51,14 +56,16 @@ public class MensagemDataProvider implements MensagemGateway {
             @Value("${neoprint.ura.whatsapp.id-instance}") String idInstance,
             @Value("${neoprint.ura.whatsapp.client-token}") String clienteToken,
             @Value("${neoprint.financeiro.telefone}") String financeiroTelefone,
-            @Value("${neoprint.logistica.telefone}") String logisticaTelefone
-    ){
+            @Value("${neoprint.logistica.telefone}") String logisticaTelefone,
+            @Value("${neoprint.gerencia.telefone}") String gerenciaTelefone
+    ) {
         this.webClient = webClient;
         this.token = token;
         this.idInstance = idInstance;
         this.clienteToken = clienteToken;
         this.financeiroTelefone = financeiroTelefone;
         this.logisticaTelefone = logisticaTelefone;
+        this.gerenciaTelefone = gerenciaTelefone;
     }
 
     @Override
@@ -66,27 +73,27 @@ public class MensagemDataProvider implements MensagemGateway {
         MensagemRequestDto body = MensagemMapper.paraRequestDto(mensagem);
 
         log.info(body.toString());
-        String response = webClient
-                .post()
-                .uri("/instances/{idIsntance}/token/{token}/send-text", idInstance, token)
-                .header("Client-Token", clienteToken)
-                .bodyValue(body)
-                .retrieve()
-                .bodyToMono(String.class)
-                .retryWhen(
-                        Retry.backoff(3, Duration.ofSeconds(2))
-                                .filter(throwable -> {
-                                    log.warn("Tentando novamente após erro ao enviar mensagem: {}", throwable.getMessage());
-                                    return true;
-                                })
-                )
-                .doOnError(e -> {
-                    log.error("Erro ao enviar mensagem após tentativas.", e);
-                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_MENSAGEM, e.getCause());
-                })
-                .block();
-
-        log.info("Response envio de mensagem: {}", response);
+//        String response = webClient
+//                .post()
+//                .uri("/instances/{idIsntance}/token/{token}/send-text", idInstance, token)
+//                .header("Client-Token", clienteToken)
+//                .bodyValue(body)
+//                .retrieve()
+//                .bodyToMono(String.class)
+//                .retryWhen(
+//                        Retry.backoff(3, Duration.ofSeconds(2))
+//                                .filter(throwable -> {
+//                                    log.warn("Tentando novamente após erro ao enviar mensagem: {}", throwable.getMessage());
+//                                    return true;
+//                                })
+//                )
+//                .doOnError(e -> {
+//                    log.error("Erro ao enviar mensagem após tentativas.", e);
+//                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_MENSAGEM, e.getCause());
+//                })
+//                .block();
+//
+//        log.info("Response envio de mensagem: {}", response);
     }
 
 
@@ -96,20 +103,20 @@ public class MensagemDataProvider implements MensagemGateway {
 
         log.info(body.toString());
 
-        String response = webClient
-                .post()
-                .uri("/instances/{idInstance}/token/{token}/send-contact", idInstance, token)
-                .header("Client-Token", clienteToken)
-                .bodyValue(body)
-                .retrieve()
-                .bodyToMono(String.class)
-                .doOnError(e -> {
-                    log.error("Erro ao enviar mensagem.", e);
-                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_CONTATO, e.getCause());
-                })
-                .block();
-
-        log.info("Response envio de contato: {}", response);
+//        String response = webClient
+//                .post()
+//                .uri("/instances/{idInstance}/token/{token}/send-contact", idInstance, token)
+//                .header("Client-Token", clienteToken)
+//                .bodyValue(body)
+//                .retrieve()
+//                .bodyToMono(String.class)
+//                .doOnError(e -> {
+//                    log.error("Erro ao enviar mensagem.", e);
+//                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_CONTATO, e.getCause());
+//                })
+//                .block();
+//
+//        log.info("Response envio de contato: {}", response);
     }
 
     @Override
@@ -117,7 +124,7 @@ public class MensagemDataProvider implements MensagemGateway {
 
         ContatoRequestDto body;
 
-        if(setor.getCodigo() == 0) {
+        if (setor.getCodigo() == 0) {
             body = ContatoMapper.paraRequestDto(cliente, financeiroTelefone);
         } else {
             body = ContatoMapper.paraRequestDto(cliente, logisticaTelefone);
@@ -125,19 +132,39 @@ public class MensagemDataProvider implements MensagemGateway {
 
         log.info(body.toString());
 
+//        String response = webClient
+//                .post()
+//                .uri("/instances/{idInstance}/token/{token}/send-contact", idInstance, token)
+//                .header("Client-Token", clienteToken)
+//                .bodyValue(body)
+//                .retrieve()
+//                .bodyToMono(String.class)
+//                .doOnError(e -> {
+//                    log.error("Erro ao enviar mensagem.", e);
+//                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_CONTATO_FINANCEIRO, e.getCause());
+//                })
+//                .block();
+//
+//        log.info("Response envio de contato financeiro: {}", response);
+    }
+
+    @Override
+    public void enviarRelatorio(String arquivo) {
+        DocumentoRequestDto body = new DocumentoRequestDto(gerenciaTelefone, arquivo);
+
         String response = webClient
                 .post()
-                .uri("/instances/{idInstance}/token/{token}/send-contact", idInstance, token)
+                .uri("/instances/{idInstance}/token/{token}/send-document/xlsx", idInstance, token)
                 .header("Client-Token", clienteToken)
                 .bodyValue(body)
                 .retrieve()
                 .bodyToMono(String.class)
                 .doOnError(e -> {
-                    log.error("Erro ao enviar mensagem.", e);
-                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_CONTATO_FINANCEIRO, e.getCause());
+                    log.error("Erro ao enviar relatório.", e);
+                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_RELATORIO, e.getCause());
                 })
                 .block();
 
-        log.info("Response envio de contato financeiro: {}", response);
+        log.info("Response envio de relatório: {}", response);
     }
 }

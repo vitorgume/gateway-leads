@@ -1,6 +1,7 @@
 package com.gumeinteligencia.gateway_leads.infrastructure.dataprovider;
 
 import com.gumeinteligencia.gateway_leads.application.gateways.VendedorGateway;
+import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.infrastructure.exceptions.DataProviderException;
 import com.gumeinteligencia.gateway_leads.infrastructure.mapper.VendedorMapper;

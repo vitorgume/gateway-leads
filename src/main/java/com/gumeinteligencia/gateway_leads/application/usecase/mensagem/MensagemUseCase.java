@@ -1,8 +1,8 @@
-package com.gumeinteligencia.gateway_leads.application.usecase;
+package com.gumeinteligencia.gateway_leads.application.usecase.mensagem;
 
 import com.gumeinteligencia.gateway_leads.application.gateways.MensagemGateway;
+import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.SetorEnvioContato;
-import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.JanelaInicialDeBloqueio;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
@@ -69,5 +69,11 @@ public class MensagemUseCase {
 
         janelaInicialDeBloqueio.adicionarBloqueio(telefone);
         janelaInicialDeBloqueio.armazenarMensagens(telefone, mensagens, conversa);
+    }
+
+    public void enviarRelatorio(String arquivo) {
+        log.info("Enviando relatório de vendedores.");
+        gateway.enviarRelatorio(arquivo);
+        log.info("Relatório enviado com sucesso.");
     }
 }

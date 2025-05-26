@@ -1,12 +1,9 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.mensagem;
 
-import com.gumeinteligencia.gateway_leads.application.usecase.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
-import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

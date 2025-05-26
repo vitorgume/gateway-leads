@@ -3,10 +3,12 @@ package com.gumeinteligencia.gateway_leads.application.usecase;
 import com.gumeinteligencia.gateway_leads.application.exceptions.ClienteJaCadastradoException;
 import com.gumeinteligencia.gateway_leads.application.exceptions.ClienteNaoEncontradoException;
 import com.gumeinteligencia.gateway_leads.application.gateways.ClienteGateway;
+import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,5 +50,9 @@ public class ClienteUseCase {
         }
 
         return cliente.get();
+    }
+
+    public List<RelatorioContatoDto> getRelatorio(Long id) {
+        return gateway.getRelatorioContato(id);
     }
 }

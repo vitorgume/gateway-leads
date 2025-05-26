@@ -20,6 +20,7 @@ public class GatewayLeadsApplication {
 		System.setProperty("WHASTAPP_INSTANCE_ID", dotenv.get("WHASTAPP_INSTANCE_ID"));
 		System.setProperty("FINANCEIRO_TELEFONE", dotenv.get("FINANCEIRO_TELEFONE"));
 		System.setProperty("LOGISTICA_TELEFONE", dotenv.get("LOGISTICA_TELEFONE"));
+		System.setProperty("GERENCIA_TELEFONE", dotenv.get("GERENCIA_TELEFONE"));
 
 		SpringApplication.run(GatewayLeadsApplication.class, args);
 	}
