@@ -3,6 +3,7 @@ package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processa
 import com.gumeinteligencia.gateway_leads.application.exceptions.EscolhaNaoIdentificadoException;
 import com.gumeinteligencia.gateway_leads.application.usecase.ClienteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemOrquestradora;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.coletaInformacoes.ColetaInformacoesUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoFinalizado.DirecionamentoComercial;
@@ -25,7 +26,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ProcessamentoConversaUseCase {
+public class ProcessamentoConversaExistenteUseCase {
 
     private final ClienteUseCase clienteUseCase;
     private final ConversaUseCase conversaUseCase;
@@ -34,6 +35,7 @@ public class ProcessamentoConversaUseCase {
     private final ProcessoNaoFinalizadoFactory processoNaoFinalizadoFactory;
     private final ProcessoFinalizadoFactory processoFinalizadoFactory;
     private final MensagemBuilder mensagemBuilder;
+    private final MensagemOrquestradora mensagemOrquestradora;
 
     public void processarConversaNaoFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando mensagem de uma conversa não finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
@@ -63,14 +65,10 @@ public class ProcessamentoConversaUseCase {
     public void processarConversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando uma mensagem de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         if (!conversa.getMensagemDirecionamento().isMensagemInicial()) {
-            mensagemUseCase.enviarComEsperaDeJanela(cliente.getTelefone(), List.of(
+            mensagemOrquestradora.enviarComEspera(cliente.getTelefone(), List.of(
                     mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null),
                     mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null)
-            ), conversa);
-
-            conversa.getMensagemDirecionamento().setMensagemInicial(true);
-            conversa.setUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
-            conversaUseCase.salvar(conversa);
+            ), mensagem);
         } else {
 
             try {
@@ -89,6 +87,21 @@ public class ProcessamentoConversaUseCase {
 
         }
         log.info("Mensagem de uma conversa finalizada processada com sucesso.");
+    }
+
+    public void processarConversaExistente(Cliente cliente, Mensagem mensagem) {
+        log.info("Processando mensagem de uma conversa já existente. Cliente: {}, Mensagem: {}", cliente, mensagem);
+
+        Conversa conversa = conversaUseCase.consultarPorCliente(cliente);
+
+
+        if(!conversa.getFinalizada()) {
+            this.processarConversaNaoFinalizada(conversa, cliente, mensagem);
+        } else {
+            this.processarConversaFinalizada(conversa, cliente, mensagem);
+        }
+
+        log.info("Processamento de mensagem de uma conversa já existente conclúido com sucesso.");
     }
 
     private void processaOpcaoInvalida(Conversa conversa, Cliente cliente) {

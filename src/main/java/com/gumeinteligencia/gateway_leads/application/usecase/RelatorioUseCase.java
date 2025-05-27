@@ -27,7 +27,7 @@ public class RelatorioUseCase {
     public void enviarRelatorioDiarioVendedores() {
         List<RelatorioContatoDto> relatorioNilza = vendedorUseCase.getRelatorio("Nilza");
         List<RelatorioContatoDto> relatorioMariana = vendedorUseCase.getRelatorio("Mariana");
-        List<RelatorioContatoDto> relatorioCinthya = vendedorUseCase.getRelatorio("Cnthya");
+        List<RelatorioContatoDto> relatorioCinthya = vendedorUseCase.getRelatorio("Cinthya");
         List<RelatorioContatoDto> relatorioMarcia = vendedorUseCase.getRelatorio("Marcia");
         List<RelatorioContatoDto> relatorioSamara = vendedorUseCase.getRelatorio("Samara");
 

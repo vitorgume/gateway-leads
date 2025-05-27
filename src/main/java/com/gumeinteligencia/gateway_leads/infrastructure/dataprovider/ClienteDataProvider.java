@@ -5,12 +5,16 @@ import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioConta
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.infrastructure.exceptions.DataProviderException;
 import com.gumeinteligencia.gateway_leads.infrastructure.mapper.ClienteMapper;
+import com.gumeinteligencia.gateway_leads.infrastructure.mapper.RelatorioMapper;
 import com.gumeinteligencia.gateway_leads.infrastructure.repository.ClienteRepository;
 import com.gumeinteligencia.gateway_leads.infrastructure.repository.entity.ClienteEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -84,7 +88,8 @@ public class ClienteDataProvider implements ClienteGateway {
         List<RelatorioContatoDto> relatorios;
 
         try {
-            relatorios = repository.gerarRelatorio(id);
+
+            relatorios = RelatorioMapper.paraDto(repository.gerarRelatorio(id));
         } catch (Exception ex) {
             log.error(MENSAGEM_ERRO_GERAR_RELATORIO, ex);
             throw new DataProviderException(MENSAGEM_ERRO_GERAR_RELATORIO, ex.getCause());

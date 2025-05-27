@@ -1,6 +1,7 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.mensagem;
 
 import com.gumeinteligencia.gateway_leads.application.gateways.MensagemGateway;
+import com.gumeinteligencia.gateway_leads.application.usecase.ClienteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.SetorEnvioContato;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class MensagemUseCase {
     private final MensagemGateway gateway;
     private final MensagemBuilder mensagemBuilder;
     private final ConversaUseCase conversaUseCase;
-    private final JanelaInicialDeBloqueio janelaInicialDeBloqueio;
+    private final ClienteUseCase clienteUseCase;
 
     public void enviarMensagem(String textoMensagem, String telefone, Conversa conversa) {
         log.info("Enviando mensagem. Texto: {}, Telefone: {}", textoMensagem, telefone);
@@ -61,19 +63,30 @@ public class MensagemUseCase {
         log.info("Contato enviado com sucesso para {}.", setor.getDescricao());
     }
 
-    public void enviarComEsperaDeJanela(String telefone, List<String> mensagens, Conversa conversa) {
-        if (janelaInicialDeBloqueio.estaBloqueado(telefone)) {
-            janelaInicialDeBloqueio.armazenarMensagens(telefone, mensagens, conversa);
-            return;
-        }
-
-        janelaInicialDeBloqueio.adicionarBloqueio(telefone);
-        janelaInicialDeBloqueio.armazenarMensagens(telefone, mensagens, conversa);
-    }
-
     public void enviarRelatorio(String arquivo) {
         log.info("Enviando relatório de vendedores.");
         gateway.enviarRelatorio(arquivo);
         log.info("Relatório enviado com sucesso.");
+    }
+
+    public void executarEnvio(String telefone, List<String> mensagens, Mensagem mensagemRecebida) {
+        Optional<Cliente> clienteExistente = clienteUseCase.consultarPorTelefone(telefone);
+        Conversa conversa;
+
+        if(clienteExistente.isEmpty()) {
+            Cliente novoCliente = Cliente.builder().telefone(mensagemRecebida.getTelefone()).build();
+            Cliente cliente = clienteUseCase.cadastrar(novoCliente);
+            conversa = conversaUseCase.criar(cliente);
+        } else {
+            Conversa conversaExistente = conversaUseCase.consultarPorCliente(clienteExistente.get());
+
+            conversaExistente.getMensagemDirecionamento().setMensagemInicial(true);
+            conversaExistente.setUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
+            conversa = conversaUseCase.salvar(conversaExistente);
+        }
+
+        for (String mensagem : mensagens) {
+            this.enviarMensagem(mensagem, telefone, conversa);
+        }
     }
 }

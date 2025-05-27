@@ -1,17 +1,12 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.mensagem;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.*;
-import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.ProcessamentoConversaUseCase;
-import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
-import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
-import com.gumeinteligencia.gateway_leads.domain.Cliente;
-import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.ProcessamentoConversaExistenteUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.ProcessamentoNovaConversa;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,10 +14,8 @@ import java.util.List;
 public class ProcessarMensagemUseCase {
 
     private final ClienteUseCase clienteUseCase;
-    private final ConversaUseCase conversaUseCase;
-    private final ProcessamentoConversaUseCase processamentoConversaUseCase;
-    private final MensagemUseCase mensagemUseCase;
-    private final MensagemBuilder mensagemBuilder;
+    private final ProcessamentoConversaExistenteUseCase processamentoConversaExistenteUseCase;
+    private final ProcessamentoNovaConversa processamentoNovaConversa;
 
     public void processarNovaMensagem(Mensagem mensagem) {
         log.info("Processando nova mensagem. Mensagem: {}", mensagem);
@@ -30,40 +23,10 @@ public class ProcessarMensagemUseCase {
         clienteUseCase
                 .consultarPorTelefone(mensagem.getTelefone())
                 .ifPresentOrElse(
-                        cliente -> processarConversaExistente(cliente, mensagem),
-                        () -> iniciarNovaConversa(mensagem)
+                        cliente -> processamentoConversaExistenteUseCase.processarConversaExistente(cliente, mensagem),
+                        () -> processamentoNovaConversa.iniciarNovaConversa(mensagem)
                 );
 
         log.info("Mensagem processada com sucesso.");
-    }
-
-    private void processarConversaExistente(Cliente cliente, Mensagem mensagem) {
-        log.info("Processando mensagem de uma conversa já existente. Cliente: {}, Mensagem: {}", cliente, mensagem);
-
-        Conversa conversa = conversaUseCase.consultarPorCliente(cliente);
-
-
-        if(!conversa.getFinalizada()) {
-            processamentoConversaUseCase.processarConversaNaoFinalizada(conversa, cliente, mensagem);
-        } else {
-            processamentoConversaUseCase.processarConversaFinalizada(conversa, cliente, mensagem);
-        }
-
-        log.info("Processamento de mensagem de uma conversa já existente conclúido com sucesso.");
-    }
-
-    private void iniciarNovaConversa(Mensagem mensagem) {
-        log.info("Processando início de uma conversa. Mensagem: {}", mensagem);
-
-        Cliente novoCliente = Cliente.builder().telefone(mensagem.getTelefone()).build();
-        Cliente cliente = clienteUseCase.cadastrar(novoCliente);
-        Conversa novaConversa = conversaUseCase.criar(cliente);
-
-        mensagemUseCase.enviarComEsperaDeJanela(cliente.getTelefone(), List.of(
-                mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null),
-                mensagemBuilder.getMensagem(TipoMensagem.COLETA_NOME, null, null)
-        ), novaConversa);
-
-        log.info("Conversa iniciada com sucesso.");
     }
 }

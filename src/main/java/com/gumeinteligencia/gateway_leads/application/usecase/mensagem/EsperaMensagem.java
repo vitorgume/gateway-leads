@@ -15,5 +15,4 @@ import java.util.List;
 public class EsperaMensagem {
     private List<String> mensagensParaEnviar = new ArrayList<>();
     private Mensagem ultimaMensagemRecebida;
-    private Conversa conversa;
 }
