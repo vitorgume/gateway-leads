@@ -83,12 +83,8 @@ public class VendedorUseCase {
         gateway.deletar(id);
     }
 
-    public List<RelatorioContatoDto> getRelatorio(String nome) {
-        Vendedor vendedor = this.consultarVendedor(nome);
-
-        List<RelatorioContatoDto> relatorio = clienteUseCase.getRelatorio(vendedor.getId());
-
-        return relatorio;
+    public List<RelatorioContatoDto> getRelatorio() {
+        return clienteUseCase.getRelatorio();
     }
 
 }

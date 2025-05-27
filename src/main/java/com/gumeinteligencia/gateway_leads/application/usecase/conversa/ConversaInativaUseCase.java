@@ -3,8 +3,10 @@ package com.gumeinteligencia.gateway_leads.application.usecase.conversa;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.VendedorUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
+import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,6 +23,7 @@ public class ConversaInativaUseCase {
     private final ConversaUseCase conversaUseCase;
     private final VendedorUseCase vendedorUseCase;
     private final MensagemUseCase mensagemUseCase;
+    private final MensagemBuilder mensagemBuilder;
 
     @Scheduled(cron = "0 */10 * * * *")
     public void verificaAusenciaDeMensagem() {
@@ -44,15 +47,16 @@ public class ConversaInativaUseCase {
         if(!conversasAtrasadas.isEmpty()) {
             conversasAtrasadas.forEach(conversa -> {
                 conversa.setFinalizada(true);
-                conversaUseCase.salvar(conversa);
                 Vendedor vendedor = vendedorUseCase.consultarVendedor("Mariana");
+                conversa.setVendedor(vendedor);
                 mensagemUseCase
                         .enviarContatoVendedor(
                                 vendedor,
                                 conversa.getCliente(),
                                 null
                         );
-                mensagemUseCase.enviarMensagem("Contato inativo por mais de 10 minutos", vendedor.getTelefone(), null);
+                mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.CONTATO_INATIVO, null, null), vendedor.getTelefone(), null);
+                conversaUseCase.salvar(conversa);
             });
         }
 

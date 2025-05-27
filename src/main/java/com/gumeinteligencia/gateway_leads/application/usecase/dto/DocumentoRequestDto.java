@@ -12,4 +12,5 @@ import lombok.Setter;
 public class DocumentoRequestDto {
     private String phone;
     private String document;
+    private String fileName;
 }

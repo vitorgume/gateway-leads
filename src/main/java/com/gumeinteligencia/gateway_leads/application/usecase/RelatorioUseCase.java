@@ -2,12 +2,14 @@ package com.gumeinteligencia.gateway_leads.application.usecase;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
+import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -23,26 +25,13 @@ public class RelatorioUseCase {
     private final VendedorUseCase vendedorUseCase;
     private final MensagemUseCase mensagemUseCase;
 
-    //@Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 0 16 * * *")
     public void enviarRelatorioDiarioVendedores() {
-        List<RelatorioContatoDto> relatorioNilza = vendedorUseCase.getRelatorio("Nilza");
-        List<RelatorioContatoDto> relatorioMariana = vendedorUseCase.getRelatorio("Mariana");
-        List<RelatorioContatoDto> relatorioCinthya = vendedorUseCase.getRelatorio("Cinthya");
-        List<RelatorioContatoDto> relatorioMarcia = vendedorUseCase.getRelatorio("Marcia");
-        List<RelatorioContatoDto> relatorioSamara = vendedorUseCase.getRelatorio("Samara");
+        List<RelatorioContatoDto> relatorio = vendedorUseCase.getRelatorio();
 
-        String arquivoNilza = gerarArquivo(relatorioNilza);
-        String arquivoMariana = gerarArquivo(relatorioMariana);
-        String arquivoCinthya = gerarArquivo(relatorioCinthya);
-        String arquivoMarcia = gerarArquivo(relatorioMarcia);
-        String arquivoSamara = gerarArquivo(relatorioSamara);
+        String arquivo = gerarArquivo(relatorio);
 
-        mensagemUseCase.enviarRelatorio(arquivoNilza);
-        mensagemUseCase.enviarRelatorio(arquivoMariana);
-        mensagemUseCase.enviarRelatorio(arquivoCinthya);
-        mensagemUseCase.enviarRelatorio(arquivoMarcia);
-        mensagemUseCase.enviarRelatorio(arquivoSamara);
-
+        mensagemUseCase.enviarRelatorio(arquivo, "Relatorio.xlsx");
     }
 
     private String gerarArquivo(List<RelatorioContatoDto> contatos) {
@@ -55,18 +44,20 @@ public class RelatorioUseCase {
             header.createCell(2).setCellValue("Segmento");
             header.createCell(3).setCellValue("Região");
             header.createCell(4).setCellValue("Data de Criação");
+            header.createCell(5).setCellValue("Vendedor");
 
             int rowNum = 1;
             for (RelatorioContatoDto dto : contatos) {
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(dto.getNome());
                 row.createCell(1).setCellValue(dto.getTelefone());
-                row.createCell(2).setCellValue(dto.getSegmento());
-                row.createCell(3).setCellValue(dto.getRegiao());
+                row.createCell(2).setCellValue(dto.getSegmento().getDescricao());
+                row.createCell(3).setCellValue(dto.getRegiao().getDescricao());
                 row.createCell(4).setCellValue(dto.getDataCriacao().toString());
+                row.createCell(5).setCellValue(dto.getNomeVendedor());
             }
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 6; i++) {
                 sheet.autoSizeColumn(i);
             }
 

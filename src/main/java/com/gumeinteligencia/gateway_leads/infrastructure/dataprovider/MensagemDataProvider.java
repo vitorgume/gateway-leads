@@ -149,8 +149,9 @@ public class MensagemDataProvider implements MensagemGateway {
     }
 
     @Override
-    public void enviarRelatorio(String arquivo) {
-        DocumentoRequestDto body = new DocumentoRequestDto(gerenciaTelefone, arquivo);
+    public void enviarRelatorio(String arquivo, String fileName) {
+        String base64ComPrefixo = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," + arquivo;
+        DocumentoRequestDto body = new DocumentoRequestDto(gerenciaTelefone, base64ComPrefixo, fileName);
 
         String response = webClient
                 .post()

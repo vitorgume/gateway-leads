@@ -52,7 +52,7 @@ public class ClienteUseCase {
         return cliente.get();
     }
 
-    public List<RelatorioContatoDto> getRelatorio(Long id) {
-        return gateway.getRelatorioContato(id);
+    public List<RelatorioContatoDto> getRelatorio() {
+        return gateway.getRelatorioContato();
     }
 }

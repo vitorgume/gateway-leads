@@ -1,5 +1,6 @@
 package com.gumeinteligencia.gateway_leads.infrastructure.mapper;
 
+import com.gumeinteligencia.gateway_leads.application.usecase.GatewayEnum;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
 
 import java.sql.Timestamp;
@@ -13,9 +14,10 @@ public class RelatorioMapper {
                 .map(obj -> new RelatorioContatoDto(
                         (String) obj[0],
                         (String) obj[1],
-                        String.valueOf(obj[2]),
-                        String.valueOf(obj[3]),
-                        ((Timestamp) obj[4]).toLocalDateTime()
+                        GatewayEnum.gatewaySegmento(String.valueOf(obj[2])),
+                        GatewayEnum.gatewayRegiao(String.valueOf(obj[3])),
+                        ((Timestamp) obj[4]).toLocalDateTime(),
+                        (String) obj[5]
                 ))
                 .collect(Collectors.toList());
     }

@@ -84,12 +84,11 @@ public class ClienteDataProvider implements ClienteGateway {
     }
 
     @Override
-    public List<RelatorioContatoDto> getRelatorioContato(Long id) {
+    public List<RelatorioContatoDto> getRelatorioContato() {
         List<RelatorioContatoDto> relatorios;
 
         try {
-
-            relatorios = RelatorioMapper.paraDto(repository.gerarRelatorio(id));
+            relatorios = RelatorioMapper.paraDto(repository.gerarRelatorio());
         } catch (Exception ex) {
             log.error(MENSAGEM_ERRO_GERAR_RELATORIO, ex);
             throw new DataProviderException(MENSAGEM_ERRO_GERAR_RELATORIO, ex.getCause());
