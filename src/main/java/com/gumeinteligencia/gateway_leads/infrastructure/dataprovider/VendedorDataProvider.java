@@ -25,6 +25,7 @@ public class VendedorDataProvider implements VendedorGateway {
     private final String MENSAGEM_ERRO_LISTAR_SEM_NILZA = "Erro ao listar todos os vendedores exceto a nilza";
     private final String MENSAGEM_ERRO_SALVAR = "Erro ao salvar vendedor.";
     private final String MENSAGEM_ERRO_DELETAR_POR_ID = "Erro ao deletar vendedor pelo id.";
+    private final String MENSAGEM_ERRO_CONSULTAR_POR_TELEFONE = "Erro ao consultar vendedor pelo seu telefone.";
 
     @Override
     public Optional<Vendedor> consultarVendedor(String nome) {
@@ -89,5 +90,20 @@ public class VendedorDataProvider implements VendedorGateway {
             log.error(MENSAGEM_ERRO_DELETAR_POR_ID, ex);
             throw new DataProviderException(MENSAGEM_ERRO_DELETAR_POR_ID, ex.getCause());
         }
+    }
+
+    @Override
+    public Optional<Vendedor> consultarPorTelefone(String telefone) {
+        Optional<VendedorEntity> vendedor;
+
+        try {
+            vendedor = repository.findByTelefone(telefone);
+        } catch (Exception ex) {
+            log.error(MENSAGEM_ERRO_CONSULTAR_POR_TELEFONE, ex);
+            throw new DataProviderException(MENSAGEM_ERRO_CONSULTAR_POR_TELEFONE, ex.getCause());
+        }
+
+
+        return vendedor.map(VendedorMapper::paraDomain);
     }
 }

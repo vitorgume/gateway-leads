@@ -16,4 +16,6 @@ public interface VendedorGateway {
     Vendedor salvar(Vendedor vendedor);
 
     void deletar(Long id);
+
+    Optional<Vendedor> consultarPorTelefone(String telefone);
 }

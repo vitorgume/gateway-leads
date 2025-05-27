@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class MensagemDirecionarFinanceiro implements MensagemType{
     @Override
     public String getMensagem(String nomeVendedor, Cliente cliente) {
-        return "Muito bem ! Agora você será redirecionado para a Patrícia, responsável pelo nosso financeiro. Em alguns minutos elá entrará em contato com você. Até ...";
+        return "Muito bem ! Agora você será redirecionado para a Vitória, responsável pelo nosso financeiro. Em alguns minutos elá entrará em contato com você. Até ...";
     }
 
     @Override

@@ -15,4 +15,6 @@ public interface VendedorRepository extends JpaRepository<VendedorEntity, Long> 
 
     @Query("SELECT v FROM Vendedor v WHERE v.nome <> 'Nilza'")
     List<VendedorEntity> listarSemNilza();
+
+    Optional<VendedorEntity> findByTelefone(String telefone);
 }

@@ -87,4 +87,7 @@ public class VendedorUseCase {
         return clienteUseCase.getRelatorio();
     }
 
+    public Optional<Vendedor> consultarPorTelefone(String telefone) {
+        return gateway.consultarPorTelefone(telefone);
+    }
 }
