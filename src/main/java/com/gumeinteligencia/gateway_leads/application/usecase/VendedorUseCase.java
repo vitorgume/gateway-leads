@@ -2,20 +2,24 @@ package com.gumeinteligencia.gateway_leads.application.usecase;
 
 import com.gumeinteligencia.gateway_leads.application.exceptions.VendedorNaoEncontradoException;
 import com.gumeinteligencia.gateway_leads.application.gateways.VendedorGateway;
+import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class VendedorUseCase {
 
     private final VendedorGateway gateway;
+    private final ClienteUseCase clienteUseCase;
     private final Random random = new Random();
 
 
@@ -77,5 +81,13 @@ public class VendedorUseCase {
 
     public void deletar(Long id) {
         gateway.deletar(id);
+    }
+
+    public List<RelatorioContatoDto> getRelatorio() {
+        return clienteUseCase.getRelatorio();
+    }
+
+    public Optional<Vendedor> consultarPorTelefone(String telefone) {
+        return gateway.consultarPorTelefone(telefone);
     }
 }

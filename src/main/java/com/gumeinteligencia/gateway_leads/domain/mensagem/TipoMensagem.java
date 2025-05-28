@@ -19,7 +19,8 @@ public enum TipoMensagem {
     DADOS_CONTATO_VENDEDOR(10, "Mensagem com os dados do contato enviado para o vendedor."),
     ESCOLHA_INVALIDA(11, "Mensagem para quando o usuário fizer uma escolha invalida das opções."),
     DIRECIONAR_LOGISTICA(12, "Mensagem de direcionamento para logística."),
-    DIRECIONAR_OUTRO_CONTATO_LOGISTICA(13, "Mensagem de direcionamento de outro contato da logistica.");
+    DIRECIONAR_OUTRO_CONTATO_LOGISTICA(13, "Mensagem de direcionamento de outro contato da logistica."),
+    CONTATO_INATIVO(14, "Mensgem de contato inativo.");
 
     private final Integer codigo;
     private final String descricao;

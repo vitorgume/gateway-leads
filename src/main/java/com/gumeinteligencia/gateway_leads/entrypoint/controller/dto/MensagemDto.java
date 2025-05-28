@@ -10,4 +10,5 @@ import lombok.*;
 public class MensagemDto {
     private String phone;
     private TextoDto text;
+    private ImageDto image;
 }

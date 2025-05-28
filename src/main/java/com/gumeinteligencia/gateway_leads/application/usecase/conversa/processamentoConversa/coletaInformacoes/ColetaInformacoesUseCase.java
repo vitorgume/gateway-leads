@@ -1,7 +1,7 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.coletaInformacoes;
 
 import com.gumeinteligencia.gateway_leads.application.exceptions.EscolhaNaoIdentificadoException;
-import com.gumeinteligencia.gateway_leads.application.usecase.MensagemUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;

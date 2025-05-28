@@ -9,7 +9,7 @@ public class MensagemDirecionarLogistica implements MensagemType {
 
     @Override
     public String getMensagem(String nomeVendedor, Cliente cliente) {
-        return "Muito bem ! Agora você será direcionado para a Gabriella, responsável pela nossa logística. Em alguns minutos elá entrará em contato com você. Até ...";
+        return "Muito bem ! Agora você será direcionado para a Gabriella, responsável pela nossa logística. Logo elá entrará em contato com você. Até ...";
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoFinalizado;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
-import com.gumeinteligencia.gateway_leads.application.usecase.MensagemUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.SetorEnvioContato;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
@@ -29,7 +29,7 @@ public class DirecionamentoLogistica implements ProcessoFinalizadoType {
         if(conversa.getMensagemDirecionamento().getEscolhaLogistica()) {
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_LOGISTICA, null, null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoOutroSetor(cliente, SetorEnvioContato.LOGISTICA);
-            conversa.getMensagemDirecionamento().setMensagemInicial(true);
+            conversa.getMensagemDirecionamento().setMensagemInicial(false);
             conversaUseCase.salvar(conversa);
         } else {
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_LOGISTICA, null, null), cliente.getTelefone(), conversa);

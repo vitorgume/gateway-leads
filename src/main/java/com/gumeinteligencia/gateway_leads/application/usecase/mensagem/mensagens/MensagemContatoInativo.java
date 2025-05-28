@@ -5,15 +5,15 @@ import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MensagemDirecionarPrimeiroContato implements MensagemType{
+public class MensagemContatoInativo implements MensagemType{
+
     @Override
     public String getMensagem(String nomeVendedor, Cliente cliente) {
-        return "Muito obrigado pelas informações ! Agora você será redirecionado para o(a) "
-                + nomeVendedor + ", logo entrará em contato com você ! Até...";
+        return "Contato inativo por mais de 10 minutos";
     }
 
     @Override
     public Integer getTipoMensagem() {
-        return TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO.getCodigo();
+        return TipoMensagem.CONTATO_INATIVO.getCodigo();
     }
 }

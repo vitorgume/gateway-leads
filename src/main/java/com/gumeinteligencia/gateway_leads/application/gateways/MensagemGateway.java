@@ -9,4 +9,6 @@ public interface MensagemGateway {
     void enviar(Mensagem mensagem);
     void enviarContato(Vendedor vendedor, Cliente cliente, String mensagem);
     void enviarContatoOutroSetor(Cliente cliente, SetorEnvioContato setor);
+
+    void enviarRelatorio(String arquivo, String fileName);
 }

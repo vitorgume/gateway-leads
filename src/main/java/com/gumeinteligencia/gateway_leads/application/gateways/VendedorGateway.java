@@ -1,5 +1,6 @@
 package com.gumeinteligencia.gateway_leads.application.gateways;
 
+import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface VendedorGateway {
     Vendedor salvar(Vendedor vendedor);
 
     void deletar(Long id);
+
+    Optional<Vendedor> consultarPorTelefone(String telefone);
 }

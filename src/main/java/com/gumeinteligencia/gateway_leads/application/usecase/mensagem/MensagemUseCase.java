@@ -1,6 +1,8 @@
-package com.gumeinteligencia.gateway_leads.application.usecase;
+package com.gumeinteligencia.gateway_leads.application.usecase.mensagem;
 
 import com.gumeinteligencia.gateway_leads.application.gateways.MensagemGateway;
+import com.gumeinteligencia.gateway_leads.application.usecase.ClienteUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.SetorEnvioContato;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
@@ -13,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class MensagemUseCase {
     private final MensagemGateway gateway;
     private final MensagemBuilder mensagemBuilder;
     private final ConversaUseCase conversaUseCase;
+    private final ClienteUseCase clienteUseCase;
 
     public void enviarMensagem(String textoMensagem, String telefone, Conversa conversa) {
         log.info("Enviando mensagem. Texto: {}, Telefone: {}", textoMensagem, telefone);
@@ -56,5 +61,32 @@ public class MensagemUseCase {
         log.info("Enviando contato para {}. Cliente: {}", setor.getDescricao() ,cliente);
         gateway.enviarContatoOutroSetor(cliente, setor);
         log.info("Contato enviado com sucesso para {}.", setor.getDescricao());
+    }
+
+    public void enviarRelatorio(String arquivo, String fileName) {
+        log.info("Enviando relatório de vendedores.");
+        gateway.enviarRelatorio(arquivo, fileName);
+        log.info("Relatório enviado com sucesso.");
+    }
+
+    public void executarEnvio(String telefone, List<String> mensagens, Mensagem mensagemRecebida) {
+        Optional<Cliente> clienteExistente = clienteUseCase.consultarPorTelefone(telefone);
+        Conversa conversa;
+
+        if(clienteExistente.isEmpty()) {
+            Cliente novoCliente = Cliente.builder().telefone(mensagemRecebida.getTelefone()).build();
+            Cliente cliente = clienteUseCase.cadastrar(novoCliente);
+            conversa = conversaUseCase.criar(cliente);
+        } else {
+            Conversa conversaExistente = conversaUseCase.consultarPorCliente(clienteExistente.get());
+
+            conversaExistente.getMensagemDirecionamento().setMensagemInicial(true);
+            conversaExistente.setTipoUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
+            conversa = conversaUseCase.salvar(conversaExistente);
+        }
+
+        for (String mensagem : mensagens) {
+            this.enviarMensagem(mensagem, telefone, conversa);
+        }
     }
 }
