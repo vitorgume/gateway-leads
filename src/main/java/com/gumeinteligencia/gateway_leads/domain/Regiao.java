@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum Regiao {
     MARINGA(1, "Maringá"),
     REGIAO_MARINGA(2, "Região de Maringá"),
-    OUTRA(3, "Outras regiões");
+    OUTRA(3, "Outras regiões"),
+    NAO_INFORMADA(4, "Não informada");
 
     private final int codigo;
     private final String descricao;

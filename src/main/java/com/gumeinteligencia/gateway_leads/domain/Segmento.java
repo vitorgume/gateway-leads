@@ -11,7 +11,8 @@ public enum Segmento {
     ENGENHARIA_ARQUITETURA(3, "Engenharia e Arquitetura"),
     ALIMENTOS(4, "Alimentos"),
     CELULARES(5, "Celulares"),
-    OUTROS(6, "Outros");
+    OUTROS(6, "Outros"),
+    NAO_INFORMADO(7, "Não informado");
 
     private final int codigo;
     private final String descricao;

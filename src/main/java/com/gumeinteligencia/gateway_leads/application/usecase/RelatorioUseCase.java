@@ -25,7 +25,7 @@ public class RelatorioUseCase {
     private final VendedorUseCase vendedorUseCase;
     private final MensagemUseCase mensagemUseCase;
 
-    @Scheduled(cron = "0 0 16 * * *")
+    @Scheduled(cron = "0 0 16 * * MON-FRI")
     public void enviarRelatorioDiarioVendedores() {
         List<RelatorioContatoDto> relatorio = vendedorUseCase.getRelatorio();
 

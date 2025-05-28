@@ -29,7 +29,7 @@ public class DirecionamentoLogistica implements ProcessoFinalizadoType {
         if(conversa.getMensagemDirecionamento().isEscolhaLogistica()) {
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_LOGISTICA, null, null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoOutroSetor(cliente, SetorEnvioContato.LOGISTICA);
-            conversa.getMensagemDirecionamento().setMensagemInicial(true);
+            conversa.getMensagemDirecionamento().setMensagemInicial(false);
             conversaUseCase.salvar(conversa);
         } else {
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_LOGISTICA, null, null), cliente.getTelefone(), conversa);
