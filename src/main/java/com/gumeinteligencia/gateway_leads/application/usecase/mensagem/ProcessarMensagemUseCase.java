@@ -33,12 +33,6 @@ public class ProcessarMensagemUseCase {
     @Value("${neoprint.gerencia.telefone}")
     private final String gerenciaTelefone;
 
-
-    private final String MENSAGEM_ERRO_ENVIAR_MENSAGEM = "Erro ao enviar mensagem.";
-    private final String MENSAGEM_ERRO_ENVIAR_CONTATO = "Erro ao enviar contato.";
-    private final String MENSAGEM_ERRO_ENVIAR_CONTATO_FINANCEIRO = "Erro ao enviar contato financeiro.";
-    private final String MENSAGEM_ERRO_ENVIAR_RELATORIO = "Erro ao enviar relatóro.";
-
     public ProcessarMensagemUseCase(
             ClienteUseCase clienteUseCase,
             ProcessamentoConversaExistenteUseCase processamentoConversaExistenteUseCase,
@@ -73,10 +67,10 @@ public class ProcessarMensagemUseCase {
     }
 
     private boolean validaTelefoneVendedores(String telefone) {
-        Optional<Vendedor> vededor = vendedorUseCase.consultarPorTelefone(telefone);
+        Optional<Vendedor> vendedor = vendedorUseCase.consultarPorTelefone(telefone);
         List<String> outrosTelefones = new ArrayList<>(Arrays.asList(financeiroTelefone, logisticaTelefone, gerenciaTelefone));
 
-        if(vededor.isEmpty()) {
+        if(vendedor.isEmpty()) {
             return !outrosTelefones.contains(telefone);
         }
 

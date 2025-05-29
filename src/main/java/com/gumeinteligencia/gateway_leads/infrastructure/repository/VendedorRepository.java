@@ -13,8 +13,11 @@ import java.util.UUID;
 public interface VendedorRepository extends JpaRepository<VendedorEntity, Long> {
     Optional<VendedorEntity> findByNome(String nome);
 
-    @Query("SELECT v FROM Vendedor v WHERE v.nome <> 'Nilza'")
+    @Query("SELECT v FROM Vendedor v WHERE v.nome <> 'Nilza' AND v.nome <> 'Samara'")
     List<VendedorEntity> listarSemNilza();
 
     Optional<VendedorEntity> findByTelefone(String telefone);
+
+    @Query("SELECT v FROM Vendedor v WHERE v.nome <> 'Samara'")
+    List<VendedorEntity> listar();
 }
