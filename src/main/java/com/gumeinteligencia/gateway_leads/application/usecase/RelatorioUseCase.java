@@ -58,7 +58,7 @@ public class RelatorioUseCase {
             }
 
             for (int i = 0; i < 6; i++) {
-                sheet.autoSizeColumn(i);
+                sheet.setColumnWidth(i, 6000);
             }
 
             byte[] planilha;
