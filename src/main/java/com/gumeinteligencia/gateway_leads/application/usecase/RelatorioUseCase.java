@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +19,29 @@ import java.util.Base64;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class RelatorioUseCase {
 
     private final VendedorUseCase vendedorUseCase;
     private final MensagemUseCase mensagemUseCase;
+
+    @Value("${neoprint.gerencia.telefone}")
+    private final String gerenciaTelefone;
+
+    @Value("${gume.telefone.consultor}")
+    private final String consultorTelefone;
+
+    public RelatorioUseCase(
+            VendedorUseCase vendedorUseCase,
+            MensagemUseCase mensagemUseCase,
+            @Value("${neoprint.gerencia.telefone}") String gerenciaTelefone,
+            @Value("${gume.telefone.consultor}") String consultorTelefone
+    ) {
+        this.vendedorUseCase = vendedorUseCase;
+        this.mensagemUseCase = mensagemUseCase;
+        this.gerenciaTelefone = gerenciaTelefone;
+        this.consultorTelefone = consultorTelefone;
+    }
 
     @Scheduled(cron = "0 0 16 * * MON-FRI")
     public void enviarRelatorioDiarioVendedores() {
@@ -31,7 +49,8 @@ public class RelatorioUseCase {
 
         String arquivo = gerarArquivo(relatorio);
 
-        mensagemUseCase.enviarRelatorio(arquivo, "Relatorio.xlsx");
+        mensagemUseCase.enviarRelatorio(arquivo, "Relatorio.xlsx", gerenciaTelefone);
+        mensagemUseCase.enviarRelatorio(arquivo, "Relatorio.xlsx", consultorTelefone);
     }
 
     private String gerarArquivo(List<RelatorioContatoDto> contatos) {

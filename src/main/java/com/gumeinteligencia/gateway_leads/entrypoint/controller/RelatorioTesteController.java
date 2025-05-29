@@ -15,7 +15,7 @@ public class RelatorioTesteController {
     private final RelatorioUseCase relatorioUseCase;
 
     @GetMapping
-    public ResponseEntity<Void> getRelatorio() {
+    public ResponseEntity<Void> getRelatorios() {
         relatorioUseCase.enviarRelatorioDiarioVendedores();
         return ResponseEntity.ok().build();
     }

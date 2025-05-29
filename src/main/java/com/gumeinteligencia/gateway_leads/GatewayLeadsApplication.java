@@ -21,6 +21,7 @@ public class GatewayLeadsApplication {
 		System.setProperty("FINANCEIRO_TELEFONE", dotenv.get("FINANCEIRO_TELEFONE"));
 		System.setProperty("LOGISTICA_TELEFONE", dotenv.get("LOGISTICA_TELEFONE"));
 		System.setProperty("GERENCIA_TELEFONE", dotenv.get("GERENCIA_TELEFONE"));
+		System.setProperty("CONSULTOR_TELEFONE", dotenv.get("CONSULTOR_TELEFONE"));
 
 		SpringApplication.run(GatewayLeadsApplication.class, args);
 	}
