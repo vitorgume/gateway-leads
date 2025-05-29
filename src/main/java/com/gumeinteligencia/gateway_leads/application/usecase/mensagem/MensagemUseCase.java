@@ -63,9 +63,9 @@ public class MensagemUseCase {
         log.info("Contato enviado com sucesso para {}.", setor.getDescricao());
     }
 
-    public void enviarRelatorio(String arquivo, String fileName) {
+    public void enviarRelatorio(String arquivo, String fileName, String telefone) {
         log.info("Enviando relatório de vendedores.");
-        gateway.enviarRelatorio(arquivo, fileName);
+        gateway.enviarRelatorio(arquivo, fileName, telefone);
         log.info("Relatório enviado com sucesso.");
     }
 

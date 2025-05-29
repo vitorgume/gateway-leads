@@ -21,6 +21,7 @@ public class GatewayLeadsApplication {
 		System.setProperty("FINANCEIRO_TELEFONE", System.getenv("FINANCEIRO_TELEFONE"));
 		System.setProperty("LOGISTICA_TELEFONE", System.getenv("LOGISTICA_TELEFONE"));
 		System.setProperty("GERENCIA_TELEFONE", System.getenv("GERENCIA_TELEFONE"));
+		System.setProperty("CONSULTOR_TELEFONE", System.getenv("CONSULTOR_TELEFONE"));
 
 		TimeZone.setDefault(TimeZone.getTimeZone("America/Sao_Paulo"));
 

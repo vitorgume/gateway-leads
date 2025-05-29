@@ -41,9 +41,6 @@ public class MensagemDataProvider implements MensagemGateway {
     @Value("${neoprint.logistica.telefone}")
     private final String logisticaTelefone;
 
-    @Value("${neoprint.gerencia.telefone}")
-    private final String gerenciaTelefone;
-
 
     private final String MENSAGEM_ERRO_ENVIAR_MENSAGEM = "Erro ao enviar mensagem.";
     private final String MENSAGEM_ERRO_ENVIAR_CONTATO = "Erro ao enviar contato.";
@@ -65,7 +62,6 @@ public class MensagemDataProvider implements MensagemGateway {
         this.clienteToken = clienteToken;
         this.financeiroTelefone = financeiroTelefone;
         this.logisticaTelefone = logisticaTelefone;
-        this.gerenciaTelefone = gerenciaTelefone;
     }
 
     @Override
@@ -149,9 +145,9 @@ public class MensagemDataProvider implements MensagemGateway {
     }
 
     @Override
-    public void enviarRelatorio(String arquivo, String fileName) {
+    public void enviarRelatorio(String arquivo, String fileName, String telefone) {
         String base64ComPrefixo = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," + arquivo;
-        DocumentoRequestDto body = new DocumentoRequestDto(gerenciaTelefone, base64ComPrefixo, fileName);
+        DocumentoRequestDto body = new DocumentoRequestDto(telefone, base64ComPrefixo, fileName);
 
         String response = webClient
                 .post()
