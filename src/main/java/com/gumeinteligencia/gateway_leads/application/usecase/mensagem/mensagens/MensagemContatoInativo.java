@@ -9,7 +9,7 @@ public class MensagemContatoInativo implements MensagemType{
 
     @Override
     public String getMensagem(String nomeVendedor, Cliente cliente) {
-        return "Contato inativo por mais de 10 minutos";
+        return "Contato inativo por mais de 30 minutos";
     }
 
     @Override

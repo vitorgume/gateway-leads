@@ -23,13 +23,13 @@ public class RelatorioMapper {
                                     .build();
 
                             try {
-                                relatorio.setSegmento(GatewayEnum.gatewaySegmento(String.valueOf(obj[2])));
+                                relatorio.setSegmento(GatewayEnum.gatewaySegmentoRelatorio(String.valueOf(obj[2])));
                             } catch (EscolhaNaoIdentificadoException ex) {
                                 relatorio.setSegmento(Segmento.NAO_INFORMADO);
                             }
 
                             try {
-                                relatorio.setRegiao(GatewayEnum.gatewayRegiao(String.valueOf(obj[3])));
+                                relatorio.setRegiao(GatewayEnum.gatewayRegiaoRelatorio(String.valueOf(obj[3])));
                             } catch (EscolhaNaoIdentificadoException ex) {
                                 relatorio.setRegiao(Regiao.NAO_INFORMADA);
                             }

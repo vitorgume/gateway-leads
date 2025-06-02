@@ -1,26 +1,32 @@
 package com.gumeinteligencia.gateway_leads.application.usecase;
 
 import com.gumeinteligencia.gateway_leads.application.exceptions.OutroContatoNaoEncontradoException;
-import com.gumeinteligencia.gateway_leads.domain.OutroContato;
+import com.gumeinteligencia.gateway_leads.application.gateways.OutroContatoGateway;
+import com.gumeinteligencia.gateway_leads.domain.outroContato.OutroContato;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class OutroContatoUseCase {
 
-    private final OutroContatoGateway outroContatoGateway;
+    private final OutroContatoGateway gateway;
 
 
     public OutroContato consultarPorNome(String nome) {
-        Optional<OutroContato> outroContato = outroContatoGateway.consultarPorNome(nome);
+        Optional<OutroContato> outroContato = gateway.consultarPorNome(nome);
 
         if(outroContato.isEmpty()) {
             throw new OutroContatoNaoEncontradoException();
         }
 
         return outroContato.get();
+    }
+
+    public List<OutroContato> listar() {
+        return gateway.listar();
     }
 }

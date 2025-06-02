@@ -26,4 +26,14 @@ public interface ClienteRepository extends JpaRepository<ClienteEntity, UUID> {
                                   AND co.data_criacao <= DATE_ADD(NOW(), INTERVAL 3 HOUR);
             """, nativeQuery = true)
     List<Object[]> gerarRelatorio();
+
+    @Query(value = """
+                SELECT cl.nome, cl.telefone, cl.segmento, cl.regiao, co.data_criacao, v.nome as nome_vendedor
+                                FROM clientes cl
+                                INNER JOIN conversas co ON co.cliente_id_cliente = cl.id_cliente
+                                INNER JOIN vendedores v ON v.id_vendedor = co.vendedor_id_vendedor
+                                WHERE co.data_criacao >= DATE_SUB(DATE_ADD(NOW(), INTERVAL 3 HOUR), INTERVAL 2 DAY)
+                                  AND co.data_criacao <= DATE_ADD(NOW(), INTERVAL 3 HOUR);
+            """, nativeQuery = true)
+    List<Object[]> gerarRelatorioSegundaFeira();
 }

@@ -1,5 +1,6 @@
 package com.gumeinteligencia.gateway_leads.infrastructure.repository.entity;
 
+import com.gumeinteligencia.gateway_leads.domain.outroContato.Setor;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,4 +20,7 @@ public class OutroContatoEntity {
     private String nome;
     private String telefone;
     private String descricao;
+
+    @Enumerated(EnumType.ORDINAL)
+    private Setor setor;
 }

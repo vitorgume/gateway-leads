@@ -17,4 +17,6 @@ public interface ClienteGateway {
     Optional<Cliente> consultarPorId(UUID id);
 
     List<RelatorioContatoDto> getRelatorioContato();
+
+    List<RelatorioContatoDto> getRelatorioContatoSegundaFeira();
 }

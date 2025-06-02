@@ -48,7 +48,7 @@ public class VendedorUseCase {
         return this.consultarVendedor(vendedor);
     }
 
-    private String roletaVendedores() {
+    public String roletaVendedores() {
         List<Vendedor> vendedores = gateway.listarSemNilza();
 
         int limite = vendedores.size();
@@ -89,5 +89,9 @@ public class VendedorUseCase {
 
     public Optional<Vendedor> consultarPorTelefone(String telefone) {
         return gateway.consultarPorTelefone(telefone);
+    }
+
+    public List<RelatorioContatoDto> getRelatorioSegundaFeira() {
+        return clienteUseCase.getRelatorioSegundaFeira();
     }
 }

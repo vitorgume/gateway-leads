@@ -1,6 +1,5 @@
 package com.gumeinteligencia.gateway_leads.application.gateways;
 
-import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.SetorEnvioContato;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
@@ -8,7 +7,7 @@ import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 public interface MensagemGateway {
     void enviar(Mensagem mensagem);
     void enviarContato(Vendedor vendedor, Cliente cliente, String mensagem);
-    void enviarContatoOutroSetor(Cliente cliente, SetorEnvioContato setor);
+    void enviarContatoOutroSetor(Cliente cliente, String telefone);
 
     void enviarRelatorio(String arquivo, String fileName, String telefone);
 }

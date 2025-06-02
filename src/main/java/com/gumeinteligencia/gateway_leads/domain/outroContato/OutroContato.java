@@ -1,4 +1,4 @@
-package com.gumeinteligencia.gateway_leads.domain;
+package com.gumeinteligencia.gateway_leads.domain.outroContato;
 
 import lombok.*;
 
@@ -12,4 +12,5 @@ public class OutroContato {
     private String nome;
     private String telefone;
     private String descricao;
-}
+    private Setor setor;
+ }
