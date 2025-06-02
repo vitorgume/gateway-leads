@@ -10,6 +10,7 @@ public class OutroContatoMapper {
                 .nome(entity.getNome())
                 .telefone(entity.getTelefone())
                 .descricao(entity.getDescricao())
+                .setor(entity.getSetor())
                 .build();
     }
 }

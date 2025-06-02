@@ -21,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -44,7 +46,7 @@ public class ProcessamentoConversaExistenteUseCase {
             conversa.getMensagemDirecionamento().setColetaNome(true);
             clienteUseCase.salvar(cliente);
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null), cliente.getTelefone(), conversa);
-            conversa.setUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
+            conversa.setTipoUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
             conversaUseCase.salvar(conversa);
         } else {
 
@@ -64,28 +66,35 @@ public class ProcessamentoConversaExistenteUseCase {
 
     public void processarConversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando uma mensagem de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
-        if (!conversa.getMensagemDirecionamento().isMensagemInicial()) {
-            mensagemOrquestradora.enviarComEspera(cliente.getTelefone(), List.of(
-                    mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null),
-                    mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null)
-            ), mensagem);
-        } else {
 
-            try {
-                ProcessoFinalizadoType strategy;
+        LocalDateTime agora = LocalDateTime.now();
 
-                if(conversa.getMensagemDirecionamento().isEscolhaComercialRecontato() && !conversa.getMensagemDirecionamento().isEscolhaComercial()) {
-                    strategy = new DirecionamentoComercial(mensagemUseCase, conversaUseCase, coletaInformacoesUseCase, mensagemBuilder);
-                } else {
-                    strategy = processoFinalizadoFactory.create(mensagem);
+//        if(conversa.getUltimaMensagem().plusHours(1).isBefore(agora)) {
+        if(true){
+            if (!conversa.getMensagemDirecionamento().isMensagemInicial()) {
+                mensagemOrquestradora.enviarComEspera(cliente.getTelefone(), List.of(
+                        mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null),
+                        mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null)
+                ), mensagem);
+            } else {
+
+                try {
+                    ProcessoFinalizadoType strategy;
+
+                    if(conversa.getMensagemDirecionamento().isEscolhaComercialRecontato() && !conversa.getMensagemDirecionamento().isEscolhaComercial()) {
+                        strategy = new DirecionamentoComercial(mensagemUseCase, conversaUseCase, coletaInformacoesUseCase, mensagemBuilder);
+                    } else {
+                        strategy = processoFinalizadoFactory.create(mensagem);
+                    }
+
+                    strategy.processar(conversa, cliente, mensagem);
+                } catch (EscolhaNaoIdentificadoException ex) {
+                    processaOpcaoInvalida(conversa, cliente);
                 }
 
-                strategy.processar(conversa, cliente, mensagem);
-            } catch (EscolhaNaoIdentificadoException ex) {
-                processaOpcaoInvalida(conversa, cliente);
             }
-
         }
+
         log.info("Mensagem de uma conversa finalizada processada com sucesso.");
     }
 
@@ -109,7 +118,7 @@ public class ProcessamentoConversaExistenteUseCase {
 
         mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ESCOLHA_INVALIDA, null, null), cliente.getTelefone(), conversa);
 
-        TipoMensagem ultimaMensagem = conversa.getUltimaMensagem();
+        TipoMensagem ultimaMensagem = conversa.getTipoUltimaMensagem();
 
         if(ultimaMensagem != null) {
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(ultimaMensagem, null, null), cliente.getTelefone(), conversa);

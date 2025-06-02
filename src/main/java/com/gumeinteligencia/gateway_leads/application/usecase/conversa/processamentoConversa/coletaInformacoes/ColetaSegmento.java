@@ -31,7 +31,7 @@ public class ColetaSegmento implements ColetaType{
         log.info("Coletando segmento. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_SEGMENTO, null, null), cliente.getTelefone(), conversa);
         conversa.getMensagemColeta().setColetaSegmento(true);
-        conversa.setDataUltimaMensagem(LocalDateTime.now());
+        conversa.setUltimaMensagem(LocalDateTime.now());
         conversaUseCase.salvar(conversa);
         log.info("Coleta de segmento concluida com sucesso. Conversa: {}, Cliente: {}", conversa, cliente);
     }

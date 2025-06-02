@@ -35,8 +35,8 @@ public class ConversaInativaUseCase {
 
         List<Conversa> conversasAtrasadas = conversas.stream()
                 .filter(conversa -> {
-                            if(conversa.getDataUltimaMensagem() != null)
-                                return conversa.getDataUltimaMensagem().plusMinutes(30).isBefore(agora);
+                            if(conversa.getUltimaMensagem() != null)
+                                return conversa.getUltimaMensagem().plusMinutes(30).isBefore(agora);
 
                             return false;
                         }
@@ -55,7 +55,7 @@ public class ConversaInativaUseCase {
                                 conversa.getCliente(),
                                 null
                         );
-                mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.CONTATO_INATIVO, null, null), vendedor.getTelefone(), null);
+                mensagemUseCase.enviarMensagemVendedor(mensagemBuilder.getMensagem(TipoMensagem.CONTATO_INATIVO, null, null), vendedor.getTelefone(), null);
                 conversaUseCase.salvar(conversa);
             });
         }

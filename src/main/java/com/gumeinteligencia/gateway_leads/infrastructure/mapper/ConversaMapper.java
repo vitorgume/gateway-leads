@@ -14,8 +14,8 @@ public class ConversaMapper {
                 .mensagemDirecionamento(entity.getMensagemDirecionamento())
                 .finalizada(entity.getFinalizada())
                 .encerrada(entity.getEncerrada())
+                .tipoUltimaMensagem(entity.getTipoUltimaMensagem())
                 .ultimaMensagem(entity.getUltimaMensagem())
-                .dataUltimaMensagem(entity.getDataUltimaMensagem())
                 .build();
 
         if(entity.getVendedor() != null) {
@@ -24,10 +24,10 @@ public class ConversaMapper {
             conversaBuild.setVendedor(null);
         }
 
-        if(entity.getUltimaMensagem() == null) {
-            conversaBuild.setUltimaMensagem(null);
+        if(entity.getTipoUltimaMensagem() == null) {
+            conversaBuild.setTipoUltimaMensagem(null);
         } else {
-            conversaBuild.setDataUltimaMensagem(entity.getDataUltimaMensagem());
+            conversaBuild.setUltimaMensagem(entity.getUltimaMensagem());
         }
 
         return conversaBuild;
@@ -42,8 +42,8 @@ public class ConversaMapper {
                 .mensagemDirecionamento(domain.getMensagemDirecionamento())
                 .finalizada(domain.getFinalizada())
                 .encerrada(domain.getEncerrada())
+                .tipoUltimaMensagem(domain.getTipoUltimaMensagem())
                 .ultimaMensagem(domain.getUltimaMensagem())
-                .dataUltimaMensagem(domain.getDataUltimaMensagem())
                 .build();
 
         if(domain.getVendedor() != null) {
@@ -52,10 +52,10 @@ public class ConversaMapper {
             conversaBuild.setVendedor(null);
         }
 
-        if(domain.getUltimaMensagem() == null) {
-            conversaBuild.setUltimaMensagem(null);
+        if(domain.getTipoUltimaMensagem() == null) {
+            conversaBuild.setTipoUltimaMensagem(null);
         } else {
-            conversaBuild.setDataUltimaMensagem(domain.getDataUltimaMensagem());
+            conversaBuild.setUltimaMensagem(domain.getUltimaMensagem());
         }
 
         return conversaBuild;
