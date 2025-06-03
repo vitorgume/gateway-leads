@@ -69,7 +69,7 @@ public class ProcessamentoConversaExistenteUseCase {
 
         LocalDateTime agora = LocalDateTime.now();
 
-        if(conversa.getUltimaMensagem().plusHours(1).isBefore(agora)) {
+        if(conversa.getUltimaMensagemConversaFinalizada().plusHours(1).isBefore(agora)) {
             if (!conversa.getMensagemDirecionamento().isMensagemInicial()) {
                 mensagemOrquestradora.enviarComEspera(cliente.getTelefone(), List.of(
                         mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null),

@@ -33,6 +33,11 @@ public class MensagemUseCase {
 
         if(conversa != null) {
             conversa.setUltimaMensagem(LocalDateTime.now());
+
+            if(conversa.getFinalizada() && conversa.getUltimaMensagemConversaFinalizada() == null) {
+                conversa.setUltimaMensagemConversaFinalizada(conversa.getUltimaMensagem());
+            }
+
             conversaUseCase.salvar(conversa);
         }
 

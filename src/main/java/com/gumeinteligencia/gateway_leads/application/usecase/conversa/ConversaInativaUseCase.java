@@ -55,7 +55,7 @@ public class ConversaInativaUseCase {
                                 conversa.getCliente(),
                                 null
                         );
-                mensagemUseCase.enviarMensagemVendedor(mensagemBuilder.getMensagem(TipoMensagem.CONTATO_INATIVO, null, null), vendedor.getTelefone(), null);
+                mensagemUseCase.enviarMensagemVendedor(mensagemBuilder.getMensagem(TipoMensagem.CONTATO_INATIVO, null, null), vendedor.getTelefone(), conversa);
                 conversaUseCase.salvar(conversa);
             });
         }
