@@ -30,6 +30,7 @@ public class RelatorioUseCase {
 
     @Scheduled(cron = "0 0 16 * * MON-FRI")
     public void enviarRelatorioDiarioVendedores() {
+        log.info("Gerando relatório de contatos dos vendedores.");
         DayOfWeek dataHoje = LocalDate.now().getDayOfWeek();
         List<RelatorioContatoDto> relatorio;
 
@@ -46,6 +47,8 @@ public class RelatorioUseCase {
 
         mensagemUseCase.enviarRelatorio(arquivo, "Relatorio.xlsx", gerencia.getTelefone());
         mensagemUseCase.enviarRelatorio(arquivo, "Relatorio.xlsx", consultor.getTelefone());
+        
+        log.info("Geração de relatório dos contatos dos vendedores concluida com sucesso.");
     }
 
     private String gerarArquivo(List<RelatorioContatoDto> contatos) {
