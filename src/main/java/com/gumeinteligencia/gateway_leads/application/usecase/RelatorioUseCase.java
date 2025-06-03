@@ -2,55 +2,50 @@ package com.gumeinteligencia.gateway_leads.application.usecase;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
-import com.gumeinteligencia.gateway_leads.domain.Vendedor;
+import com.gumeinteligencia.gateway_leads.domain.outroContato.OutroContato;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class RelatorioUseCase {
 
     private final VendedorUseCase vendedorUseCase;
     private final MensagemUseCase mensagemUseCase;
-
-    @Value("${neoprint.gerencia.telefone}")
-    private final String gerenciaTelefone;
-
-    @Value("${gume.telefone.consultor}")
-    private final String consultorTelefone;
-
-    public RelatorioUseCase(
-            VendedorUseCase vendedorUseCase,
-            MensagemUseCase mensagemUseCase,
-            @Value("${neoprint.gerencia.telefone}") String gerenciaTelefone,
-            @Value("${gume.telefone.consultor}") String consultorTelefone
-    ) {
-        this.vendedorUseCase = vendedorUseCase;
-        this.mensagemUseCase = mensagemUseCase;
-        this.gerenciaTelefone = gerenciaTelefone;
-        this.consultorTelefone = consultorTelefone;
-    }
+    private final OutroContatoUseCase outroContatoUseCase;
 
     @Scheduled(cron = "0 0 16 * * MON-FRI")
     public void enviarRelatorioDiarioVendedores() {
-        List<RelatorioContatoDto> relatorio = vendedorUseCase.getRelatorio();
+        DayOfWeek dataHoje = LocalDate.now().getDayOfWeek();
+        List<RelatorioContatoDto> relatorio;
+
+        if(dataHoje.equals(DayOfWeek.MONDAY)) {
+            relatorio = vendedorUseCase.getRelatorioSegundaFeira();
+        } else {
+            relatorio = vendedorUseCase.getRelatorio();
+        }
+
+        OutroContato gerencia = outroContatoUseCase.consultarPorNome("Ney");
+        OutroContato consultor = outroContatoUseCase.consultarPorNome("Ricardo");
 
         String arquivo = gerarArquivo(relatorio);
 
-        mensagemUseCase.enviarRelatorio(arquivo, "Relatorio.xlsx", gerenciaTelefone);
-        mensagemUseCase.enviarRelatorio(arquivo, "Relatorio.xlsx", consultorTelefone);
+        mensagemUseCase.enviarRelatorio(arquivo, "Relatorio.xlsx", gerencia.getTelefone());
+        mensagemUseCase.enviarRelatorio(arquivo, "Relatorio.xlsx", consultor.getTelefone());
     }
 
     private String gerarArquivo(List<RelatorioContatoDto> contatos) {

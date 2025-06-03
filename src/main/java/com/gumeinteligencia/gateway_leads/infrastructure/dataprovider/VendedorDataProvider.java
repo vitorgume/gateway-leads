@@ -46,7 +46,7 @@ public class VendedorDataProvider implements VendedorGateway {
         List<VendedorEntity> vendedorEntities;
 
         try {
-            vendedorEntities = repository.findAll();
+            vendedorEntities = repository.listar();
         } catch (Exception ex) {
             log.error(MENSAGEM_ERRO_LISTAR, ex);
             throw new DataProviderException(MENSAGEM_ERRO_LISTAR, ex.getCause());

@@ -55,4 +55,8 @@ public class ClienteUseCase {
     public List<RelatorioContatoDto> getRelatorio() {
         return gateway.getRelatorioContato();
     }
+
+    public List<RelatorioContatoDto> getRelatorioSegundaFeira() {
+        return gateway.getRelatorioContatoSegundaFeira();
+    }
 }

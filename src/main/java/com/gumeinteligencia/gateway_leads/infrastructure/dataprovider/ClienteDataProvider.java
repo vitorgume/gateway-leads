@@ -30,6 +30,7 @@ public class ClienteDataProvider implements ClienteGateway {
     private final String MENSAGEM_ERRO_DELETAR = "Erro ao deletar cliente pelo id.";
     private final String MENSAGEM_ERRO_CONSULTAR_POR_ID = "Erro ao consultar por cliente pelo id.";
     private final String MENSAGEM_ERRO_GERAR_RELATORIO = "Erro ao gerar relatório de contatos.";
+    private final String MENSAGEM_ERRO_GERAR_RELATORIO_SEGUNDA_FEIRA = "Erro ao gerar relatório de segunda feira.";
 
     @Override
     public Optional<Cliente> consutlarPorTelfone(String telefone) {
@@ -92,6 +93,20 @@ public class ClienteDataProvider implements ClienteGateway {
         } catch (Exception ex) {
             log.error(MENSAGEM_ERRO_GERAR_RELATORIO, ex);
             throw new DataProviderException(MENSAGEM_ERRO_GERAR_RELATORIO, ex.getCause());
+        }
+
+        return relatorios;
+    }
+
+    @Override
+    public List<RelatorioContatoDto> getRelatorioContatoSegundaFeira() {
+        List<RelatorioContatoDto> relatorios;
+
+        try {
+            relatorios = RelatorioMapper.paraDto(repository.gerarRelatorioSegundaFeira());
+        } catch (Exception ex) {
+            log.error(MENSAGEM_ERRO_GERAR_RELATORIO_SEGUNDA_FEIRA, ex);
+            throw new DataProviderException(MENSAGEM_ERRO_GERAR_RELATORIO_SEGUNDA_FEIRA, ex.getCause());
         }
 
         return relatorios;

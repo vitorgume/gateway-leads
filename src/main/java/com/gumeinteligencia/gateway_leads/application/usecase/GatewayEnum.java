@@ -29,4 +29,29 @@ public class GatewayEnum {
             default -> throw new EscolhaNaoIdentificadoException();
         };
     }
+
+    public static Segmento gatewaySegmentoRelatorio(String tipo) {
+        String mensagemFormatada = tipo.toLowerCase();
+
+        return switch (mensagemFormatada) {
+            case "0" -> Segmento.MEDICINA_SAUDE;
+            case "1" -> Segmento.BOUTIQUE_LOJAS;
+            case "2" -> Segmento.ENGENHARIA_ARQUITETURA;
+            case "3" -> Segmento.ALIMENTOS;
+            case "4" -> Segmento.CELULARES;
+            case "5" -> Segmento.OUTROS;
+            default -> throw new EscolhaNaoIdentificadoException();
+        };
+    }
+
+    public static Regiao gatewayRegiaoRelatorio(String tipo) {
+        String mensagemFormatada = tipo.toLowerCase();
+
+        return switch (mensagemFormatada) {
+            case "0" -> Regiao.MARINGA;
+            case "1" -> Regiao.REGIAO_MARINGA;
+            case "2" -> Regiao.OUTRA;
+            default -> throw new EscolhaNaoIdentificadoException();
+        };
+    }
 }

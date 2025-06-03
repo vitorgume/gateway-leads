@@ -1,7 +1,6 @@
 package com.gumeinteligencia.gateway_leads.infrastructure.dataprovider;
 
 import com.gumeinteligencia.gateway_leads.application.gateways.MensagemGateway;
-import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.SetorEnvioContato;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.ContatoRequestDto;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.DocumentoRequestDto;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.MensagemRequestDto;
@@ -11,7 +10,6 @@ import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import com.gumeinteligencia.gateway_leads.infrastructure.exceptions.DataProviderException;
 import com.gumeinteligencia.gateway_leads.infrastructure.mapper.ContatoMapper;
 import com.gumeinteligencia.gateway_leads.infrastructure.mapper.MensagemMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -35,12 +33,6 @@ public class MensagemDataProvider implements MensagemGateway {
     @Value("${neoprint.ura.whatsapp.client-token}")
     private final String clienteToken;
 
-    @Value("${neoprint.financeiro.telefone}")
-    private final String financeiroTelefone;
-
-    @Value("${neoprint.logistica.telefone}")
-    private final String logisticaTelefone;
-
 
     private final String MENSAGEM_ERRO_ENVIAR_MENSAGEM = "Erro ao enviar mensagem.";
     private final String MENSAGEM_ERRO_ENVIAR_CONTATO = "Erro ao enviar contato.";
@@ -51,17 +43,12 @@ public class MensagemDataProvider implements MensagemGateway {
             WebClient webClient,
             @Value("${neoprint.ura.whatsapp.token}") String token,
             @Value("${neoprint.ura.whatsapp.id-instance}") String idInstance,
-            @Value("${neoprint.ura.whatsapp.client-token}") String clienteToken,
-            @Value("${neoprint.financeiro.telefone}") String financeiroTelefone,
-            @Value("${neoprint.logistica.telefone}") String logisticaTelefone,
-            @Value("${neoprint.gerencia.telefone}") String gerenciaTelefone
+            @Value("${neoprint.ura.whatsapp.client-token}") String clienteToken
     ) {
         this.webClient = webClient;
         this.token = token;
         this.idInstance = idInstance;
         this.clienteToken = clienteToken;
-        this.financeiroTelefone = financeiroTelefone;
-        this.logisticaTelefone = logisticaTelefone;
     }
 
     @Override
@@ -106,6 +93,13 @@ public class MensagemDataProvider implements MensagemGateway {
                 .bodyValue(body)
                 .retrieve()
                 .bodyToMono(String.class)
+                .retryWhen(
+                        Retry.backoff(3, Duration.ofSeconds(2))
+                                .filter(throwable -> {
+                                    log.warn("Tentando novamente após erro ao enviar contato para vendedor: {}", throwable.getMessage());
+                                    return true;
+                                })
+                )
                 .doOnError(e -> {
                     log.error("Erro ao enviar mensagem.", e);
                     throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_CONTATO, e.getCause());
@@ -116,15 +110,9 @@ public class MensagemDataProvider implements MensagemGateway {
     }
 
     @Override
-    public void enviarContatoOutroSetor(Cliente cliente, SetorEnvioContato setor) {
+    public void enviarContatoOutroSetor(Cliente cliente, String telefone) {
 
-        ContatoRequestDto body;
-
-        if (setor.getCodigo() == 0) {
-            body = ContatoMapper.paraRequestDto(cliente, financeiroTelefone);
-        } else {
-            body = ContatoMapper.paraRequestDto(cliente, logisticaTelefone);
-        }
+        ContatoRequestDto body = ContatoMapper.paraRequestDto(cliente, telefone);;
 
         log.info(body.toString());
 
@@ -135,6 +123,13 @@ public class MensagemDataProvider implements MensagemGateway {
                 .bodyValue(body)
                 .retrieve()
                 .bodyToMono(String.class)
+                .retryWhen(
+                        Retry.backoff(3, Duration.ofSeconds(2))
+                                .filter(throwable -> {
+                                    log.warn("Tentando novamente após erro ao enviar contato para outro setor: {}", throwable.getMessage());
+                                    return true;
+                                })
+                )
                 .doOnError(e -> {
                     log.error("Erro ao enviar mensagem.", e);
                     throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_CONTATO_FINANCEIRO, e.getCause());
@@ -156,6 +151,13 @@ public class MensagemDataProvider implements MensagemGateway {
                 .bodyValue(body)
                 .retrieve()
                 .bodyToMono(String.class)
+                .retryWhen(
+                        Retry.backoff(5, Duration.ofSeconds(2))
+                                .filter(throwable -> {
+                                    log.warn("Tentando novamente após erro ao enviar relatório: {}", throwable.getMessage());
+                                    return true;
+                                })
+                )
                 .doOnError(e -> {
                     log.error("Erro ao enviar relatório.", e);
                     throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_RELATORIO, e.getCause());

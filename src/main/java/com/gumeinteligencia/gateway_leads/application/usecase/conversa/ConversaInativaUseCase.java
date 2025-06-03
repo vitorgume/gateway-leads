@@ -25,19 +25,18 @@ public class ConversaInativaUseCase {
     private final MensagemUseCase mensagemUseCase;
     private final MensagemBuilder mensagemBuilder;
 
-    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 */20 * * * *")
     public void verificaAusenciaDeMensagem() {
         List<Conversa> conversas = conversaUseCase.listarNaoFinalizados();
-        log.info("Verificando se existe alguma mensagem inativa por mais de 10 minutos. Conversas: {}", conversas);
+        log.info("Verificando se existe alguma mensagem inativa por mais de 30 minutos. Conversas: {}", conversas);
         
 
         LocalDateTime agora = LocalDateTime.now();
 
         List<Conversa> conversasAtrasadas = conversas.stream()
                 .filter(conversa -> {
-
                             if(conversa.getUltimaMensagem() != null)
-                                return conversa.getUltimaMensagem().plusMinutes(10).isBefore(agora);
+                                return conversa.getUltimaMensagem().plusMinutes(30).isBefore(agora);
 
                             return false;
                         }
@@ -48,7 +47,7 @@ public class ConversaInativaUseCase {
         if(!conversasAtrasadas.isEmpty()) {
             conversasAtrasadas.forEach(conversa -> {
                 conversa.setFinalizada(true);
-                Vendedor vendedor = vendedorUseCase.consultarVendedor("Mariana");
+                Vendedor vendedor = vendedorUseCase.consultarVendedor(vendedorUseCase.roletaVendedores());
                 conversa.setVendedor(vendedor);
                 mensagemUseCase
                         .enviarContatoVendedor(
@@ -56,7 +55,7 @@ public class ConversaInativaUseCase {
                                 conversa.getCliente(),
                                 null
                         );
-                mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.CONTATO_INATIVO, null, null), vendedor.getTelefone(), null);
+                mensagemUseCase.enviarMensagemVendedor(mensagemBuilder.getMensagem(TipoMensagem.CONTATO_INATIVO, null, null), vendedor.getTelefone(), null);
                 conversaUseCase.salvar(conversa);
             });
         }

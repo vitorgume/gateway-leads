@@ -5,15 +5,14 @@ import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MensagemContatoInativo implements MensagemType{
-
+public class MensagemSeparacaoContatosVendedores implements MensagemType{
     @Override
     public String getMensagem(String nomeVendedor, Cliente cliente) {
-        return "Contato inativo por mais de 30 minutos";
+        return "✳️✳️✳️✳️✳️✳️";
     }
 
     @Override
     public Integer getTipoMensagem() {
-        return TipoMensagem.CONTATO_INATIVO.getCodigo();
+        return TipoMensagem.SEPARACAO_CONTATOS.getCodigo();
     }
 }
