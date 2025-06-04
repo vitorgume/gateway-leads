@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,10 +37,11 @@ public class ProcessamentoConversaExistenteUseCase {
     private final ProcessoFinalizadoFactory processoFinalizadoFactory;
     private final MensagemBuilder mensagemBuilder;
     private final MensagemOrquestradora mensagemOrquestradora;
+    private final ProcessamentoConversaInativaUseCase processamentoConversaInativaUseCase;
 
     public void processarConversaNaoFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando mensagem de uma conversa não finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
-        if(!conversa.getMensagemDirecionamento().isColetaNome()) {
+        if (!conversa.getMensagemDirecionamento().isColetaNome()) {
             cliente.setNome(mensagem.getMensagem());
             conversa.getMensagemDirecionamento().setColetaNome(true);
             clienteUseCase.salvar(cliente);
@@ -69,7 +69,7 @@ public class ProcessamentoConversaExistenteUseCase {
 
         LocalDateTime agora = LocalDateTime.now();
 
-        if(conversa.getUltimaMensagem().plusHours(1).isBefore(agora)) {
+        if (conversa.getUltimaMensagem().plusMinutes(1).isBefore(agora)) {
             if (!conversa.getMensagemDirecionamento().isMensagemInicial()) {
                 mensagemOrquestradora.enviarComEspera(cliente.getTelefone(), List.of(
                         mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null),
@@ -80,7 +80,7 @@ public class ProcessamentoConversaExistenteUseCase {
                 try {
                     ProcessoFinalizadoType strategy;
 
-                    if(conversa.getMensagemDirecionamento().isEscolhaComercialRecontato() && !conversa.getMensagemDirecionamento().isEscolhaComercial()) {
+                    if (conversa.getMensagemDirecionamento().isEscolhaComercialRecontato() && !conversa.getMensagemDirecionamento().isEscolhaComercial()) {
                         strategy = new DirecionamentoComercial(mensagemUseCase, conversaUseCase, coletaInformacoesUseCase, mensagemBuilder);
                     } else {
                         strategy = processoFinalizadoFactory.create(mensagem);
@@ -102,8 +102,15 @@ public class ProcessamentoConversaExistenteUseCase {
 
         Conversa conversa = conversaUseCase.consultarPorCliente(cliente);
 
+        if(conversa.getInativa()) {
 
-        if(!conversa.getFinalizada()) {
+            try {
+                processamentoConversaInativaUseCase.processar(cliente, conversa, mensagem);
+            } catch (EscolhaNaoIdentificadoException ex) {
+                processaOpcaoInvalida(conversa, cliente);
+            }
+
+        } else if (!conversa.getFinalizada()) {
             this.processarConversaNaoFinalizada(conversa, cliente, mensagem);
         } else {
             this.processarConversaFinalizada(conversa, cliente, mensagem);
@@ -119,7 +126,7 @@ public class ProcessamentoConversaExistenteUseCase {
 
         TipoMensagem ultimaMensagem = conversa.getTipoUltimaMensagem();
 
-        if(ultimaMensagem != null) {
+        if (ultimaMensagem != null) {
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(ultimaMensagem, null, null), cliente.getTelefone(), conversa);
         }
     }
