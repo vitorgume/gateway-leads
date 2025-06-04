@@ -13,4 +13,5 @@ public class Vendedor {
     private Long id;
     private String nome;
     private String telefone;
+    private Boolean inativo;
 }

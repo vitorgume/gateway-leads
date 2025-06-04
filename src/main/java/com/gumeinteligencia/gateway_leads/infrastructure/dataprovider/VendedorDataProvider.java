@@ -1,7 +1,6 @@
 package com.gumeinteligencia.gateway_leads.infrastructure.dataprovider;
 
 import com.gumeinteligencia.gateway_leads.application.gateways.VendedorGateway;
-import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.infrastructure.exceptions.DataProviderException;
 import com.gumeinteligencia.gateway_leads.infrastructure.mapper.VendedorMapper;
@@ -55,11 +54,11 @@ public class VendedorDataProvider implements VendedorGateway {
     }
 
     @Override
-    public List<Vendedor> listarSemNilza() {
+    public List<Vendedor> listarComExcecao(String excecao) {
         List<VendedorEntity> vendedorEntities;
 
         try {
-            vendedorEntities = repository.listarSemNilza();
+            vendedorEntities = repository.listarComExcecao(excecao);
         } catch (Exception ex) {
             log.error(MENSAGEM_ERRO_LISTAR_SEM_NILZA, ex);
             throw new DataProviderException(MENSAGEM_ERRO_LISTAR_SEM_NILZA, ex.getCause());

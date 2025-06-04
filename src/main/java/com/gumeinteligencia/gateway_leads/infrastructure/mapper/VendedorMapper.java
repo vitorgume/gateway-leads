@@ -9,14 +9,16 @@ public class VendedorMapper {
                 .id(entity.getId())
                 .telefone(entity.getTelefone())
                 .nome(entity.getNome())
+                .inativo(entity.getInativo())
                 .build();
     }
 
-    public static VendedorEntity paraEntity(Vendedor entity) {
+    public static VendedorEntity paraEntity(Vendedor domain) {
         return VendedorEntity.builder()
-                .id(entity.getId())
-                .telefone(entity.getTelefone())
-                .nome(entity.getNome())
+                .id(domain.getId())
+                .telefone(domain.getTelefone())
+                .nome(domain.getNome())
+                .inativo(domain.getInativo())
                 .build();
     }
 }

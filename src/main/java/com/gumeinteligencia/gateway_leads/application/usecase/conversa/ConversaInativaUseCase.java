@@ -47,7 +47,7 @@ public class ConversaInativaUseCase {
         if(!conversasAtrasadas.isEmpty()) {
             conversasAtrasadas.forEach(conversa -> {
                 conversa.setFinalizada(true);
-                Vendedor vendedor = vendedorUseCase.consultarVendedor(vendedorUseCase.roletaVendedores());
+                Vendedor vendedor = vendedorUseCase.consultarVendedor(vendedorUseCase.roletaVendedores("Nilza"));
                 conversa.setVendedor(vendedor);
                 mensagemUseCase
                         .enviarContatoVendedor(
