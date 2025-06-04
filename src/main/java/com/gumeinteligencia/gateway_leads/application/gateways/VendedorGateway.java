@@ -1,6 +1,5 @@
 package com.gumeinteligencia.gateway_leads.application.gateways;
 
-import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 
 import java.util.List;
@@ -11,7 +10,7 @@ public interface VendedorGateway {
 
     List<Vendedor> listar();
 
-    List<Vendedor> listarSemNilza();
+    List<Vendedor> listarComExcecao(String excecao);
 
     Vendedor salvar(Vendedor vendedor);
 

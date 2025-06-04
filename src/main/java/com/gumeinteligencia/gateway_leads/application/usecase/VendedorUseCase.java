@@ -30,39 +30,55 @@ public class VendedorUseCase {
         }
 
         if(cliente.getSegmento().getCodigo() == 5) {
-            return this.consultarVendedor("Mariana");
+            Vendedor vendedor = consultarVendedor("Mariana");
+
+            if(vendedor.getInativo()) {
+                vendedor = consultarVendedor(roletaVendedores("Nilza"));
+            }
+
+            return vendedor;
         }
 
         if(cliente.getRegiao().getCodigo() == 2) {
-            return this.consultarVendedor("Samara");
+            Vendedor vendedor = consultarVendedor("Samara");
+
+            if(vendedor.getInativo()) {
+                vendedor = consultarVendedor(roletaVendedores("Nilza"));
+            }
+
+            return vendedor;
         }
 
         String vendedor;
 
         if(cliente.getSegmento().getCodigo() == 3) {
-            vendedor = this.roletaVendedoresNilza();
+            vendedor = this.roletaVendedores(null);
         } else {
-            vendedor = this.roletaVendedores();
+            vendedor = this.roletaVendedores("Nilza");
         }
 
         return this.consultarVendedor(vendedor);
     }
 
-    public String roletaVendedores() {
-        List<Vendedor> vendedores = gateway.listarSemNilza();
+    public String roletaVendedores(String excecao) {
+        List<Vendedor> vendedores;
+
+        if(excecao == null) {
+            vendedores = gateway.listar();
+        } else {
+            vendedores = gateway.listarComExcecao(excecao);
+        }
 
         int limite = vendedores.size();
 
-        return vendedores.get(random.nextInt(limite)).getNome();
+        Vendedor vendedor;
 
-    }
+        do {
+            vendedor = vendedores.get(random.nextInt(limite));
+        } while (vendedor.getInativo());
 
-    private String roletaVendedoresNilza() {
-        List<Vendedor> vendedores = gateway.listar();
+        return vendedor.getNome();
 
-        int limite = vendedores.size();
-
-        return vendedores.get(random.nextInt(limite)).getNome();
     }
 
     public Vendedor consultarVendedor(String nome) {

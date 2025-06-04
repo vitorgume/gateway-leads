@@ -21,4 +21,5 @@ public class VendedorEntity {
     private Long id;
     private String nome;
     private String telefone;
+    private Boolean inativo;
 }
