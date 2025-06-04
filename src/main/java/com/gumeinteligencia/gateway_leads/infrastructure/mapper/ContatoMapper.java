@@ -7,10 +7,18 @@ import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 public class ContatoMapper {
 
     public static ContatoRequestDto paraRequestDto(Cliente cliente, String telefoneDestinatario) {
-        return ContatoRequestDto.builder()
-                .phone(telefoneDestinatario)
-                .contactName(cliente.getNome())
-                .contactPhone(cliente.getTelefone())
-                .build();
+        if(cliente.getNome() == null) {
+            return ContatoRequestDto.builder()
+                    .phone(telefoneDestinatario)
+                    .contactName("Nome não informado")
+                    .contactPhone(cliente.getTelefone())
+                    .build();
+        } else {
+            return ContatoRequestDto.builder()
+                    .phone(telefoneDestinatario)
+                    .contactName(cliente.getNome())
+                    .contactPhone(cliente.getTelefone())
+                    .build();
+        }
     }
 }
