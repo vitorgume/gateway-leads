@@ -29,7 +29,7 @@ public class ProcessaEscolhaLogistica implements ProcessoNaoFinalizadoType{
     public void processar(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando escolha da logística de uma conversa não finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
 
-        OutroContato outroContato = outroContatoUseCase.consultarPorNome("Gabrielle");
+        OutroContato outroContato = outroContatoUseCase.consultarPorNome("Gabriella");
 
         mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_LOGISTICA, null, null), cliente.getTelefone(), conversa);
         mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);

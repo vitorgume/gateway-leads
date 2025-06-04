@@ -20,6 +20,7 @@ public class Conversa {
     private Vendedor vendedor;
     private LocalDateTime dataCriacao;
     private LocalDateTime ultimaMensagem;
+    private LocalDateTime ultimaMensagemConversaFinalizada;
     private MensagemColeta mensagemColeta;
     private MensagemDirecionamento mensagemDirecionamento;
     private Boolean finalizada;

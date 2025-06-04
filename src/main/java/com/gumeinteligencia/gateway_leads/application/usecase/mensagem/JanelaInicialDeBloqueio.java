@@ -23,7 +23,7 @@ public class JanelaInicialDeBloqueio {
 
         Executors.newSingleThreadScheduledExecutor().schedule(() -> {
             processarMensagens(telefone);
-        }, 2, TimeUnit.SECONDS);
+        }, 25, TimeUnit.SECONDS);
     }
 
     public void armazenarMensagens(String telefone, List<String> mensagens, Mensagem ultima) {

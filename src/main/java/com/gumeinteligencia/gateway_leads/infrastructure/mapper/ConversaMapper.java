@@ -17,6 +17,7 @@ public class ConversaMapper {
                 .tipoUltimaMensagem(entity.getTipoUltimaMensagem())
                 .ultimaMensagem(entity.getUltimaMensagem())
                 .inativa(entity.getInativa())
+                .ultimaMensagemConversaFinalizada(entity.getUltimaMensagemConversaFinalizada())
                 .build();
 
         if(entity.getVendedor() != null) {
@@ -46,6 +47,7 @@ public class ConversaMapper {
                 .tipoUltimaMensagem(domain.getTipoUltimaMensagem())
                 .ultimaMensagem(domain.getUltimaMensagem())
                 .inativa(domain.getInativa())
+                .ultimaMensagemConversaFinalizada(domain.getUltimaMensagemConversaFinalizada())
                 .build();
 
         if(domain.getVendedor() != null) {

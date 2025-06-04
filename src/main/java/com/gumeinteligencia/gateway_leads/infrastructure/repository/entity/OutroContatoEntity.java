@@ -16,6 +16,7 @@ public class OutroContatoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_outro_contato")
     private Long id;
     private String nome;
     private String telefone;
