@@ -12,14 +12,14 @@ import java.util.TimeZone;
 public class GatewayLeadsApplication {
 
 	public static void main(String[] args) {
-		Dotenv dotenv = Dotenv.load();
+		System.setProperty("URL_BD", System.getenv("URL_BD"));
+		System.setProperty("USER_BD", System.getenv("USER_BD"));
+		System.setProperty("PASSWORD_BD", System.getenv("PASSWORD_BD"));
+		System.setProperty("WHASTAPP_CLIENT_TOKEN", System.getenv("WHASTAPP_CLIENT_TOKEN"));
+		System.setProperty("WHASTAPP_TOKEN", System.getenv("WHASTAPP_TOKEN"));
+		System.setProperty("WHASTAPP_INSTANCE_ID", System.getenv("WHASTAPP_INSTANCE_ID"));
 
-		System.setProperty("URL_BD", dotenv.get("URL_BD"));
-		System.setProperty("USER_BD", dotenv.get("USER_BD"));
-		System.setProperty("PASSWORD_BD", dotenv.get("PASSWORD_BD"));
-		System.setProperty("WHASTAPP_CLIENT_TOKEN", dotenv.get("WHASTAPP_CLIENT_TOKEN"));
-		System.setProperty("WHASTAPP_TOKEN", dotenv.get("WHASTAPP_TOKEN"));
-		System.setProperty("WHASTAPP_INSTANCE_ID", dotenv.get("WHASTAPP_INSTANCE_ID"));
+		TimeZone.setDefault(TimeZone.getTimeZone("America/Sao_Paulo"));
 
 		SpringApplication.run(GatewayLeadsApplication.class, args);
 	}
