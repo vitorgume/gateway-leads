@@ -12,11 +12,8 @@ import java.util.Optional;
 public interface VendedorRepository extends JpaRepository<VendedorEntity, Long> {
     Optional<VendedorEntity> findByNome(String nome);
 
-    @Query("SELECT v FROM Vendedor v WHERE v.nome <> :excecao AND v.nome <> 'Samara'")
+    @Query("SELECT v FROM Vendedor v WHERE v.nome <> :excecao")
     List<VendedorEntity> listarComExcecao(String excecao);
 
     Optional<VendedorEntity> findByTelefone(String telefone);
-
-    @Query("SELECT v FROM Vendedor v WHERE v.nome <> 'Samara'")
-    List<VendedorEntity> listar();
 }

@@ -25,7 +25,7 @@ public class ConversaInativaUseCase {
     private final MensagemUseCase mensagemUseCase;
     private final MensagemBuilder mensagemBuilder;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 */20 * * * *")
     public void verificaAusenciaDeMensagem() {
         List<Conversa> conversas = conversaUseCase.listarNaoFinalizados();
         log.info("Verificando se existe alguma mensagem inativa por mais de 30 minutos. Conversas: {}", conversas);
@@ -36,7 +36,7 @@ public class ConversaInativaUseCase {
         List<Conversa> conversasAtrasadas = conversas.stream()
                 .filter(conversa -> {
                             if(conversa.getUltimaMensagem() != null)
-                                return conversa.getUltimaMensagem().plusSeconds(1).isBefore(agora);
+                                return conversa.getUltimaMensagem().plusMinutes(30).isBefore(agora);
 
                             return false;
                         }

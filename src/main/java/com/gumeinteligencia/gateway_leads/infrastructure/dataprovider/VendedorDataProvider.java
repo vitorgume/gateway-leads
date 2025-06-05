@@ -21,7 +21,7 @@ public class VendedorDataProvider implements VendedorGateway {
     private final VendedorRepository repository;
     private final String MENSAGEM_ERRO_CONSULTAR_VENDEDOR_POR_NOME = "Erro ao consultar vendedor pelo seu nome.";
     private final String MENSAGEM_ERRO_LISTAR = "Erro ao listar todos os vendedores.";
-    private final String MENSAGEM_ERRO_LISTAR_SEM_NILZA = "Erro ao listar todos os vendedores exceto a nilza";
+    private final String MENSAGEM_ERRO_LISTAR_COM_EXCECAO = "Erro ao listar todos os vendedores com excecao";
     private final String MENSAGEM_ERRO_SALVAR = "Erro ao salvar vendedor.";
     private final String MENSAGEM_ERRO_DELETAR_POR_ID = "Erro ao deletar vendedor pelo id.";
     private final String MENSAGEM_ERRO_CONSULTAR_POR_TELEFONE = "Erro ao consultar vendedor pelo seu telefone.";
@@ -45,7 +45,7 @@ public class VendedorDataProvider implements VendedorGateway {
         List<VendedorEntity> vendedorEntities;
 
         try {
-            vendedorEntities = repository.listar();
+            vendedorEntities = repository.findAll();
         } catch (Exception ex) {
             log.error(MENSAGEM_ERRO_LISTAR, ex);
             throw new DataProviderException(MENSAGEM_ERRO_LISTAR, ex.getCause());
@@ -60,8 +60,8 @@ public class VendedorDataProvider implements VendedorGateway {
         try {
             vendedorEntities = repository.listarComExcecao(excecao);
         } catch (Exception ex) {
-            log.error(MENSAGEM_ERRO_LISTAR_SEM_NILZA, ex);
-            throw new DataProviderException(MENSAGEM_ERRO_LISTAR_SEM_NILZA, ex.getCause());
+            log.error(MENSAGEM_ERRO_LISTAR_COM_EXCECAO, ex);
+            throw new DataProviderException(MENSAGEM_ERRO_LISTAR_COM_EXCECAO, ex.getCause());
         }
 
         return vendedorEntities.stream().map(VendedorMapper::paraDomain).toList();

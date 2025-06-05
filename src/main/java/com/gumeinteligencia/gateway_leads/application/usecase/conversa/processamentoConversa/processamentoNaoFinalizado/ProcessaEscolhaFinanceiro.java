@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -35,7 +37,9 @@ public class ProcessaEscolhaFinanceiro implements ProcessoNaoFinalizadoType {
         mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);
         conversa.setFinalizada(true);
         conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);
+        conversa.setUltimaMensagemConversaFinalizada(LocalDateTime.now());
         conversaUseCase.salvar(conversa);
+
         log.info("Processamento de escolha do financeiro de uma conversa não finalizada concluida com sucesso. Conversa: {}", conversa);
     }
 

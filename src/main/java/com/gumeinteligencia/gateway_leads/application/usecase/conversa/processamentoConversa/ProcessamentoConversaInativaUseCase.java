@@ -67,7 +67,7 @@ public class ProcessamentoConversaInativaUseCase {
                     conversaUseCase.salvar(conversa);
                 }
                 case "3" -> {
-                    OutroContato outroContato = outroContatoUseCase.consultarPorNome("Gabrielle");
+                    OutroContato outroContato = outroContatoUseCase.consultarPorNome("Gabriella");
 
                     mensagemUseCase.enviarMensagem(
                             mensagemBuilder.getMensagem(

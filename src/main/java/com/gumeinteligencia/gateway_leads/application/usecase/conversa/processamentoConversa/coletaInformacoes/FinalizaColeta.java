@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -41,6 +43,7 @@ public class FinalizaColeta implements ColetaType{
             Vendedor vendedor = vendedorUseCase.escolherVendedor(cliente);
             conversa.setVendedor(vendedor);
             conversa.setFinalizada(true);
+            conversa.setUltimaMensagemConversaFinalizada(LocalDateTime.now());
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, vendedor.getNome(), null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoVendedor(vendedor, cliente, "Contato novo");
             conversaUseCase.salvar(conversa);

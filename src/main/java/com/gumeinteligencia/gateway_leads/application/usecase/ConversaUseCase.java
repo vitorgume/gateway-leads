@@ -54,6 +54,7 @@ public class ConversaUseCase {
                 .mensagemColeta(new MensagemColeta())
                 .finalizada(false)
                 .mensagemDirecionamento(new MensagemDirecionamento())
+                .inativa(false)
                 .build();
 
         return gateway.salvar(novaConversa);
