@@ -54,9 +54,4 @@ public class JanelaInicialDeBloqueio {
     public void removerBloqueio(String telefone) {
         bloqueioInicial.remove(telefone);
     }
-
-    public boolean estaBloqueado(String telefone) {
-        return bloqueioInicial.contains(telefone);
-    }
-
 }
