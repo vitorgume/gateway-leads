@@ -18,12 +18,16 @@ public class JanelaInicialDeBloqueio {
     private final Map<String, EsperaMensagem> filaMensagens = new ConcurrentHashMap<>();
     private final MensagemUseCase mensagemUseCase;
 
-    public void adicionarBloqueio(String telefone) {
-        bloqueioInicial.add(telefone);
+    public boolean adicionarSeNaoExiste(String telefone) {
+        boolean adicionado = bloqueioInicial.add(telefone);
 
-        Executors.newSingleThreadScheduledExecutor().schedule(() -> {
-            processarMensagens(telefone);
-        }, 25, TimeUnit.SECONDS);
+        if (adicionado) {
+            Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+                processarMensagens(telefone);
+            }, 25, TimeUnit.SECONDS);
+        }
+
+        return adicionado;
     }
 
     public void armazenarMensagens(String telefone, List<String> mensagens, Mensagem ultima) {
