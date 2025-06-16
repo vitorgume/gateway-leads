@@ -28,7 +28,7 @@ public class ProcessarMensagemUseCase {
     public void processarNovaMensagem(Mensagem mensagem) {
         log.info("Processando nova mensagem. Mensagem: {}", mensagem);
 
-        if(validaTelefoneVendedores(mensagem.getTelefone())) {
+        if(validacaoInicial(mensagem)) {
             clienteUseCase
                     .consultarPorTelefone(mensagem.getTelefone())
                     .ifPresentOrElse(
@@ -38,6 +38,14 @@ public class ProcessarMensagemUseCase {
         }
 
         log.info("Mensagem processada com sucesso.");
+    }
+
+    private boolean validacaoInicial(Mensagem mensagem) {
+        if(validaTelefoneVendedores(mensagem.getTelefone())) {
+           return mensagem.getMensagem().isBlank();
+        }
+
+        return false;
     }
 
     private boolean validaTelefoneVendedores(String telefone) {
