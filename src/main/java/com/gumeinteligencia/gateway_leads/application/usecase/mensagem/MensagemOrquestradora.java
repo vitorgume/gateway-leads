@@ -15,12 +15,13 @@ public class MensagemOrquestradora {
     private final JanelaInicialDeBloqueio janelaInicialDeBloqueio;
 
     public void enviarComEspera(String telefone, List<String> mensagens, Mensagem ultima) {
-        if (janelaInicialDeBloqueio.estaBloqueado(telefone)) {
+        boolean jaBloqueado = !janelaInicialDeBloqueio.adicionarSeNaoExiste(telefone);
+
+        if (jaBloqueado) {
             janelaInicialDeBloqueio.armazenarMensagens(telefone, mensagens, ultima);
             return;
         }
 
-        janelaInicialDeBloqueio.adicionarBloqueio(telefone);
         janelaInicialDeBloqueio.armazenarMensagens(telefone, mensagens, ultima);
     }
 }
