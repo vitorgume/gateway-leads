@@ -4,6 +4,7 @@ import com.gumeinteligencia.gateway_leads.application.exceptions.VendedorNaoEnco
 import com.gumeinteligencia.gateway_leads.application.gateways.VendedorGateway;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
+import com.gumeinteligencia.gateway_leads.domain.Segmento;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,25 +25,29 @@ public class VendedorUseCase {
 
 
     public Vendedor escolherVendedor(Cliente cliente) {
+        if (cliente.getRegiao().getCodigo() == 2) {
+            Vendedor vendedor = consultarVendedor("Samara");
 
-        if(cliente.getSegmento().getCodigo() == 1) {
-            return this.consultarVendedor("Nilza");
-        }
-
-        if(cliente.getSegmento().getCodigo() == 5) {
-            Vendedor vendedor = consultarVendedor("Mariana");
-
-            if(vendedor.getInativo()) {
+            if (vendedor.getInativo()) {
                 vendedor = consultarVendedor(roletaVendedores("Nilza"));
             }
 
             return vendedor;
         }
 
-        if(cliente.getRegiao().getCodigo() == 2) {
-            Vendedor vendedor = consultarVendedor("Samara");
+        return escolheVendedorSegmento(cliente.getSegmento());
+    }
 
-            if(vendedor.getInativo()) {
+    private Vendedor escolheVendedorSegmento(Segmento segmento) {
+        if (segmento.getCodigo() == 1) {
+            return this.consultarVendedor("Nilza");
+        }
+
+
+        if (segmento.getCodigo() == 5) {
+            Vendedor vendedor = consultarVendedor("Mariana");
+
+            if (vendedor.getInativo()) {
                 vendedor = consultarVendedor(roletaVendedores("Nilza"));
             }
 
@@ -51,7 +56,7 @@ public class VendedorUseCase {
 
         String vendedor;
 
-        if(cliente.getSegmento().getCodigo() == 3) {
+        if (segmento.getCodigo() == 3) {
             vendedor = this.roletaVendedores(null);
         } else {
             vendedor = this.roletaVendedores("Nilza");
@@ -63,7 +68,7 @@ public class VendedorUseCase {
     public String roletaVendedores(String excecao) {
         List<Vendedor> vendedores;
 
-        if(excecao == null) {
+        if (excecao == null) {
             vendedores = gateway.listar();
         } else {
             vendedores = gateway.listarComExcecao(excecao);
@@ -84,7 +89,7 @@ public class VendedorUseCase {
     public Vendedor consultarVendedor(String nome) {
         Optional<Vendedor> vendedor = gateway.consultarVendedor(nome);
 
-        if(vendedor.isEmpty()) {
+        if (vendedor.isEmpty()) {
             throw new VendedorNaoEncontradoException();
         }
 
@@ -109,5 +114,13 @@ public class VendedorUseCase {
 
     public List<RelatorioContatoDto> getRelatorioSegundaFeira() {
         return clienteUseCase.getRelatorioSegundaFeira();
+    }
+
+    public Vendedor roletaVendedoresConversaInativa(Cliente cliente) {
+        if(cliente.getSegmento() != null) {
+            return escolheVendedorSegmento(cliente.getSegmento());
+        }
+
+        return this.consultarVendedor(this.roletaVendedores("Nilza"));
     }
 }

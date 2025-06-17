@@ -24,7 +24,7 @@ public class JanelaInicialDeBloqueio {
         if (adicionado) {
             Executors.newSingleThreadScheduledExecutor().schedule(() -> {
                 processarMensagens(telefone);
-            }, 25, TimeUnit.SECONDS);
+            }, 2, TimeUnit.SECONDS);
         }
 
     }

@@ -30,26 +30,18 @@ public class ProcessarMensagemUseCase {
     public void processarNovaMensagem(Mensagem mensagem) {
         log.info("Processando nova mensagem. Mensagem: {}", mensagem);
 
-        if(validaTelefoneVendedores(mensagem.getTelefone())) {
-            clienteUseCase
-                    .consultarPorTelefone(mensagem.getTelefone())
-                    .ifPresentOrElse(
-                            cliente -> processamentoConversaExistenteUseCase.processarConversaExistente(cliente, mensagem),
-                            () -> processamentoNovaConversa.iniciarNovaConversa(mensagem)
-                    );
+        if (validadorMensagem.deveIgnorar(mensagem)) {
+            log.info("Mensagem ignorada. Motivo: Validação.");
+            return;
         }
+
+        clienteUseCase
+                .consultarPorTelefone(mensagem.getTelefone())
+                .ifPresentOrElse(
+                        cliente -> processamentoConversaExistenteUseCase.processarConversaExistente(cliente, mensagem),
+                        () -> processamentoNovaConversa.iniciarNovaConversa(mensagem)
+                );
 
         log.info("Mensagem processada com sucesso.");
-    }
-
-    private boolean validaTelefoneVendedores(String telefone) {
-        Optional<Vendedor> vendedor = vendedorUseCase.consultarPorTelefone(telefone);
-        List<String> outrosTelefones = outroContatoUseCase.listar().stream().map(OutroContato::getTelefone).toList();
-
-        if (vendedor.isEmpty()) {
-            return !outrosTelefones.contains(telefone);
-        }
-
-        return false;
     }
 }
