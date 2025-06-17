@@ -30,27 +30,16 @@ public class ProcessarMensagemUseCase {
     public void processarNovaMensagem(Mensagem mensagem) {
         log.info("Processando nova mensagem. Mensagem: {}", mensagem);
 
-        if (validadorMensagem.deveIgnorar(mensagem)) {
-            log.info("Mensagem ignorada. Motivo: Validação.");
-            return;
+        if(validaTelefoneVendedores(mensagem.getTelefone())) {
+            clienteUseCase
+                    .consultarPorTelefone(mensagem.getTelefone())
+                    .ifPresentOrElse(
+                            cliente -> processamentoConversaExistenteUseCase.processarConversaExistente(cliente, mensagem),
+                            () -> processamentoNovaConversa.iniciarNovaConversa(mensagem)
+                    );
         }
-
-        clienteUseCase
-                .consultarPorTelefone(mensagem.getTelefone())
-                .ifPresentOrElse(
-                        cliente -> processamentoConversaExistenteUseCase.processarConversaExistente(cliente, mensagem),
-                        () -> processamentoNovaConversa.iniciarNovaConversa(mensagem)
-                );
 
         log.info("Mensagem processada com sucesso.");
-    }
-
-    private boolean validacaoInicial(Mensagem mensagem) {
-        if (validaTelefoneVendedores(mensagem.getTelefone())) {
-            return mensagem.getMensagem().isBlank();
-        }
-
-        return false;
     }
 
     private boolean validaTelefoneVendedores(String telefone) {
