@@ -3,6 +3,7 @@ package com.gumeinteligencia.gateway_leads.application.usecase.mensagem;
 import com.gumeinteligencia.gateway_leads.application.usecase.*;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.ProcessamentoConversaExistenteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.ProcessamentoNovaConversa;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.validatorMensagens.ValidadorMensagemComposite;
 import com.gumeinteligencia.gateway_leads.domain.outroContato.OutroContato;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
@@ -23,26 +24,30 @@ public class ProcessarMensagemUseCase {
     private final ProcessamentoNovaConversa processamentoNovaConversa;
     private final VendedorUseCase vendedorUseCase;
     private final OutroContatoUseCase outroContatoUseCase;
+    private final ValidadorMensagemComposite validadorMensagem;
 
 
     public void processarNovaMensagem(Mensagem mensagem) {
         log.info("Processando nova mensagem. Mensagem: {}", mensagem);
 
-        if(validacaoInicial(mensagem)) {
-            clienteUseCase
-                    .consultarPorTelefone(mensagem.getTelefone())
-                    .ifPresentOrElse(
-                            cliente -> processamentoConversaExistenteUseCase.processarConversaExistente(cliente, mensagem),
-                            () -> processamentoNovaConversa.iniciarNovaConversa(mensagem)
-                    );
+        if (validadorMensagem.deveIgnorar(mensagem)) {
+            log.info("Mensagem ignorada. Motivo: Validação.");
+            return;
         }
+
+        clienteUseCase
+                .consultarPorTelefone(mensagem.getTelefone())
+                .ifPresentOrElse(
+                        cliente -> processamentoConversaExistenteUseCase.processarConversaExistente(cliente, mensagem),
+                        () -> processamentoNovaConversa.iniciarNovaConversa(mensagem)
+                );
 
         log.info("Mensagem processada com sucesso.");
     }
 
     private boolean validacaoInicial(Mensagem mensagem) {
-        if(validaTelefoneVendedores(mensagem.getTelefone())) {
-           return mensagem.getMensagem().isBlank();
+        if (validaTelefoneVendedores(mensagem.getTelefone())) {
+            return mensagem.getMensagem().isBlank();
         }
 
         return false;
@@ -52,7 +57,7 @@ public class ProcessarMensagemUseCase {
         Optional<Vendedor> vendedor = vendedorUseCase.consultarPorTelefone(telefone);
         List<String> outrosTelefones = outroContatoUseCase.listar().stream().map(OutroContato::getTelefone).toList();
 
-        if(vendedor.isEmpty()) {
+        if (vendedor.isEmpty()) {
             return !outrosTelefones.contains(telefone);
         }
 
