@@ -18,7 +18,7 @@ public class JanelaInicialDeBloqueio {
     private final Map<String, EsperaMensagem> filaMensagens = new ConcurrentHashMap<>();
     private final MensagemUseCase mensagemUseCase;
 
-    public boolean adicionarSeNaoExiste(String telefone) {
+    public void adicionarSeNaoExiste(String telefone) {
         boolean adicionado = bloqueioInicial.add(telefone);
 
         if (adicionado) {
@@ -27,7 +27,6 @@ public class JanelaInicialDeBloqueio {
             }, 25, TimeUnit.SECONDS);
         }
 
-        return adicionado;
     }
 
     public void armazenarMensagens(String telefone, List<String> mensagens, Mensagem ultima) {
