@@ -12,6 +12,7 @@ import com.gumeinteligencia.gateway_leads.infrastructure.mapper.ContatoMapper;
 import com.gumeinteligencia.gateway_leads.infrastructure.mapper.MensagemMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.util.retry.Retry;
@@ -20,6 +21,7 @@ import java.time.Duration;
 
 @Component
 @Slf4j
+@Profile("prod")
 public class MensagemDataProvider implements MensagemGateway {
 
     private final WebClient webClient;
@@ -56,27 +58,27 @@ public class MensagemDataProvider implements MensagemGateway {
         MensagemRequestDto body = MensagemMapper.paraRequestDto(mensagem);
 
         log.info(body.toString());
-//        String response = webClient
-//                .post()
-//                .uri("/instances/{idIsntance}/token/{token}/send-text", idInstance, token)
-//                .header("Client-Token", clienteToken)
-//                .bodyValue(body)
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .retryWhen(
-//                        Retry.backoff(3, Duration.ofSeconds(2))
-//                                .filter(throwable -> {
-//                                    log.warn("Tentando novamente após erro ao enviar mensagem: {}", throwable.getMessage());
-//                                    return true;
-//                                })
-//                )
-//                .doOnError(e -> {
-//                    log.error("Erro ao enviar mensagem após tentativas.", e);
-//                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_MENSAGEM, e.getCause());
-//                })
-//                .block();
-//
-//        log.info("Response envio de mensagem: {}", response);
+        String response = webClient
+                .post()
+                .uri("/instances/{idIsntance}/token/{token}/send-text", idInstance, token)
+                .header("Client-Token", clienteToken)
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(String.class)
+                .retryWhen(
+                        Retry.backoff(3, Duration.ofSeconds(2))
+                                .filter(throwable -> {
+                                    log.warn("Tentando novamente após erro ao enviar mensagem: {}", throwable.getMessage());
+                                    return true;
+                                })
+                )
+                .doOnError(e -> {
+                    log.error("Erro ao enviar mensagem após tentativas.", e);
+                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_MENSAGEM, e.getCause());
+                })
+                .block();
+
+        log.info("Response envio de mensagem: {}", response);
     }
 
 
@@ -86,57 +88,57 @@ public class MensagemDataProvider implements MensagemGateway {
 
         log.info(body.toString());
 
-//        String response = webClient
-//                .post()
-//                .uri("/instances/{idInstance}/token/{token}/send-contact", idInstance, token)
-//                .header("Client-Token", clienteToken)
-//                .bodyValue(body)
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .retryWhen(
-//                        Retry.backoff(3, Duration.ofSeconds(2))
-//                                .filter(throwable -> {
-//                                    log.warn("Tentando novamente após erro ao enviar contato para vendedor: {}", throwable.getMessage());
-//                                    return true;
-//                                })
-//                )
-//                .doOnError(e -> {
-//                    log.error("Erro ao enviar mensagem.", e);
-//                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_CONTATO, e.getCause());
-//                })
-//                .block();
-//
-//        log.info("Response envio de contato: {}", response);
+        String response = webClient
+                .post()
+                .uri("/instances/{idInstance}/token/{token}/send-contact", idInstance, token)
+                .header("Client-Token", clienteToken)
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(String.class)
+                .retryWhen(
+                        Retry.backoff(3, Duration.ofSeconds(2))
+                                .filter(throwable -> {
+                                    log.warn("Tentando novamente após erro ao enviar contato para vendedor: {}", throwable.getMessage());
+                                    return true;
+                                })
+                )
+                .doOnError(e -> {
+                    log.error("Erro ao enviar mensagem.", e);
+                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_CONTATO, e.getCause());
+                })
+                .block();
+
+        log.info("Response envio de contato: {}", response);
     }
 
     @Override
     public void enviarContatoOutroSetor(Cliente cliente, String telefone) {
 
-        ContatoRequestDto body = ContatoMapper.paraRequestDto(cliente, telefone);;
+        ContatoRequestDto body = ContatoMapper.paraRequestDto(cliente, telefone);
 
         log.info(body.toString());
 
-//        String response = webClient
-//                .post()
-//                .uri("/instances/{idInstance}/token/{token}/send-contact", idInstance, token)
-//                .header("Client-Token", clienteToken)
-//                .bodyValue(body)
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .retryWhen(
-//                        Retry.backoff(3, Duration.ofSeconds(2))
-//                                .filter(throwable -> {
-//                                    log.warn("Tentando novamente após erro ao enviar contato para outro setor: {}", throwable.getMessage());
-//                                    return true;
-//                                })
-//                )
-//                .doOnError(e -> {
-//                    log.error("Erro ao enviar mensagem.", e);
-//                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_CONTATO_FINANCEIRO, e.getCause());
-//                })
-//                .block();
-//
-//        log.info("Response envio de contato financeiro: {}", response);
+        String response = webClient
+                .post()
+                .uri("/instances/{idInstance}/token/{token}/send-contact", idInstance, token)
+                .header("Client-Token", clienteToken)
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(String.class)
+                .retryWhen(
+                        Retry.backoff(3, Duration.ofSeconds(2))
+                                .filter(throwable -> {
+                                    log.warn("Tentando novamente após erro ao enviar contato para outro setor: {}", throwable.getMessage());
+                                    return true;
+                                })
+                )
+                .doOnError(e -> {
+                    log.error("Erro ao enviar mensagem.", e);
+                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_CONTATO_FINANCEIRO, e.getCause());
+                })
+                .block();
+
+        log.info("Response envio de contato financeiro: {}", response);
     }
 
     @Override
@@ -144,26 +146,26 @@ public class MensagemDataProvider implements MensagemGateway {
         String base64ComPrefixo = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," + arquivo;
         DocumentoRequestDto body = new DocumentoRequestDto(telefone, base64ComPrefixo, fileName);
 
-//        String response = webClient
-//                .post()
-//                .uri("/instances/{idInstance}/token/{token}/send-document/xlsx", idInstance, token)
-//                .header("Client-Token", clienteToken)
-//                .bodyValue(body)
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .retryWhen(
-//                        Retry.backoff(5, Duration.ofSeconds(2))
-//                                .filter(throwable -> {
-//                                    log.warn("Tentando novamente após erro ao enviar relatório: {}", throwable.getMessage());
-//                                    return true;
-//                                })
-//                )
-//                .doOnError(e -> {
-//                    log.error("Erro ao enviar relatório.", e);
-//                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_RELATORIO, e.getCause());
-//                })
-//                .block();
-//
-//        log.info("Response envio de relatório: {}", response);
+        String response = webClient
+                .post()
+                .uri("/instances/{idInstance}/token/{token}/send-document/xlsx", idInstance, token)
+                .header("Client-Token", clienteToken)
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(String.class)
+                .retryWhen(
+                        Retry.backoff(5, Duration.ofSeconds(2))
+                                .filter(throwable -> {
+                                    log.warn("Tentando novamente após erro ao enviar relatório: {}", throwable.getMessage());
+                                    return true;
+                                })
+                )
+                .doOnError(e -> {
+                    log.error("Erro ao enviar relatório.", e);
+                    throw new DataProviderException(MENSAGEM_ERRO_ENVIAR_RELATORIO, e.getCause());
+                })
+                .block();
+
+        log.info("Response envio de relatório: {}", response);
     }
 }

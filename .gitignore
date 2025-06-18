@@ -32,4 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 
-.env
+### Ambiente desevolvimento x produção ###
+
+/src/main/resources/application-dev.properties
+/src/main/java/com/gumeinteligencia/gateway_leads/infrastructure/dataprovider/MensagemDataProviderDev.java
+
