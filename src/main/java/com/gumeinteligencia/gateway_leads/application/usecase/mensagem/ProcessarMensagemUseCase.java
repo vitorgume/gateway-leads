@@ -1,18 +1,13 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.mensagem;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.*;
-import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.ProcessamentoConversaExistenteUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.conversaExistente.ProcessamentoConversaExistenteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.ProcessamentoNovaConversa;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.validatorMensagens.ValidadorMensagemComposite;
-import com.gumeinteligencia.gateway_leads.domain.outroContato.OutroContato;
-import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -22,8 +17,6 @@ public class ProcessarMensagemUseCase {
     private final ClienteUseCase clienteUseCase;
     private final ProcessamentoConversaExistenteUseCase processamentoConversaExistenteUseCase;
     private final ProcessamentoNovaConversa processamentoNovaConversa;
-    private final VendedorUseCase vendedorUseCase;
-    private final OutroContatoUseCase outroContatoUseCase;
     private final ValidadorMensagemComposite validadorMensagem;
 
 

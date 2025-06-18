@@ -1,8 +1,8 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.conversa;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
-import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.VendedorUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
@@ -19,26 +19,25 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Profile("prod")
-public class ConversaInativaUseCase {
-
+@Profile("dev")
+public class ConversaInativaUseCaseDev {
     private final ConversaUseCase conversaUseCase;
     private final VendedorUseCase vendedorUseCase;
     private final MensagemUseCase mensagemUseCase;
     private final MensagemBuilder mensagemBuilder;
 
-    @Scheduled(cron = "0 */20 * * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void verificaAusenciaDeMensagem() {
         List<Conversa> conversas = conversaUseCase.listarNaoFinalizados();
         log.info("Verificando se existe alguma mensagem inativa por mais de 30 minutos. Conversas: {}", conversas);
-        
+
 
         LocalDateTime agora = LocalDateTime.now();
 
         List<Conversa> conversasAtrasadas = conversas.stream()
                 .filter(conversa -> {
                             if(conversa.getUltimaMensagem() != null)
-                                return conversa.getUltimaMensagem().plusMinutes(30).isBefore(agora);
+                                return conversa.getUltimaMensagem().plusSeconds(30).isBefore(agora);
 
                             return false;
                         }

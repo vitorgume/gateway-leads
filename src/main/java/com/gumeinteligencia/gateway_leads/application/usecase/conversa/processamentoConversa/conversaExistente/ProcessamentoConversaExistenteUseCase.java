@@ -1,9 +1,10 @@
-package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa;
+package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.conversaExistente;
 
 import com.gumeinteligencia.gateway_leads.application.exceptions.EscolhaNaoIdentificadoException;
 import com.gumeinteligencia.gateway_leads.application.usecase.ClienteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
-import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemOrquestradora;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.ProcessamentoConversaInativaUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.janelaInicial.MensagemOrquestradora;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.coletaInformacoes.ColetaInformacoesUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoFinalizado.DirecionamentoComercial;
@@ -19,6 +20,7 @@ import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,7 +29,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ProcessamentoConversaExistenteUseCase {
+@Profile("prod")
+public class ProcessamentoConversaExistenteUseCase implements ConversaExistente {
 
     private final ClienteUseCase clienteUseCase;
     private final ConversaUseCase conversaUseCase;
@@ -39,6 +42,7 @@ public class ProcessamentoConversaExistenteUseCase {
     private final MensagemOrquestradora mensagemOrquestradora;
     private final ProcessamentoConversaInativaUseCase processamentoConversaInativaUseCase;
 
+    @Override
     public void processarConversaNaoFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando mensagem de uma conversa não finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         if (!conversa.getMensagemDirecionamento().isColetaNome()) {
@@ -64,12 +68,13 @@ public class ProcessamentoConversaExistenteUseCase {
         log.info("Mensagem de uma conversa não finalizada processada com sucesso.");
     }
 
+    @Override
     public void processarConversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando uma mensagem de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
 
         LocalDateTime agora = LocalDateTime.now();
 
-        if(conversa.getUltimaMensagemConversaFinalizada().plusSeconds(1).isBefore(agora)) {
+        if(conversa.getUltimaMensagemConversaFinalizada().plusHours(1).isBefore(agora)) {
             if (!conversa.getMensagemDirecionamento().isMensagemInicial()) {
                 mensagemOrquestradora.enviarComEspera(cliente.getTelefone(), List.of(
                         mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null),
@@ -97,6 +102,7 @@ public class ProcessamentoConversaExistenteUseCase {
         log.info("Mensagem de uma conversa finalizada processada com sucesso.");
     }
 
+    @Override
     public void processarConversaExistente(Cliente cliente, Mensagem mensagem) {
         log.info("Processando mensagem de uma conversa já existente. Cliente: {}, Mensagem: {}", cliente, mensagem);
 

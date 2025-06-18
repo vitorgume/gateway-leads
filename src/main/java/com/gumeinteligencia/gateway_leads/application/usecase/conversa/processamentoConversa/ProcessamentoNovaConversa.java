@@ -1,6 +1,6 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa;
 
-import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemOrquestradora;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.janelaInicial.MensagemOrquestradora;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;

@@ -1,7 +1,10 @@
-package com.gumeinteligencia.gateway_leads.application.usecase.mensagem;
+package com.gumeinteligencia.gateway_leads.application.usecase.mensagem.janelaInicial;
 
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.EsperaMensagem;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,11 +16,13 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
-public class JanelaInicialDeBloqueio {
+@Profile("dev")
+public class JanelaInicialDeBloqueioDev implements JanelaInicial {
     private final Set<String> bloqueioInicial = ConcurrentHashMap.newKeySet();
     private final Map<String, EsperaMensagem> filaMensagens = new ConcurrentHashMap<>();
     private final MensagemUseCase mensagemUseCase;
 
+    @Override
     public void adicionarSeNaoExiste(String telefone) {
         boolean adicionado = bloqueioInicial.add(telefone);
 
@@ -29,6 +34,7 @@ public class JanelaInicialDeBloqueio {
 
     }
 
+    @Override
     public void armazenarMensagens(String telefone, List<String> mensagens, Mensagem ultima) {
         EsperaMensagem espera = new EsperaMensagem();
         espera.setMensagensParaEnviar(mensagens);
@@ -50,6 +56,7 @@ public class JanelaInicialDeBloqueio {
         }
     }
 
+    @Override
     public void removerBloqueio(String telefone) {
         bloqueioInicial.remove(telefone);
     }

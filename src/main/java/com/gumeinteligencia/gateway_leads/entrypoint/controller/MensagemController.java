@@ -1,6 +1,5 @@
 package com.gumeinteligencia.gateway_leads.entrypoint.controller;
 
-import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.JanelaInicialDeBloqueio;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.ProcessarMensagemUseCase;
 import com.gumeinteligencia.gateway_leads.entrypoint.controller.dto.MensagemDto;
 import com.gumeinteligencia.gateway_leads.entrypoint.mapper.MensagemMapper;

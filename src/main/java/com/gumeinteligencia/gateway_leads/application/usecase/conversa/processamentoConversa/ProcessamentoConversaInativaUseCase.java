@@ -4,7 +4,7 @@ import com.gumeinteligencia.gateway_leads.application.exceptions.EscolhaNaoIdent
 import com.gumeinteligencia.gateway_leads.application.usecase.ClienteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.OutroContatoUseCase;
-import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemOrquestradora;
+import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.janelaInicial.MensagemOrquestradora;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
