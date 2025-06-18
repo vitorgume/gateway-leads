@@ -56,12 +56,12 @@ public class MensagemUseCase {
         this.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.SEPARACAO_CONTATOS, null, null), telefone, conversa);
     }
 
-    public void enviarContatoVendedor(Vendedor vendedor, Cliente cliente, String mensagem) {
-        log.info("Enviando contato para vendedor. Vendedor: {}, Cliente: {}, Texto: {}", vendedor, cliente, mensagem);
+    public void enviarContatoVendedor(Vendedor vendedor, Cliente cliente) {
+        log.info("Enviando contato para vendedor. Vendedor: {}, Cliente: {}", vendedor, cliente);
 
         String textoMensagem = mensagemBuilder.getMensagem(TipoMensagem.DADOS_CONTATO_VENDEDOR, null, cliente);
 
-        gateway.enviarContato(vendedor, cliente, mensagem);
+        gateway.enviarContato(vendedor.getTelefone(), cliente);
 
         this.enviarMensagemVendedor(textoMensagem, vendedor.getTelefone(), null);
         log.info("Contato enviado com sucesso para vendedor.");
@@ -69,7 +69,7 @@ public class MensagemUseCase {
 
     public void enviarContatoOutroSetor(Cliente cliente, OutroContato outroContato) {
         log.info("Enviando contato para {}. Cliente: {}", outroContato.getSetor().getDescricao() ,cliente);
-        gateway.enviarContatoOutroSetor(cliente, outroContato.getTelefone());
+        gateway.enviarContato(outroContato.getTelefone(), cliente);
         log.info("Contato enviado com sucesso para {}.", outroContato.getSetor().getDescricao());
     }
 

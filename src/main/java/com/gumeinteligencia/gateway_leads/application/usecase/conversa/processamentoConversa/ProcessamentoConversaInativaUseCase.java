@@ -46,7 +46,7 @@ public class ProcessamentoConversaInativaUseCase {
                                     TipoMensagem.DIRECIONAR_OUTRO_CONTATO_COMERCIAL, conversa.getVendedor().getNome(), cliente
                             ), cliente.getTelefone(), conversa
                     );
-                    mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente, "Recontato");
+                    mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente);
                     conversa.getMensagemDirecionamento().setEscolhaComercial(true);
                     conversa.getMensagemDirecionamento().setMensagemInicial(false);
                     conversa.setInativa(false);

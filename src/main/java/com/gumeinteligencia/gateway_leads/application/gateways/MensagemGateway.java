@@ -6,8 +6,6 @@ import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 
 public interface MensagemGateway {
     void enviar(Mensagem mensagem);
-    void enviarContato(Vendedor vendedor, Cliente cliente, String mensagem);
-    void enviarContatoOutroSetor(Cliente cliente, String telefone);
-
+    void enviarContato(String telefoneDestino, Cliente cliente);
     void enviarRelatorio(String arquivo, String fileName, String telefone);
 }

@@ -53,8 +53,7 @@ public class ConversaInativaUseCase {
                 mensagemUseCase
                         .enviarContatoVendedor(
                                 vendedor,
-                                conversa.getCliente(),
-                                null
+                                conversa.getCliente()
                         );
                 mensagemUseCase.enviarMensagemVendedor(mensagemBuilder.getMensagem(TipoMensagem.CONTATO_INATIVO, null, null), vendedor.getTelefone(), conversa);
                 conversaUseCase.salvar(conversa);
