@@ -36,4 +36,6 @@ build/
 
 /src/main/resources/application-dev.properties
 /src/main/java/com/gumeinteligencia/gateway_leads/infrastructure/dataprovider/MensagemDataProviderDev.java
-
+/src/main/java/com/gumeinteligencia/gateway_leads/application/usecase/conversa/ConversaInativaUseCaseDev.java
+/src/main/java/com/gumeinteligencia/gateway_leads/application/usecase/conversa/processamentoConversa/conversaExistente/ProcessarConversaExistenteDev.java
+/src/main/java/com/gumeinteligencia/gateway_leads/application/usecase/mensagem/janelaInicial/JanelaInicialDeBloqueioDev.java
