@@ -25,6 +25,10 @@ public class VendedorUseCase {
 
 
     public Vendedor escolherVendedor(Cliente cliente) {
+        if (cliente.getSegmento().getCodigo() == 1) {
+            return this.consultarVendedor("Nilza");
+        }
+
         if (cliente.getRegiao().getCodigo() == 2) {
             Vendedor vendedor = consultarVendedor("Samara");
 
@@ -39,11 +43,6 @@ public class VendedorUseCase {
     }
 
     private Vendedor escolheVendedorSegmento(Segmento segmento) {
-        if (segmento.getCodigo() == 1) {
-            return this.consultarVendedor("Nilza");
-        }
-
-
         if (segmento.getCodigo() == 5) {
             Vendedor vendedor = consultarVendedor("Mariana");
 
