@@ -12,8 +12,8 @@ import java.util.TimeZone;
 public class GatewayLeadsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GatewayLeadsApplication.class, args);
 		TimeZone.setDefault(TimeZone.getTimeZone("America/Sao_Paulo"));
+		SpringApplication.run(GatewayLeadsApplication.class, args);
 	}
 
 }
