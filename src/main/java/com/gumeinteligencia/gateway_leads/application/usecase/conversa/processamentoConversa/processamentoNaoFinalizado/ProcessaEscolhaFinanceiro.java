@@ -33,12 +33,12 @@ public class ProcessaEscolhaFinanceiro implements ProcessoNaoFinalizadoType {
 
         OutroContato outroContato = outroContatoUseCase.consultarPorNome("Vitoria");
 
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_FINANACEIRO, null, null), cliente.getTelefone(), conversa);
         mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);
         conversa.setFinalizada(true);
         conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);
         conversa.setUltimaMensagemConversaFinalizada(LocalDateTime.now());
         conversaUseCase.salvar(conversa);
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_FINANACEIRO, null, null), cliente.getTelefone(), conversa);
 
         log.info("Processamento de escolha do financeiro de uma conversa não finalizada concluida com sucesso. Conversa: {}", conversa);
     }

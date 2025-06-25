@@ -37,13 +37,12 @@ public class ColetaRegiao implements ColetaType{
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ATENDIMENTO_ENCERRADO, null, null), cliente.getTelefone(), conversa);
         } else {
             conversa.setTipoUltimaMensagem(TipoMensagem.COLETA_SEGMENTO);
-            conversaUseCase.salvar(conversa);
             cliente.setSegmento(GatewayEnum.gatewaySegmento(mensagem.getMensagem()));
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_REGIAO, null, null), cliente.getTelefone(), conversa);
             conversa.getMensagemColeta().setColetaRegiao(true);
             conversa.setUltimaMensagem(LocalDateTime.now());
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_REGIAO, null, null), cliente.getTelefone(), conversa);
         }
 
         log.info("Coleta de região concluida com sucesso. Conversa: {}, Cliente: {}", conversa, cliente);

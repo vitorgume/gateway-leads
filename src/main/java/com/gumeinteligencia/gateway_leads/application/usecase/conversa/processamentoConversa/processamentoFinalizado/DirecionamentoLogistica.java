@@ -32,16 +32,16 @@ public class DirecionamentoLogistica implements ProcessoFinalizadoType {
         OutroContato outroContato = outroContatoUseCase.consultarPorNome("Gabriella");
 
         if(conversa.getMensagemDirecionamento().getEscolhaLogistica()) {
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_LOGISTICA, null, null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);
             conversa.getMensagemDirecionamento().setMensagemInicial(false);
             conversaUseCase.salvar(conversa);
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_LOGISTICA, null, null), cliente.getTelefone(), conversa);
         } else {
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_LOGISTICA, null, null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);
             conversa.getMensagemDirecionamento().setEscolhaLogistica(true);
             conversa.getMensagemDirecionamento().setMensagemInicial(false);
             conversaUseCase.salvar(conversa);
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_LOGISTICA, null, null), cliente.getTelefone(), conversa);
         }
 
         log.info("Processamento de escolha da logística concluida com sucesso. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);

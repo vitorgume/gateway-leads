@@ -29,10 +29,10 @@ public class ColetaSegmento implements ColetaType{
     @Override
     public void coleta(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Coletando segmento. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
-        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_SEGMENTO, null, null), cliente.getTelefone(), conversa);
         conversa.getMensagemColeta().setColetaSegmento(true);
         conversa.setUltimaMensagem(LocalDateTime.now());
         conversaUseCase.salvar(conversa);
+        mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_SEGMENTO, null, null), cliente.getTelefone(), conversa);
         log.info("Coleta de segmento concluida com sucesso. Conversa: {}, Cliente: {}", conversa, cliente);
     }
 

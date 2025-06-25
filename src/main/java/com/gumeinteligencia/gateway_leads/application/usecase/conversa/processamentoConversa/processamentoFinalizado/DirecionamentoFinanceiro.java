@@ -31,16 +31,16 @@ public class DirecionamentoFinanceiro implements ProcessoFinalizadoType{
         OutroContato outroContato = outroContatoUseCase.consultarPorNome("Vitoria");
 
         if (conversa.getMensagemDirecionamento().isEscolhaFinanceiro()) {
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_FINANCEIRO, null, null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);
             conversa.getMensagemDirecionamento().setMensagemInicial(false);
             conversaUseCase.salvar(conversa);
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_FINANCEIRO, null, null), cliente.getTelefone(), conversa);
         } else {
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_FINANACEIRO, null, null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);
             conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);
             conversa.getMensagemDirecionamento().setMensagemInicial(false);
             conversaUseCase.salvar(conversa);
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_FINANACEIRO, null, null), cliente.getTelefone(), conversa);
         }
         log.info("Processamento de escolha financeira concluidá com sucesso. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
     }

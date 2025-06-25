@@ -49,9 +49,9 @@ public class ProcessamentoConversaExistenteUseCase implements ConversaExistente 
             cliente.setNome(mensagem.getMensagem());
             conversa.getMensagemDirecionamento().setColetaNome(true);
             clienteUseCase.salvar(cliente);
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null), cliente.getTelefone(), conversa);
             conversa.setTipoUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
             conversaUseCase.salvar(conversa);
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null), cliente.getTelefone(), conversa);
         } else {
 
             try {

@@ -27,11 +27,11 @@ public class DirecionamentoComercial implements ProcessoFinalizadoType{
     public void processar(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando escolha comercial de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         if(conversa.getMensagemDirecionamento().isEscolhaComercial() || conversa.getVendedor() != null) {
-            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_COMERCIAL, conversa.getVendedor().getNome(), null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente);
             conversa.getMensagemDirecionamento().setEscolhaComercial(true);
             conversa.getMensagemDirecionamento().setMensagemInicial(false);
             conversaUseCase.salvar(conversa);
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_COMERCIAL, conversa.getVendedor().getNome(), null), cliente.getTelefone(), conversa);
         } else {
             coletaInformacoesUseCase.processarEtapaDeColeta(mensagem, cliente, conversa);
             conversa.getMensagemDirecionamento().setEscolhaComercialRecontato(true);
