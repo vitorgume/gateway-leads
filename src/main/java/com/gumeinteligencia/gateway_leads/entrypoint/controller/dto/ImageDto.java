@@ -9,4 +9,5 @@ import lombok.*;
 @Builder
 public class ImageDto {
     private String imageUrl;
+    private String caption;
 }
