@@ -1,6 +1,6 @@
 package com.gumeinteligencia.gateway_leads.entrypoint.controller;
 
-import com.gumeinteligencia.gateway_leads.application.usecase.VendedorUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.vendedor.VendedorUseCase;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
