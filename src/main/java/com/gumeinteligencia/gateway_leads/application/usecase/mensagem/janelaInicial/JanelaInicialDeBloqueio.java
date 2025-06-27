@@ -4,6 +4,7 @@ import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.EsperaMen
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -15,26 +16,34 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Component
-@RequiredArgsConstructor
-@Profile("prod")
-public class JanelaInicialDeBloqueio implements JanelaInicial {
+public class JanelaInicialDeBloqueio {
+
     private final Set<String> bloqueioInicial = ConcurrentHashMap.newKeySet();
     private final Map<String, EsperaMensagem> filaMensagens = new ConcurrentHashMap<>();
     private final MensagemUseCase mensagemUseCase;
 
-    @Override
+    @Value("${neoprint.delay.janela}")
+    private final Long delay;
+
+    public JanelaInicialDeBloqueio(
+            MensagemUseCase mensagemUseCase,
+            @Value("${neoprint.delay.janela}") Long delay
+    ) {
+        this.mensagemUseCase = mensagemUseCase;
+        this.delay = delay;
+    }
+
     public void adicionarSeNaoExiste(String telefone) {
         boolean adicionado = bloqueioInicial.add(telefone);
 
         if (adicionado) {
             Executors.newSingleThreadScheduledExecutor().schedule(() -> {
                 processarMensagens(telefone);
-            }, 25, TimeUnit.SECONDS);
+            }, delay, TimeUnit.SECONDS);
         }
 
     }
 
-    @Override
     public void armazenarMensagens(String telefone, List<String> mensagens, Mensagem ultima) {
         EsperaMensagem espera = new EsperaMensagem();
         espera.setMensagensParaEnviar(mensagens);
@@ -56,7 +65,6 @@ public class JanelaInicialDeBloqueio implements JanelaInicial {
         }
     }
 
-    @Override
     public void removerBloqueio(String telefone) {
         bloqueioInicial.remove(telefone);
     }
