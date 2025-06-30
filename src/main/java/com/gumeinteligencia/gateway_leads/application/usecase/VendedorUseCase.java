@@ -43,6 +43,10 @@ public class VendedorUseCase {
     }
 
     private Vendedor escolheVendedorSegmento(Segmento segmento) {
+        if (segmento.getCodigo() == 1) {
+            return this.consultarVendedor("Nilza");
+        }
+
         if (segmento.getCodigo() == 5) {
             Vendedor vendedor = consultarVendedor("Mariana");
 
