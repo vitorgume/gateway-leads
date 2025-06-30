@@ -4,11 +4,12 @@ import com.gumeinteligencia.gateway_leads.application.usecase.*;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.application.usecase.vendedor.VendedorUseCase;
+import com.gumeinteligencia.gateway_leads.domain.conversa.EstadoColeta;
+import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
-import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -50,9 +52,9 @@ public class FinalizaColeta implements ColetaType{
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
 
-            if(conversa.getMensagemDirecionamento().isEscolhaComercialRecontato()) {
-                conversa.getMensagemDirecionamento().setMensagemInicial(false);
-                conversa.getMensagemDirecionamento().setEscolhaComercial(true);
+            if(conversa.getMensagemDirecionamento().contains(MensagemDirecionamento.ESCOLHA_COMERCIAL_RECONTATO)) {
+                conversa.getMensagemDirecionamento().remove(MensagemDirecionamento.MENSAGEM_INICIAL);
+                conversa.getMensagemDirecionamento().add(MensagemDirecionamento.ESCOLHA_COMERCIAL);
                 conversaUseCase.salvar(conversa);
             }
         }
@@ -61,8 +63,8 @@ public class FinalizaColeta implements ColetaType{
     }
 
     @Override
-    public boolean deveAplicar(MensagemColeta estado) {
-        return estado.isColetaSegmento() && estado.isColetaRegiao();
+    public boolean deveAplicar(List<EstadoColeta> estados) {
+        return estados.contains(EstadoColeta.COLETA_SEGMENTO) && estados.contains(EstadoColeta.COLETA_REGIAO);
     }
 
     @Override

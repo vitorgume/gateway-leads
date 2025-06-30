@@ -1,8 +1,7 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.mensagem;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.*;
-import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.conversaExistente.ConversaExistente;
-import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.conversaExistente.ProcessamentoConversaExistenteUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.ProcessamentoConversaExistenteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.ProcessamentoNovaConversa;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.validatorMensagens.ValidadorMensagemComposite;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class ProcessarMensagemUseCase {
 
     private final ClienteUseCase clienteUseCase;
-    private final ConversaExistente conversaExistente;
+    private final ProcessamentoConversaExistenteUseCase conversaExistente;
     private final ProcessamentoNovaConversa processamentoNovaConversa;
     private final ValidadorMensagemComposite validadorMensagem;
 

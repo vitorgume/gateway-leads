@@ -3,14 +3,15 @@ package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processa
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
+import com.gumeinteligencia.gateway_leads.domain.conversa.EstadoColeta;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
-import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
@@ -29,7 +30,7 @@ public class ColetaSegmento implements ColetaType{
     @Override
     public void coleta(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Coletando segmento. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
-        conversa.getMensagemColeta().setColetaSegmento(true);
+        conversa.getMensagemColeta().add(EstadoColeta.COLETA_SEGMENTO);
         conversa.setUltimaMensagem(LocalDateTime.now());
         conversaUseCase.salvar(conversa);
         mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.COLETA_SEGMENTO, null, null), cliente.getTelefone(), conversa);
@@ -37,8 +38,8 @@ public class ColetaSegmento implements ColetaType{
     }
 
     @Override
-    public boolean deveAplicar(MensagemColeta estado) {
-        return !estado.isColetaSegmento();
+    public boolean deveAplicar(List<EstadoColeta> estados) {
+        return estados.contains(EstadoColeta.COLETA_SEGMENTO);
     }
 
     @Override

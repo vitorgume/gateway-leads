@@ -3,14 +3,15 @@ package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processa
 import com.gumeinteligencia.gateway_leads.application.usecase.*;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
+import com.gumeinteligencia.gateway_leads.domain.conversa.EstadoColeta;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
-import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
@@ -38,7 +39,7 @@ public class ColetaRegiao implements ColetaType{
         } else {
             conversa.setTipoUltimaMensagem(TipoMensagem.COLETA_SEGMENTO);
             cliente.setSegmento(GatewayEnum.gatewaySegmento(mensagem.getMensagem()));
-            conversa.getMensagemColeta().setColetaRegiao(true);
+            conversa.getMensagemColeta().add(EstadoColeta.COLETA_REGIAO);
             conversa.setUltimaMensagem(LocalDateTime.now());
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
@@ -49,8 +50,8 @@ public class ColetaRegiao implements ColetaType{
     }
 
     @Override
-    public boolean deveAplicar(MensagemColeta estado) {
-        return !estado.isColetaRegiao();
+    public boolean deveAplicar(List<EstadoColeta> estados) {
+        return estados.contains(EstadoColeta.COLETA_REGIAO);
     }
 
     @Override

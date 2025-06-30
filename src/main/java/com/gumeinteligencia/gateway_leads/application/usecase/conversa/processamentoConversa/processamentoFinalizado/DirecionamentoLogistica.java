@@ -3,6 +3,7 @@ package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processa
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.OutroContatoUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
+import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
 import com.gumeinteligencia.gateway_leads.domain.outroContato.OutroContato;
 import com.gumeinteligencia.gateway_leads.domain.outroContato.Setor;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
@@ -31,15 +32,15 @@ public class DirecionamentoLogistica implements ProcessoFinalizadoType {
 
         OutroContato outroContato = outroContatoUseCase.consultarPorNome("Gabriella");
 
-        if(conversa.getMensagemDirecionamento().getEscolhaLogistica()) {
+        if(conversa.getMensagemDirecionamento().contains(MensagemDirecionamento.ESCOLHA_LOGISTICA)) {
             mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);
-            conversa.getMensagemDirecionamento().setMensagemInicial(false);
+            conversa.getMensagemDirecionamento().remove(MensagemDirecionamento.MENSAGEM_INICIAL);
             conversaUseCase.salvar(conversa);
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_LOGISTICA, null, null), cliente.getTelefone(), conversa);
         } else {
             mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);
-            conversa.getMensagemDirecionamento().setEscolhaLogistica(true);
-            conversa.getMensagemDirecionamento().setMensagemInicial(false);
+            conversa.getMensagemDirecionamento().add(MensagemDirecionamento.ESCOLHA_LOGISTICA);
+            conversa.getMensagemDirecionamento().remove(MensagemDirecionamento.MENSAGEM_INICIAL);
             conversaUseCase.salvar(conversa);
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_LOGISTICA, null, null), cliente.getTelefone(), conversa);
         }

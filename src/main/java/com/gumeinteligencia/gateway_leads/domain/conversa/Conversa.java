@@ -7,6 +7,7 @@ import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -21,8 +22,8 @@ public class Conversa {
     private LocalDateTime dataCriacao;
     private LocalDateTime ultimaMensagem;
     private LocalDateTime ultimaMensagemConversaFinalizada;
-    private MensagemColeta mensagemColeta;
-    private MensagemDirecionamento mensagemDirecionamento;
+    private List<EstadoColeta> mensagemColeta;
+    private List<MensagemDirecionamento> mensagemDirecionamento;
     private Boolean finalizada;
     private Boolean encerrada;
     private Boolean inativa;

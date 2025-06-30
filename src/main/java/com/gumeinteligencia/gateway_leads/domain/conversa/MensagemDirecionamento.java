@@ -1,29 +1,21 @@
 package com.gumeinteligencia.gateway_leads.domain.conversa;
 
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Embeddable
+@AllArgsConstructor
 @Getter
-@Setter
-@ToString
-public class MensagemDirecionamento {
-    private boolean mensagemInicial;
-    private boolean escolhaFinanceiro;
-    private boolean escolhaComercial;
-    private boolean escolhaComercialRecontato;
-    private boolean coletaNome;
-    private Boolean escolhaLogistica;
+public enum MensagemDirecionamento {
+    MENSAGEM_INICIAL(0, "Mensagem inicial"),
+    ESCOLHA_FINANCEIRO(1, "Escolha financeiro"),
+    ESCOLHA_COMERCIAL(2, "Escolha comercial"),
+    ESCOLHA_COMERCIAL_RECONTATO(3, "Escolha comercial recontato"),
+    COLETA_NOME(4, "Coleta nome"),
+    ESCOLHA_LOGISTICA(5, "Escolha logística");
 
-
-    public MensagemDirecionamento() {
-        this.escolhaFinanceiro = false;
-        this.escolhaComercial = false;
-        this.mensagemInicial = false;
-        this.coletaNome = false;
-        this.escolhaComercialRecontato = false;
-        this.escolhaLogistica = false;
-    }
+    private final int codigo;
+    private final String descricao;
 }

@@ -5,12 +5,14 @@ import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemU
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
-import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
+import com.gumeinteligencia.gateway_leads.domain.conversa.EstadoColeta;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class ColetaInformacoesUseCase {
     private final MensagemBuilder mensagemBuilder;
 
     public void processarEtapaDeColeta(Mensagem mensagem, Cliente cliente, Conversa conversa) {
-        MensagemColeta mensagemColeta = conversa.getMensagemColeta();
+        List<EstadoColeta> mensagemColeta = conversa.getMensagemColeta();
 
         try {
             ColetaType coletaType = coletaFactory.create(mensagemColeta);

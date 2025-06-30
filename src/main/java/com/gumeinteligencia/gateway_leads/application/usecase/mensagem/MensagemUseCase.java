@@ -5,6 +5,7 @@ import com.gumeinteligencia.gateway_leads.application.usecase.ClienteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
+import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
@@ -90,7 +91,7 @@ public class MensagemUseCase {
         } else {
             Conversa conversaExistente = conversaUseCase.consultarPorCliente(clienteExistente.get());
 
-            conversaExistente.getMensagemDirecionamento().setMensagemInicial(true);
+            conversaExistente.getMensagemDirecionamento().add(MensagemDirecionamento.MENSAGEM_INICIAL);
             conversaExistente.setTipoUltimaMensagem(TipoMensagem.DIRECIONAR_SETOR);
             conversa = conversaUseCase.salvar(conversaExistente);
         }
