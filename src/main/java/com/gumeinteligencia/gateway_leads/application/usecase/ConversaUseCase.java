@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,9 +51,9 @@ public class ConversaUseCase {
         Conversa novaConversa = Conversa.builder()
                 .dataCriacao(LocalDateTime.now())
                 .cliente(cliente)
-                .mensagemColeta(new MensagemColeta())
+                .mensagemColeta(new ArrayList<>())
                 .finalizada(false)
-                .mensagemDirecionamento(new MensagemDirecionamento())
+                .mensagemDirecionamento(new ArrayList<>())
                 .inativa(false)
                 .build();
 
