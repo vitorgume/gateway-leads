@@ -55,6 +55,7 @@ public class WebClientExecutor {
 
             return response;
         } catch (Exception e) {
+            log.error(errorMessage, e);
             throw new DataProviderException(errorMessage, e.getCause());
         }
     }

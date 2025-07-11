@@ -1,6 +1,7 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.conversa;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.RelatorioUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.VendedorUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
@@ -26,6 +27,7 @@ public class ConversaInativaUseCase {
     private final VendedorUseCase vendedorUseCase;
     private final MensagemUseCase mensagemUseCase;
     private final MensagemBuilder mensagemBuilder;
+    private final RelatorioUseCase relatorioUseCase;
 
     @Scheduled(cron = "0 */20 * * * *")
     public void verificaAusenciaDeMensagem() {
@@ -58,6 +60,7 @@ public class ConversaInativaUseCase {
                                 conversa.getCliente()
                         );
                 mensagemUseCase.enviarMensagemVendedor(mensagemBuilder.getMensagem(TipoMensagem.CONTATO_INATIVO, null, null), vendedor.getTelefone(), conversa);
+                relatorioUseCase.atualizarRelatorioOnline(conversa.getCliente(), vendedor);
                 conversaUseCase.salvar(conversa);
             });
         }

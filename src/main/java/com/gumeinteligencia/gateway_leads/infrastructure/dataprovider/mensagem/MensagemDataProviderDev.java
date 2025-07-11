@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @Profile("dev")
 public class MensagemDataProviderDev implements MensagemGateway {
 
+
     @Override
     public void enviar(Mensagem mensagem) {
         MensagemRequestDto body = MensagemMapper.paraRequestDto(mensagem);
