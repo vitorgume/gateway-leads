@@ -2,9 +2,11 @@ package com.gumeinteligencia.gateway_leads.application.usecase.vendedor;
 
 import com.gumeinteligencia.gateway_leads.domain.Regiao;
 import com.gumeinteligencia.gateway_leads.domain.Segmento;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
+@Order(3)
 public class EscolhaRegiaoMaringa implements EscolhaVendedorType {
     @Override
     public EscolhaVendedor escolher() {
