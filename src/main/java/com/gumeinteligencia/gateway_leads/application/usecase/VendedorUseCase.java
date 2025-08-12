@@ -22,6 +22,7 @@ public class VendedorUseCase {
     private final VendedorGateway gateway;
     private final ClienteUseCase clienteUseCase;
     private final Random random = new Random();
+    private static String ultimoVendedor = null;
 
 
     public Vendedor escolherVendedor(Cliente cliente) {
@@ -83,8 +84,9 @@ public class VendedorUseCase {
 
         do {
             vendedor = vendedores.get(random.nextInt(limite));
-        } while (vendedor.getInativo());
+        } while (vendedor.getInativo() || vendedor.getNome().equals(ultimoVendedor));
 
+        ultimoVendedor = vendedor.getNome();
         return vendedor.getNome();
 
     }
