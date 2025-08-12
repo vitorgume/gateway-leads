@@ -16,4 +16,5 @@ public class Cliente {
     private Regiao regiao;
     private Segmento segmento;
     private boolean inativo;
+    private Canal canal;
 }

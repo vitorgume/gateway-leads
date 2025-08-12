@@ -4,6 +4,7 @@ import com.gumeinteligencia.gateway_leads.application.gateways.MensagemGateway;
 import com.gumeinteligencia.gateway_leads.application.usecase.ClienteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
+import com.gumeinteligencia.gateway_leads.domain.Canal;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
@@ -85,7 +86,7 @@ public class MensagemUseCase {
         Conversa conversa;
 
         if(clienteExistente.isEmpty()) {
-            Cliente novoCliente = Cliente.builder().telefone(mensagemRecebida.getTelefone()).build();
+            Cliente novoCliente = Cliente.builder().telefone(mensagemRecebida.getTelefone()).canal(Canal.URA).build();
             Cliente cliente = clienteUseCase.cadastrar(novoCliente);
             conversa = conversaUseCase.criar(cliente);
         } else {
