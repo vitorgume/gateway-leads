@@ -30,6 +30,7 @@ public class FinalizaColeta implements ColetaType{
     private final ConversaUseCase conversaUseCase;
     private final ClienteUseCase clienteUseCase;
     private final MensagemBuilder mensagemBuilder;
+    private final RelatorioUseCase relatorioUseCase;
 
     @Override
     public void coleta(Conversa conversa, Cliente cliente, Mensagem mensagem) {
@@ -49,6 +50,7 @@ public class FinalizaColeta implements ColetaType{
             conversa.setUltimaMensagemConversaFinalizada(LocalDateTime.now());
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, vendedor.getNome(), null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoVendedor(vendedor, cliente);
+            relatorioUseCase.atualizarRelatorioOnline(cliente, vendedor);
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
 

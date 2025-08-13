@@ -1,6 +1,7 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.conversa;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.RelatorioUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.application.usecase.vendedor.VendedorUseCase;
@@ -23,6 +24,7 @@ public class ConversaInativaUseCase {
     private final VendedorUseCase vendedorUseCase;
     private final MensagemUseCase mensagemUseCase;
     private final MensagemBuilder mensagemBuilder;
+    private final RelatorioUseCase relatorioUseCase;
 
     @Value("${spring.profiles.active}")
     private final String profile;
@@ -32,12 +34,14 @@ public class ConversaInativaUseCase {
             VendedorUseCase vendedorUseCase,
             MensagemUseCase mensagemUseCase,
             MensagemBuilder mensagemBuilder,
+            RelatorioUseCase relatorioUseCase,
             @Value("${spring.profiles.active}") String profile
     ) {
         this.conversaUseCase = conversaUseCase;
         this.vendedorUseCase = vendedorUseCase;
         this.mensagemUseCase = mensagemUseCase;
         this.mensagemBuilder = mensagemBuilder;
+        this.relatorioUseCase = relatorioUseCase;
         this.profile = profile;
     }
 
@@ -75,6 +79,7 @@ public class ConversaInativaUseCase {
                                 conversa.getCliente()
                         );
                 mensagemUseCase.enviarMensagemVendedor(mensagemBuilder.getMensagem(TipoMensagem.CONTATO_INATIVO, null, null), vendedor.getTelefone(), conversa);
+                relatorioUseCase.atualizarRelatorioOnline(conversa.getCliente(), vendedor);
                 conversaUseCase.salvar(conversa);
             });
         }

@@ -1,8 +1,12 @@
 package com.gumeinteligencia.gateway_leads.application.usecase;
 
+import com.gumeinteligencia.gateway_leads.application.gateways.RelatorioGateway;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
+import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioOnlineDto;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.vendedor.VendedorUseCase;
+import com.gumeinteligencia.gateway_leads.domain.Cliente;
+import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.outroContato.OutroContato;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
 
@@ -28,6 +33,7 @@ public class RelatorioUseCase {
     private final VendedorUseCase vendedorUseCase;
     private final MensagemUseCase mensagemUseCase;
     private final OutroContatoUseCase outroContatoUseCase;
+    private final RelatorioGateway gateway;
 
     @Scheduled(cron = "0 0 16 * * MON-FRI")
     public void enviarRelatorioDiarioVendedores() {
@@ -92,6 +98,23 @@ public class RelatorioUseCase {
         }
 
         return "";
+    }
+
+    public void atualizarRelatorioOnline(Cliente cliente, Vendedor vendedor) {
+        log.info("Atualizando relatório online. Cliente: {}, Vendedor: {}", cliente, vendedor);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        RelatorioOnlineDto novaLinha = RelatorioOnlineDto.builder()
+                .data(LocalDate.now().format(formatter))
+                .telefone(cliente.getTelefone())
+                .cliente(cliente.getNome())
+                .vendedor(vendedor.getNome())
+                .build();
+
+        gateway.atualizarRelatorioOnline(novaLinha);
+
+        log.info("Relatório atualizado com sucesso.");
     }
 
 }
