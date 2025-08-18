@@ -134,7 +134,7 @@ public class VendedorUseCase {
         Vendedor vendedorEscolhido;
         do {
             vendedorEscolhido = vendedoresMedicina.get(random.nextInt(vendedoresMedicina.size()));
-        } while (vendedorEscolhido.getInativo() || ultimoVendedorMedicina.equals(vendedorEscolhido.getNome()));
+        } while (vendedorEscolhido.getInativo() || vendedorEscolhido.getNome().equals(ultimoVendedorMedicina));
 
         ultimoVendedorMedicina = vendedorEscolhido.getNome();
         return vendedorEscolhido;
