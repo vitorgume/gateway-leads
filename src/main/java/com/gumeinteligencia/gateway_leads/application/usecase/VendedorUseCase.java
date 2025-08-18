@@ -23,11 +23,11 @@ public class VendedorUseCase {
     private final ClienteUseCase clienteUseCase;
     private final Random random = new Random();
     private static String ultimoVendedor = null;
-
+    private static String ultimoVendedorMedicina = null;
 
     public Vendedor escolherVendedor(Cliente cliente) {
         if (cliente.getSegmento().getCodigo() == 1) {
-            return this.consultarVendedor("Nilza");
+            return this.escolheVendedorMedicina();
         }
 
         if (cliente.getRegiao().getCodigo() == 2) {
@@ -45,7 +45,7 @@ public class VendedorUseCase {
 
     private Vendedor escolheVendedorSegmento(Segmento segmento) {
         if (segmento.getCodigo() == 1) {
-            return this.consultarVendedor("Nilza");
+            return this.escolheVendedorMedicina();
         }
 
         if (segmento.getCodigo() == 5) {
@@ -127,5 +127,16 @@ public class VendedorUseCase {
         }
 
         return this.consultarVendedor(this.roletaVendedores("Nilza"));
+    }
+
+    private Vendedor escolheVendedorMedicina() {
+        List<Vendedor> vendedoresMedicina = gateway.listar().stream().filter(vendedor -> vendedor.getNome().equals("Marcia") || vendedor.getNome().equals("Cinthya")).toList();
+        Vendedor vendedorEscolhido;
+        do {
+            vendedorEscolhido = vendedoresMedicina.get(random.nextInt(vendedoresMedicina.size()));
+        } while (vendedorEscolhido.getInativo() || ultimoVendedorMedicina.equals(vendedorEscolhido.getNome()));
+
+        ultimoVendedorMedicina = vendedorEscolhido.getNome();
+        return vendedorEscolhido;
     }
 }
