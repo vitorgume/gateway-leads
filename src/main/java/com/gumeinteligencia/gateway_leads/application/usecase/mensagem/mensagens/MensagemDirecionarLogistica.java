@@ -9,7 +9,7 @@ public class MensagemDirecionarLogistica implements MensagemType {
 
     @Override
     public String getMensagem(String nomeVendedor, Cliente cliente) {
-        return "Muito bem ! Agora você será direcionado para a Gabriella, responsável pela nossa logística. Logo elá entrará em contato com você. Até ..." + "\nDia 15/08/2025 não estaremos atendendo devido ao feriado municipal";
+        return "Muito bem ! Agora você será direcionado para a Gabriella, responsável pela nossa logística. Logo elá entrará em contato com você. Até ...";
     }
 
     @Override
