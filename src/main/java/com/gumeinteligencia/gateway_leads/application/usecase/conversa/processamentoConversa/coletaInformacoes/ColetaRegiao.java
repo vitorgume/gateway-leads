@@ -39,7 +39,6 @@ public class ColetaRegiao implements ColetaType{
         } else {
             conversa.setTipoUltimaMensagem(TipoMensagem.COLETA_SEGMENTO);
             cliente.setSegmento(GatewayEnum.gatewaySegmento(mensagem.getMensagem()));
-            conversa.getMensagemColeta().add(EstadoColeta.COLETA_REGIAO);
             conversa.setUltimaMensagem(LocalDateTime.now());
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
