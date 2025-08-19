@@ -1,6 +1,6 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.mensagem.validatorMensagens;
 
-import com.gumeinteligencia.gateway_leads.application.usecase.VendedorUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.vendedor.VendedorUseCase;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.Mensagem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

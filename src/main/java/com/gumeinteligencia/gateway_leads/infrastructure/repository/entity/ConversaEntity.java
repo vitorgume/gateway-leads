@@ -1,12 +1,13 @@
 package com.gumeinteligencia.gateway_leads.infrastructure.repository.entity;
 
-import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemColeta;
+import com.gumeinteligencia.gateway_leads.domain.conversa.EstadoColeta;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "Conversa")
@@ -33,11 +34,11 @@ public class ConversaEntity {
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
 
-    @Embedded
-    private MensagemColeta mensagemColeta;
+    @Enumerated(EnumType.STRING)
+    private List<EstadoColeta> mensagemColeta;
 
-    @Embedded
-    private MensagemDirecionamento mensagemDirecionamento;
+    @Enumerated(EnumType.STRING)
+    private List<MensagemDirecionamento> mensagemDirecionamento;
 
     private LocalDateTime ultimaMensagem;
 

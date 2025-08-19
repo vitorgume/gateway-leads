@@ -1,5 +1,6 @@
 package com.gumeinteligencia.gateway_leads.infrastructure.repository.entity;
 
+import com.gumeinteligencia.gateway_leads.domain.Canal;
 import com.gumeinteligencia.gateway_leads.domain.Regiao;
 import com.gumeinteligencia.gateway_leads.domain.Segmento;
 import jakarta.persistence.*;
@@ -31,4 +32,7 @@ public class ClienteEntity {
     private Segmento segmento;
 
     private boolean inativo;
+
+    @Enumerated(EnumType.ORDINAL)
+    private Canal canal;
 }

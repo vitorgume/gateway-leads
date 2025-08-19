@@ -3,6 +3,7 @@ package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processa
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.OutroContatoUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
+import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
 import com.gumeinteligencia.gateway_leads.domain.outroContato.OutroContato;
 import com.gumeinteligencia.gateway_leads.domain.outroContato.Setor;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
@@ -30,15 +31,15 @@ public class DirecionamentoFinanceiro implements ProcessoFinalizadoType{
         log.info("Processando escolha finanaceiro de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         OutroContato outroContato = outroContatoUseCase.consultarPorNome("Vitoria");
 
-        if (conversa.getMensagemDirecionamento().isEscolhaFinanceiro()) {
+        if (conversa.getMensagemDirecionamento().contains(MensagemDirecionamento.ESCOLHA_FINANCEIRO)) {
             mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);
-            conversa.getMensagemDirecionamento().setMensagemInicial(false);
+            conversa.getMensagemDirecionamento().remove(MensagemDirecionamento.MENSAGEM_INICIAL);
             conversaUseCase.salvar(conversa);
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_FINANCEIRO, null, null), cliente.getTelefone(), conversa);
         } else {
             mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);
-            conversa.getMensagemDirecionamento().setEscolhaFinanceiro(true);
-            conversa.getMensagemDirecionamento().setMensagemInicial(false);
+            conversa.getMensagemDirecionamento().add(MensagemDirecionamento.ESCOLHA_FINANCEIRO);
+            conversa.getMensagemDirecionamento().remove(MensagemDirecionamento.MENSAGEM_INICIAL);
             conversaUseCase.salvar(conversa);
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_FINANACEIRO, null, null), cliente.getTelefone(), conversa);
         }

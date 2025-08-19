@@ -4,6 +4,7 @@ import com.gumeinteligencia.gateway_leads.application.gateways.RelatorioGateway;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioOnlineDto;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.vendedor.VendedorUseCase;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.outroContato.OutroContato;

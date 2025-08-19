@@ -1,7 +1,9 @@
-package com.gumeinteligencia.gateway_leads.application.usecase;
+package com.gumeinteligencia.gateway_leads.application.usecase.vendedor;
 
+import com.gumeinteligencia.gateway_leads.application.exceptions.EscolhaNaoIdentificadoException;
 import com.gumeinteligencia.gateway_leads.application.exceptions.VendedorNaoEncontradoException;
 import com.gumeinteligencia.gateway_leads.application.gateways.VendedorGateway;
+import com.gumeinteligencia.gateway_leads.application.usecase.ClienteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.dto.RelatorioContatoDto;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Segmento;
@@ -22,51 +24,25 @@ public class VendedorUseCase {
     private final VendedorGateway gateway;
     private final ClienteUseCase clienteUseCase;
     private final Random random = new Random();
+    private final EscolhaVendedorFactory escolhaVendedorFactory;
     private static String ultimoVendedor = null;
-    private static String ultimoVendedorMedicina = null;
 
     public Vendedor escolherVendedor(Cliente cliente) {
-        if (cliente.getSegmento().getCodigo() == 1) {
-            return this.escolheVendedorMedicina();
-        }
 
-        if (cliente.getRegiao().getCodigo() == 2) {
-            Vendedor vendedor = consultarVendedor("Samara");
+        try {
+            EscolhaVendedorType escolhaVendedorType = escolhaVendedorFactory.escolha(cliente.getSegmento(), cliente.getRegiao());
+            EscolhaVendedor escolhaVendedor = escolhaVendedorType.escolher();
 
-            if (vendedor.getInativo()) {
-                vendedor = consultarVendedor(roletaVendedores("Nilza"));
+            if(escolhaVendedor.isRoleta()) {
+                return consultarVendedor(this.roletaVendedores(escolhaVendedor.getVendedor()));
+            } else {
+                return consultarVendedor(escolhaVendedor.getVendedor());
             }
 
-            return vendedor;
+        } catch (EscolhaNaoIdentificadoException ex) {
+            log.warn("Parâmetro de escolha de segmentos de vendedores inválida.");
+            return null;
         }
-
-        return escolheVendedorSegmento(cliente.getSegmento());
-    }
-
-    private Vendedor escolheVendedorSegmento(Segmento segmento) {
-        if (segmento.getCodigo() == 1) {
-            return this.escolheVendedorMedicina();
-        }
-
-        if (segmento.getCodigo() == 5) {
-            Vendedor vendedor = consultarVendedor("Mariana");
-
-            if (vendedor.getInativo()) {
-                vendedor = consultarVendedor(roletaVendedores("Nilza"));
-            }
-
-            return vendedor;
-        }
-
-        String vendedor;
-
-        if (segmento.getCodigo() == 3) {
-            vendedor = this.roletaVendedores(null);
-        } else {
-            vendedor = this.roletaVendedores("Nilza");
-        }
-
-        return this.consultarVendedor(vendedor);
     }
 
     public String roletaVendedores(String excecao) {
@@ -78,19 +54,18 @@ public class VendedorUseCase {
             vendedores = gateway.listarComExcecao(excecao);
         }
 
-        int limite = vendedores.size();
+        if (vendedores.size() <= 1) return vendedores.get(0).getNome();
 
         Vendedor vendedor;
-
         do {
-            vendedor = vendedores.get(random.nextInt(limite));
+            vendedor = vendedores.get(random.nextInt(vendedores.size()));
         } while (vendedor.getInativo() || vendedor.getNome().equals(ultimoVendedor));
 
         ultimoVendedor = vendedor.getNome();
         return vendedor.getNome();
 
     }
-
+    
     public Vendedor consultarVendedor(String nome) {
         Optional<Vendedor> vendedor = gateway.consultarVendedor(nome);
 
@@ -123,20 +98,20 @@ public class VendedorUseCase {
 
     public Vendedor roletaVendedoresConversaInativa(Cliente cliente) {
         if(cliente.getSegmento() != null) {
-            return escolheVendedorSegmento(cliente.getSegmento());
+            return escolherVendedor(cliente);
         }
 
         return this.consultarVendedor(this.roletaVendedores("Nilza"));
     }
 
-    private Vendedor escolheVendedorMedicina() {
-        List<Vendedor> vendedoresMedicina = gateway.listar().stream().filter(vendedor -> vendedor.getNome().equals("Marcia") || vendedor.getNome().equals("Cinthya")).toList();
-        Vendedor vendedorEscolhido;
-        do {
-            vendedorEscolhido = vendedoresMedicina.get(random.nextInt(vendedoresMedicina.size()));
-        } while (vendedorEscolhido.getInativo() || vendedorEscolhido.getNome().equals(ultimoVendedorMedicina));
-
-        ultimoVendedorMedicina = vendedorEscolhido.getNome();
-        return vendedorEscolhido;
-    }
+//    private Vendedor escolheVendedorMedicina() {
+//        List<Vendedor> vendedoresMedicina = gateway.listar().stream().filter(vendedor -> vendedor.getNome().equals("Marcia") || vendedor.getNome().equals("Cinthya")).toList();
+//        Vendedor vendedorEscolhido;
+//        do {
+//            vendedorEscolhido = vendedoresMedicina.get(random.nextInt(vendedoresMedicina.size()));
+//        } while (vendedorEscolhido.getInativo() || vendedorEscolhido.getNome().equals(ultimoVendedorMedicina));
+//
+//        ultimoVendedorMedicina = vendedorEscolhido.getNome();
+//        return vendedorEscolhido;
+//    }
 }

@@ -2,8 +2,6 @@ package com.gumeinteligencia.gateway_leads.application.usecase.dto;
 
 import lombok.*;
 
-import java.time.LocalDate;
-
 @AllArgsConstructor
 @Getter
 @Setter

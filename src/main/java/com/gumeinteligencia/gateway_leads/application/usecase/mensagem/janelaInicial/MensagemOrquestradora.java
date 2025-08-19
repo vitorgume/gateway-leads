@@ -10,7 +10,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MensagemOrquestradora {
 
-    private final JanelaInicial janelaInicial;
+    private final JanelaInicialDeBloqueio janelaInicial;
 
     public void enviarComEspera(String telefone, List<String> mensagens, Mensagem ultima) {
         janelaInicial.adicionarSeNaoExiste(telefone);

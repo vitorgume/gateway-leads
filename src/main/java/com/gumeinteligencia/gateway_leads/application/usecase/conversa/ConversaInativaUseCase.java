@@ -3,14 +3,13 @@ package com.gumeinteligencia.gateway_leads.application.usecase.conversa;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.RelatorioUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
-import com.gumeinteligencia.gateway_leads.application.usecase.VendedorUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
+import com.gumeinteligencia.gateway_leads.application.usecase.vendedor.VendedorUseCase;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
-@Profile("prod")
 public class ConversaInativaUseCase {
 
     private final ConversaUseCase conversaUseCase;
@@ -29,7 +26,26 @@ public class ConversaInativaUseCase {
     private final MensagemBuilder mensagemBuilder;
     private final RelatorioUseCase relatorioUseCase;
 
-    @Scheduled(cron = "0 */20 * * * *")
+    @Value("${spring.profiles.active}")
+    private final String profile;
+
+    public ConversaInativaUseCase(
+            ConversaUseCase conversaUseCase,
+            VendedorUseCase vendedorUseCase,
+            MensagemUseCase mensagemUseCase,
+            MensagemBuilder mensagemBuilder,
+            RelatorioUseCase relatorioUseCase,
+            @Value("${spring.profiles.active}") String profile
+    ) {
+        this.conversaUseCase = conversaUseCase;
+        this.vendedorUseCase = vendedorUseCase;
+        this.mensagemUseCase = mensagemUseCase;
+        this.mensagemBuilder = mensagemBuilder;
+        this.relatorioUseCase = relatorioUseCase;
+        this.profile = profile;
+    }
+
+    @Scheduled(cron = "${neoprint.cron.conversa.inativa}")
     public void verificaAusenciaDeMensagem() {
         List<Conversa> conversas = conversaUseCase.listarNaoFinalizados();
         log.info("Verificando se existe alguma mensagem inativa por mais de 30 minutos. Conversas: {}", conversas);
@@ -37,10 +53,13 @@ public class ConversaInativaUseCase {
 
         LocalDateTime agora = LocalDateTime.now();
 
+
         List<Conversa> conversasAtrasadas = conversas.stream()
                 .filter(conversa -> {
                             if(conversa.getUltimaMensagem() != null)
-                                return conversa.getUltimaMensagem().plusMinutes(30).isBefore(agora);
+                                return profile.equals("dev")
+                                        ? conversa.getUltimaMensagem().plusMinutes(30).isBefore(agora)
+                                        : conversa.getUltimaMensagem().plusSeconds(30).isBefore(agora);
 
                             return false;
                         }
