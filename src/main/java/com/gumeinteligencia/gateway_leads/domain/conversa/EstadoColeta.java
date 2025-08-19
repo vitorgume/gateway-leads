@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 public enum EstadoColeta {
     COLETA_SEGMENTO(0, "Coleta Segmento"),
-    COLETA_REGIAO(1, "Coleta região");
+    COLETA_REGIAO(1, "Coleta região"),
+    FINALIZA_COLETA(3, "Finaliza coleta");
 
     private final int codigo;
     private final String descricao;

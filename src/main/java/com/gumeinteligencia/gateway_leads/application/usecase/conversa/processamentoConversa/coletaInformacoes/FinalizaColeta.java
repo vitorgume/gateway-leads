@@ -66,7 +66,7 @@ public class FinalizaColeta implements ColetaType{
 
     @Override
     public boolean deveAplicar(List<EstadoColeta> estados) {
-        return estados.contains(EstadoColeta.COLETA_SEGMENTO) && estados.contains(EstadoColeta.COLETA_REGIAO);
+        return estados.contains(EstadoColeta.FINALIZA_COLETA);
     }
 
     @Override
