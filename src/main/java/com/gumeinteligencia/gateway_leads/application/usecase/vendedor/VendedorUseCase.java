@@ -63,7 +63,6 @@ public class VendedorUseCase {
 
         ultimoVendedor = vendedor.getNome();
         return vendedor.getNome();
-
     }
     
     public Vendedor consultarVendedor(String nome) {
@@ -103,15 +102,4 @@ public class VendedorUseCase {
 
         return this.consultarVendedor(this.roletaVendedores("Nilza"));
     }
-
-//    private Vendedor escolheVendedorMedicina() {
-//        List<Vendedor> vendedoresMedicina = gateway.listar().stream().filter(vendedor -> vendedor.getNome().equals("Marcia") || vendedor.getNome().equals("Cinthya")).toList();
-//        Vendedor vendedorEscolhido;
-//        do {
-//            vendedorEscolhido = vendedoresMedicina.get(random.nextInt(vendedoresMedicina.size()));
-//        } while (vendedorEscolhido.getInativo() || vendedorEscolhido.getNome().equals(ultimoVendedorMedicina));
-//
-//        ultimoVendedorMedicina = vendedorEscolhido.getNome();
-//        return vendedorEscolhido;
-//    }
 }
