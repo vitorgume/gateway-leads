@@ -40,7 +40,7 @@ public class ConversaMapper {
                 .id(domain.getId())
                 .cliente(ClienteMapper.paraEntity(domain.getCliente()))
                 .dataCriacao(domain.getDataCriacao())
-                .mensagemColeta(EnumMapper.paraEnittyMensagemColeta(domain.getMensagemColeta()))
+                .mensagemColeta(EnumMapper.paraEntityMensagemColeta(domain.getMensagemColeta()))
                 .mensagemDirecionamento(EnumMapper.paraEntityMensagemDirecionamento(domain.getMensagemDirecionamento()))
                 .finalizada(domain.getFinalizada())
                 .encerrada(domain.getEncerrada())

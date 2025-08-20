@@ -4,6 +4,7 @@ import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.coletaInformacoes.ColetaInformacoesUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
+import com.gumeinteligencia.gateway_leads.domain.conversa.EstadoColeta;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
@@ -34,6 +35,10 @@ public class DirecionamentoComercial implements ProcessoFinalizadoType{
             conversaUseCase.salvar(conversa);
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_OUTRO_CONTATO_COMERCIAL, conversa.getVendedor().getNome(), null), cliente.getTelefone(), conversa);
         } else {
+            if(!conversa.getMensagemColeta().contains(EstadoColeta.COLETA_REGIAO) && !conversa.getMensagemColeta().contains(EstadoColeta.FINALIZA_COLETA)) {
+                conversa.getMensagemColeta().add(EstadoColeta.COLETA_SEGMENTO);
+            }
+
             coletaInformacoesUseCase.processarEtapaDeColeta(mensagem, cliente, conversa);
             conversa.getMensagemDirecionamento().add(MensagemDirecionamento.ESCOLHA_COMERCIAL_RECONTATO);
             conversaUseCase.salvar(conversa);

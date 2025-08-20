@@ -2,27 +2,32 @@ package com.gumeinteligencia.gateway_leads.application.usecase.vendedor;
 
 import com.gumeinteligencia.gateway_leads.domain.Regiao;
 import com.gumeinteligencia.gateway_leads.domain.Segmento;
-import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Component
-@Order(1)
-public class EscolhaMedicina implements EscolhaVendedorType {
+@Order(4)
+public class EscolhaSegmentosFaltantes implements EscolhaVendedorType {
+
+    private final List<Segmento> segmentos = new ArrayList<>(List.of(
+            Segmento.BOUTIQUE_LOJAS,
+            Segmento.ALIMENTOS,
+            Segmento.OUTROS
+    ));
 
     @Override
     public EscolhaVendedor escolher() {
         return EscolhaVendedor.builder()
-                .roleta(false)
                 .vendedor("Nilza")
+                .roleta(true)
                 .build();
     }
 
     @Override
     public boolean deveAplicar(Regiao regiao, Segmento segmento) {
-        return segmento.getCodigo() == 1;
+        return segmentos.contains(segmento);
     }
 }

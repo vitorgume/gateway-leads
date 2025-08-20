@@ -36,7 +36,13 @@ public class VendedorUseCase {
             if(escolhaVendedor.isRoleta()) {
                 return consultarVendedor(this.roletaVendedores(escolhaVendedor.getVendedor()));
             } else {
-                return consultarVendedor(escolhaVendedor.getVendedor());
+                Vendedor vendedor = consultarVendedor(escolhaVendedor.getVendedor());
+
+                if(vendedor.getInativo()) {
+                    return consultarVendedor(this.roletaVendedores("Nilza"));
+                }
+
+                return vendedor;
             }
 
         } catch (EscolhaNaoIdentificadoException ex) {
