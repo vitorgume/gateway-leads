@@ -59,7 +59,7 @@ public class ConversaInativaUseCase {
                             if(conversa.getUltimaMensagem() != null)
                                 return profile.equals("prod")
                                         ? conversa.getUltimaMensagem().plusMinutes(30).isBefore(agora)
-                                        : conversa.getUltimaMensagem().plusSeconds(30).isBefore(agora);
+                                        : conversa.getUltimaMensagem().plusSeconds(10).isBefore(agora);
 
                             return false;
                         }

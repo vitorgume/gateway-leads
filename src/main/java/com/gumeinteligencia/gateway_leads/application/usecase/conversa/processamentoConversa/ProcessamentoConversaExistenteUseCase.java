@@ -96,25 +96,29 @@ public class ProcessamentoConversaExistenteUseCase {
 
         LocalDateTime agora = LocalDateTime.now();
 
-        boolean pausaUltimaMensagem = profile.equals("DEV")
-                ? !conversa.getUltimaMensagemConversaFinalizada().plusSeconds(1).isBefore(agora)
-                : !conversa.getUltimaMensagemConversaFinalizada().plusHours(1).isBefore(agora);
+        boolean pausaUltimaMensagem = profile.equals("prod")
+                ? conversa.getUltimaMensagemConversaFinalizada().plusHours(1).isBefore(agora)
+                : conversa.getUltimaMensagemConversaFinalizada().plusSeconds(1).isBefore(agora);
 
 
-        if(!pausaUltimaMensagem) {
+        if(pausaUltimaMensagem) {
+            System.out.println("oi");
             if (!conversa.getMensagemDirecionamento().contains(MensagemDirecionamento.MENSAGEM_INICIAL)) {
+                System.out.println("oi");
                 mensagemOrquestradora.enviarComEspera(cliente.getTelefone(), List.of(
                         mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null),
                         mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null)
                 ), mensagem);
             } else {
-
+                System.out.println("oi");
                 try {
                     ProcessoFinalizadoType strategy;
 
                     if (conversa.getMensagemDirecionamento().contains(MensagemDirecionamento.ESCOLHA_COMERCIAL_RECONTATO) && !conversa.getMensagemDirecionamento().contains(MensagemDirecionamento.ESCOLHA_COMERCIAL)) {
+                        System.out.println("oi");
                         strategy = new DirecionamentoComercial(mensagemUseCase, conversaUseCase, coletaInformacoesUseCase, mensagemBuilder);
                     } else {
+                        System.out.println("oi");
                         strategy = processoFinalizadoFactory.create(mensagem);
                     }
 
