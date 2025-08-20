@@ -102,23 +102,18 @@ public class ProcessamentoConversaExistenteUseCase {
 
 
         if(pausaUltimaMensagem) {
-            System.out.println("oi");
             if (!conversa.getMensagemDirecionamento().contains(MensagemDirecionamento.MENSAGEM_INICIAL)) {
-                System.out.println("oi");
                 mensagemOrquestradora.enviarComEspera(cliente.getTelefone(), List.of(
                         mensagemBuilder.getMensagem(TipoMensagem.BOAS_VINDAS, null, null),
                         mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_SETOR, null, null)
                 ), mensagem);
             } else {
-                System.out.println("oi");
                 try {
                     ProcessoFinalizadoType strategy;
 
                     if (conversa.getMensagemDirecionamento().contains(MensagemDirecionamento.ESCOLHA_COMERCIAL_RECONTATO) && !conversa.getMensagemDirecionamento().contains(MensagemDirecionamento.ESCOLHA_COMERCIAL)) {
-                        System.out.println("oi");
                         strategy = new DirecionamentoComercial(mensagemUseCase, conversaUseCase, coletaInformacoesUseCase, mensagemBuilder);
                     } else {
-                        System.out.println("oi");
                         strategy = processoFinalizadoFactory.create(mensagem);
                     }
 

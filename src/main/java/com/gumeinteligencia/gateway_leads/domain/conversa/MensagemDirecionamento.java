@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
-public enum MensagemDirecionamento {
+public enum     MensagemDirecionamento {
     MENSAGEM_INICIAL(0, "Mensagem inicial"),
     ESCOLHA_FINANCEIRO(1, "Escolha financeiro"),
     ESCOLHA_COMERCIAL(2, "Escolha comercial"),

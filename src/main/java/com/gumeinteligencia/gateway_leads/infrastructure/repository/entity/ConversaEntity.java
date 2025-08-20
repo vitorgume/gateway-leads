@@ -34,11 +34,9 @@ public class ConversaEntity {
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
 
-    @Enumerated(EnumType.STRING)
-    private List<EstadoColeta> mensagemColeta;
+    private List<Integer> mensagemColeta;
 
-    @Enumerated(EnumType.STRING)
-    private List<MensagemDirecionamento> mensagemDirecionamento;
+    private List<Integer> mensagemDirecionamento;
 
     private LocalDateTime ultimaMensagem;
 
