@@ -18,6 +18,9 @@ public class EscolhaRegiaoMaringa implements EscolhaVendedorType {
 
     @Override
     public boolean deveAplicar(Regiao regiao, Segmento segmento) {
-        return regiao.getCodigo() == 2;
+        if(regiao != null)
+            return regiao.getCodigo() == 2;
+        else
+            return false;
     }
 }
