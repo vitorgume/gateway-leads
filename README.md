@@ -151,7 +151,7 @@ open target/site/jacoco/index.html
 
 - **Logs estruturados** (SLF4J):
     - erros em *data providers* para falhas externas.
-        - info nos principais *use cases* (Conversa, ProcessamentoConversa, Mensagem).
+    - info nos principais *use cases* (Conversa, ProcessamentoConversa, Mensagem).
 
 ---
 
