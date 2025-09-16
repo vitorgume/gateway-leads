@@ -116,39 +116,7 @@ services:
     depends_on:
       - mysql
 
-  # Cria recursos SQS/DynamoDB automaticamente no LocalStack
-  init-aws:
-    image: amazon/aws-cli:2.17.35
-    container_name: init-aws
-    depends_on:
-      - localstack
-    environment:
-      - AWS_ACCESS_KEY_ID=test
-      - AWS_SECRET_ACCESS_KEY=test
-      - AWS_DEFAULT_REGION=us-east-1
-    entrypoint: ["/bin/sh","-c"]
-    command: >
-      "
-      echo 'Aguardando LocalStack...';
-      until aws --endpoint-url=http://localstack:4566 sqs list-queues >/dev/null 2>&1; do
-        sleep 2;
-      done;
-      echo 'Criando fila SQS...';
-      aws --endpoint-url=http://localstack:4566 sqs create-queue --queue-name minha-fila-dev || true;
-
-      echo 'Criando tabela DynamoDB...';
-      aws --endpoint-url=http://localstack:4566 dynamodb create-table
-        --table-name minha-tabela
-        --attribute-definitions AttributeName=id,AttributeType=S
-        --key-schema AttributeName=id,KeyType=HASH
-        --billing-mode PAY_PER_REQUEST || true;
-
-      echo 'Recursos AWS locais prontos.';
-      "
-    restart: "no"
-
 volumes:
-  localstack_data:
   mysql_data:
   
 ```
