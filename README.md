@@ -64,7 +64,6 @@ API responsável pela lógica de chat como URA.
 ## Tecnologias & Dependências
 
 - **Linguagem/Framework**: Java 21, Spring Boot 3.5 (Web, Validation, Data)
-- **Cloud**: AWS SDK v2 (S3)
 - **Outras**: Lombok, Hibernate Validator, Poi Ooxml
 
 > A lista completa está no pom.xml.
