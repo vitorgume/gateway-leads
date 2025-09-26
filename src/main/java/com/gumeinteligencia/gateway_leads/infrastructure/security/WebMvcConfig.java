@@ -16,10 +16,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(apiKeyInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
-                        "/actuator/**",
-                        "/health",
-                        "/public/**",
-                        "/webhook/**"
+                        "/",              // raiz
+                        "/error",         // erro padrão do Spring
+                        "/favicon.ico",   // se existir
+                        "/actuator/**",   // actuator
+                        "/health",        // se tiver esse endpoint também
+                        "/public/**",     // públicos
+                        "/webhook/**"     // webhooks
                 );
     }
 }
