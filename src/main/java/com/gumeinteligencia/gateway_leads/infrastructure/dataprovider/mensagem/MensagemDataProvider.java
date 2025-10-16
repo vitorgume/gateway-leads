@@ -35,9 +35,9 @@ public class MensagemDataProvider implements MensagemGateway {
     @Value("${neoprint.ura.whatsapp.client-token}")
     private final String clienteToken;
 
-        public MensagemDataProvider(
-                WebClientExecutor executor,
-                @Value("${neoprint.ura.whatsapp.token}") String token,
+    public MensagemDataProvider(
+            WebClientExecutor executor,
+            @Value("${neoprint.ura.whatsapp.token}") String token,
             @Value("${neoprint.ura.whatsapp.id-instance}") String idInstance,
             @Value("${neoprint.ura.whatsapp.client-token}") String clienteToken
     ) {
@@ -59,7 +59,6 @@ public class MensagemDataProvider implements MensagemGateway {
 
         executor.post(uri, body, headers, "Erro ao enviar mensagem.");
     }
-
 
     @Override
     public void enviarContato(String telefoneDestino, Cliente cliente) {

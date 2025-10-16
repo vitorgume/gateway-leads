@@ -22,4 +22,5 @@ public class VendedorEntity {
     private String nome;
     private String telefone;
     private Boolean inativo;
+    private Integer idVendedorCrm;
 }
