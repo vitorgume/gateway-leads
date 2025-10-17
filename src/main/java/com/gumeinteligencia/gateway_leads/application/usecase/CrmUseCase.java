@@ -11,6 +11,7 @@ import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,51 +20,63 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class CrmUseCase {
 
     private final CrmGateway gateway;
+    private final String profile;
+
+    public CrmUseCase(
+            CrmGateway gateway,
+            @Value("${spring.profiles.active}") String profile
+    ) {
+        this.gateway = gateway;
+        this.profile = profile;
+    }
 
     public void atualizarCrm(Vendedor vendedor, Cliente cliente, Conversa conversa) {
-        log.info("Atualizando crm. Vendedor: {}, Cliente: {}, Conversa: {}", vendedor, cliente, conversa);
+        if(profile.equals("prod")) {
+            log.info("Atualizando crm. Vendedor: {}, Cliente: {}, Conversa: {}", vendedor, cliente, conversa);
 
-        Integer idLead = this.consultaLeadPeloTelefone(cliente.getTelefone());
+            Integer idLead = this.consultaLeadPeloTelefone(cliente.getTelefone());
 
-        log.info("Construindo body para atualizar card.");
+            log.info("Construindo body para atualizar card.");
 
-        List<CustomFieldDto> customFieldDtos = new ArrayList<>();
+            List<CustomFieldDto> customFieldDtos = new ArrayList<>();
 
-        customFieldDtos.add(selectField(1486843, cliente.getSegmento() == null ? 1242461 : cliente.getSegmento().getIdCrm()));
+            customFieldDtos.add(selectField(1486843, cliente.getSegmento() == null ? 1242461 : cliente.getSegmento().getIdCrm()));
 
-        customFieldDtos.add(selectField(1486845, cliente.getRegiao() == null ? 1242469 : cliente.getSegmento().getIdCrm()));
+            customFieldDtos.add(selectField(1486845, cliente.getRegiao() == null ? 1242469 : cliente.getSegmento().getIdCrm()));
 
-        Map<String, Integer> tagItem = conversa.getInativa()
-                ? Map.of("id", 111143)
-                : Map.of("id", 117527);
+            Map<String, Integer> tagItem = conversa.getInativa()
+                    ? Map.of("id", 111143)
+                    : Map.of("id", 117527);
 
-        Map<String, Object> embedded = Map.of("tags", List.of(tagItem));
+            Map<String, Object> embedded = Map.of("tags", List.of(tagItem));
 
-        CardDto cardDto = CardDto.builder()
-                .responsibleUserId(vendedor.getIdVendedorCrm())
-                .statusId(93572343)
-                .customFieldsValues(customFieldDtos)
-                .embedded(embedded)
-                .build();
+            CardDto cardDto = CardDto.builder()
+                    .responsibleUserId(vendedor.getIdVendedorCrm())
+                    .statusId(93572343)
+                    .customFieldsValues(customFieldDtos)
+                    .embedded(embedded)
+                    .build();
 
-        log.info("Body para atualizar card criado com sucesso. Body: {}", cardDto);
+            log.info("Body para atualizar card criado com sucesso. Body: {}", cardDto);
 
-        try {
-            var json = new ObjectMapper()
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(cardDto);
-            log.info("Kommo PATCH body=\n{}", json);
-        } catch (Exception ignore) {
+            try {
+                var json = new ObjectMapper()
+                        .writerWithDefaultPrettyPrinter()
+                        .writeValueAsString(cardDto);
+                log.info("Kommo PATCH body=\n{}", json);
+            } catch (Exception ignore) {
+            }
+
+            gateway.atualizarCard(cardDto, idLead);
+
+            log.info("Atualização do crm concluída com sucesso. Card: {}, Id do lead: {}", cardDto, idLead);
+        } else {
+            log.info("Card atualizado com sucesso !");
         }
-
-        gateway.atualizarCard(cardDto, idLead);
-
-        log.info("Atualização do crm concluída com sucesso. Card: {}, Id do lead: {}", cardDto, idLead);
     }
 
     public Integer consultaLeadPeloTelefone(String telefone) {
@@ -76,15 +89,6 @@ public class CrmUseCase {
 
         log.info("Lead consultado com sucesso. Lead: {}", lead.get());
         return lead.get();
-    }
-
-    private CustomFieldDto textField(int fieldId, Object value) {
-        return CustomFieldDto.builder()
-                .fieldId(fieldId)
-                .values(List.of(CustomFieldValueDto.builder()
-                        .value(value)
-                        .build()))
-                .build();
     }
 
     private CustomFieldDto selectField(int fieldId, Integer... enumIds) {
