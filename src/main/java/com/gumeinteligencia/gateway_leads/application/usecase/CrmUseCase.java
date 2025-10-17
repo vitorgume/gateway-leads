@@ -34,11 +34,11 @@ public class CrmUseCase {
 
         List<CustomFieldDto> customFieldDtos = new ArrayList<>();
 
-        customFieldDtos.add(selectField(1486843, cliente.getSegmento().getIdCrm()));
+        customFieldDtos.add(selectField(1486843, cliente.getSegmento() == null ? 1242461 : cliente.getSegmento().getIdCrm()));
 
-        customFieldDtos.add(selectField(1486845, cliente.getRegiao().getIdCrm()));
+        customFieldDtos.add(selectField(1486845, cliente.getRegiao() == null ? 1242469 : cliente.getSegmento().getIdCrm()));
 
-        Map<String, Integer> tagItem = cliente.isInativo()
+        Map<String, Integer> tagItem = conversa.getInativa()
                 ? Map.of("id", 111143)
                 : Map.of("id", 117527);
 
