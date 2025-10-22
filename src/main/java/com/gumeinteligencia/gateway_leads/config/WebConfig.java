@@ -2,18 +2,31 @@ package com.gumeinteligencia.gateway_leads.config;
 
 import com.gumeinteligencia.gateway_leads.infrastructure.security.ApiKeyInterceptor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
     private final ApiKeyInterceptor apiKeyInterceptor;
 
+    @Value("${management.endpoints.web.base-path:/actuator}")
+    private String actuatorBasePath;
+
+    public WebConfig(ApiKeyInterceptor apiKeyInterceptor) {
+        this.apiKeyInterceptor = apiKeyInterceptor;
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(apiKeyInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(apiKeyInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns(
+                        actuatorBasePath + "/health",
+                        actuatorBasePath + "/health/**",
+                        actuatorBasePath + "/info"
+                );
     }
 }
