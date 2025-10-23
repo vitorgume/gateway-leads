@@ -1,6 +1,7 @@
 package com.gumeinteligencia.gateway_leads.application.usecase.conversa;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.CrmUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.RelatorioUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
@@ -24,7 +25,7 @@ public class ConversaInativaUseCase {
     private final VendedorUseCase vendedorUseCase;
     private final MensagemUseCase mensagemUseCase;
     private final MensagemBuilder mensagemBuilder;
-    private final RelatorioUseCase relatorioUseCase;
+    private final CrmUseCase crmUseCase;
 
     @Value("${spring.profiles.active}")
     private final String profile;
@@ -34,15 +35,15 @@ public class ConversaInativaUseCase {
             VendedorUseCase vendedorUseCase,
             MensagemUseCase mensagemUseCase,
             MensagemBuilder mensagemBuilder,
-            RelatorioUseCase relatorioUseCase,
+            CrmUseCase crmUseCase,
             @Value("${spring.profiles.active}") String profile
     ) {
         this.conversaUseCase = conversaUseCase;
         this.vendedorUseCase = vendedorUseCase;
         this.mensagemUseCase = mensagemUseCase;
         this.mensagemBuilder = mensagemBuilder;
-        this.relatorioUseCase = relatorioUseCase;
         this.profile = profile;
+        this.crmUseCase = crmUseCase;
     }
 
     @Scheduled(cron = "${neoprint.cron.conversa.inativa}")
@@ -73,13 +74,12 @@ public class ConversaInativaUseCase {
                 Vendedor vendedor = vendedorUseCase.roletaVendedoresConversaInativa(conversa.getCliente());
                 conversa.setVendedor(vendedor);
                 conversa.setInativa(true);
-                mensagemUseCase
-                        .enviarContatoVendedor(
-                                vendedor,
-                                conversa.getCliente()
-                        );
-                mensagemUseCase.enviarMensagemVendedor(mensagemBuilder.getMensagem(TipoMensagem.CONTATO_INATIVO, null, null), vendedor.getTelefone(), conversa);
-                relatorioUseCase.atualizarRelatorioOnline(conversa.getCliente(), vendedor);
+                crmUseCase.atualizarCrm(vendedor, conversa.getCliente(), conversa);
+
+                if(vendedor.getNome().equals("Nilza")) {
+                    mensagemUseCase.enviarContatoVendedor(vendedor, conversa.getCliente());
+                }
+
                 conversaUseCase.salvar(conversa);
             });
         }

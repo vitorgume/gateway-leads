@@ -21,6 +21,19 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+
+        String path = request.getRequestURI();
+
+        // Whitelist rápida
+        if (path.equals("/") ||
+                path.equals("/error") ||
+                path.equals("/health") ||
+                path.startsWith("/actuator/") ||
+                path.startsWith("/public/") ||
+                path.startsWith("/webhook/")) {
+            return true;
+        }
+
         String receivedKey = request.getHeader("x-api-key");
 
         if (API_KEY.equals(receivedKey)) {

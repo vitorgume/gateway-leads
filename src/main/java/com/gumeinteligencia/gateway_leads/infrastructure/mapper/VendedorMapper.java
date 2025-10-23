@@ -10,6 +10,7 @@ public class VendedorMapper {
                 .telefone(entity.getTelefone())
                 .nome(entity.getNome())
                 .inativo(entity.getInativo())
+                .idVendedorCrm(entity.getIdVendedorCrm())
                 .build();
     }
 
@@ -19,6 +20,7 @@ public class VendedorMapper {
                 .telefone(domain.getTelefone())
                 .nome(domain.getNome())
                 .inativo(domain.getInativo())
+                .idVendedorCrm(domain.getIdVendedorCrm())
                 .build();
     }
 }

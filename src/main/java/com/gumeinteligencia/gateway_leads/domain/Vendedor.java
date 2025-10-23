@@ -14,4 +14,5 @@ public class Vendedor {
     private String nome;
     private String telefone;
     private Boolean inativo;
+    private Integer idVendedorCrm;
 }

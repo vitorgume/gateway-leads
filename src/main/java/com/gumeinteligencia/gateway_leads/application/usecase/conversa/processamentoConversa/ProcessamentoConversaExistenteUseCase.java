@@ -3,6 +3,8 @@ package com.gumeinteligencia.gateway_leads.application.usecase.conversa.processa
 import com.gumeinteligencia.gateway_leads.application.exceptions.EscolhaNaoIdentificadoException;
 import com.gumeinteligencia.gateway_leads.application.usecase.ClienteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.CrmUseCase;
+import com.gumeinteligencia.gateway_leads.application.usecase.OutroContatoUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoInativo.ProcessamentoConversaInativaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.janelaInicial.MensagemOrquestradora;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
@@ -39,6 +41,7 @@ public class ProcessamentoConversaExistenteUseCase {
     private final MensagemBuilder mensagemBuilder;
     private final MensagemOrquestradora mensagemOrquestradora;
     private final ProcessamentoConversaInativaUseCase processamentoConversaInativaUseCase;
+    private final OutroContatoUseCase outroContatoUseCase;
 
     @Value("${spring.profiles.active}")
     private final String profile;
@@ -53,6 +56,7 @@ public class ProcessamentoConversaExistenteUseCase {
             MensagemBuilder mensagemBuilder,
             MensagemOrquestradora mensagemOrquestradora,
             ProcessamentoConversaInativaUseCase processamentoConversaInativaUseCase,
+            OutroContatoUseCase outroContatoUseCase,
             @Value("${spring.profiles.active}") String profile) {
         this.clienteUseCase = clienteUseCase;
         this.conversaUseCase = conversaUseCase;
@@ -63,6 +67,7 @@ public class ProcessamentoConversaExistenteUseCase {
         this.mensagemBuilder = mensagemBuilder;
         this.mensagemOrquestradora = mensagemOrquestradora;
         this.processamentoConversaInativaUseCase = processamentoConversaInativaUseCase;
+        this.outroContatoUseCase = outroContatoUseCase;
         this.profile = profile;
     }
 
@@ -112,7 +117,7 @@ public class ProcessamentoConversaExistenteUseCase {
                     ProcessoFinalizadoType strategy;
 
                     if (conversa.getMensagemDirecionamento().contains(MensagemDirecionamento.ESCOLHA_COMERCIAL_RECONTATO) && !conversa.getMensagemDirecionamento().contains(MensagemDirecionamento.ESCOLHA_COMERCIAL)) {
-                        strategy = new DirecionamentoComercial(mensagemUseCase, conversaUseCase, coletaInformacoesUseCase, mensagemBuilder);
+                        strategy = new DirecionamentoComercial(mensagemUseCase, conversaUseCase, coletaInformacoesUseCase, mensagemBuilder, outroContatoUseCase);
                     } else {
                         strategy = processoFinalizadoFactory.create(mensagem);
                     }
