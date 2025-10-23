@@ -53,6 +53,22 @@ public class MensagemUseCase {
         log.info("Mensagem enviada com sucesso. Mensagem: {}", mensagem);
     }
 
+    public void enviarMensagemVendedor(String mensagem, String telefone, Conversa conversa) {
+        this.enviarMensagem(mensagem, telefone, conversa);
+        this.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.SEPARACAO_CONTATOS, null, null), telefone, conversa);
+    }
+
+    public void enviarContatoVendedor(Vendedor vendedor, Cliente cliente) {
+        log.info("Enviando contato para vendedor. Vendedor: {}, Cliente: {}", vendedor, cliente);
+
+        String textoMensagem = mensagemBuilder.getMensagem(TipoMensagem.DADOS_CONTATO_VENDEDOR, null, cliente);
+
+        gateway.enviarContato(vendedor.getTelefone(), cliente);
+
+        this.enviarMensagemVendedor(textoMensagem, vendedor.getTelefone(), null);
+        log.info("Contato enviado com sucesso para vendedor.");
+    }
+
     public void enviarContatoOutroSetor(Cliente cliente, OutroContato outroContato) {
         log.info("Enviando contato para {}. Cliente: {}", outroContato.getSetor().getDescricao() ,cliente);
         gateway.enviarContato(outroContato.getTelefone(), cliente);

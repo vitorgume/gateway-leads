@@ -75,6 +75,11 @@ public class ConversaInativaUseCase {
                 conversa.setVendedor(vendedor);
                 conversa.setInativa(true);
                 crmUseCase.atualizarCrm(vendedor, conversa.getCliente(), conversa);
+
+                if(vendedor.getNome().equals("Nilza")) {
+                    mensagemUseCase.enviarContatoVendedor(vendedor, conversa.getCliente());
+                }
+
                 conversaUseCase.salvar(conversa);
             });
         }
