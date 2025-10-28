@@ -41,9 +41,9 @@ public class FinalizaColeta implements ColetaType{
             clienteUseCase.inativar(cliente.getId());
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.ATENDIMENTO_ENCERRADO, null, null), cliente.getTelefone(), conversa);
         } else {
+            cliente.setRegiao(GatewayEnum.gatewayRegiao(mensagem.getMensagem()));
             conversa.setTipoUltimaMensagem(TipoMensagem.COLETA_REGIAO);
             conversaUseCase.salvar(conversa);
-            cliente.setRegiao(GatewayEnum.gatewayRegiao(mensagem.getMensagem()));
             Vendedor vendedor = vendedorUseCase.escolherVendedor(cliente);
             conversa.setVendedor(vendedor);
             conversa.setFinalizada(true);
