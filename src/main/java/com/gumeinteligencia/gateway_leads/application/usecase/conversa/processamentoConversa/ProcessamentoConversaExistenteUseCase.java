@@ -42,6 +42,7 @@ public class ProcessamentoConversaExistenteUseCase {
     private final MensagemOrquestradora mensagemOrquestradora;
     private final ProcessamentoConversaInativaUseCase processamentoConversaInativaUseCase;
     private final OutroContatoUseCase outroContatoUseCase;
+    private final CrmUseCase crmUseCase;
 
     @Value("${spring.profiles.active}")
     private final String profile;
@@ -57,6 +58,7 @@ public class ProcessamentoConversaExistenteUseCase {
             MensagemOrquestradora mensagemOrquestradora,
             ProcessamentoConversaInativaUseCase processamentoConversaInativaUseCase,
             OutroContatoUseCase outroContatoUseCase,
+            CrmUseCase crmUseCase,
             @Value("${spring.profiles.active}") String profile) {
         this.clienteUseCase = clienteUseCase;
         this.conversaUseCase = conversaUseCase;
@@ -68,6 +70,7 @@ public class ProcessamentoConversaExistenteUseCase {
         this.mensagemOrquestradora = mensagemOrquestradora;
         this.processamentoConversaInativaUseCase = processamentoConversaInativaUseCase;
         this.outroContatoUseCase = outroContatoUseCase;
+        this.crmUseCase = crmUseCase;
         this.profile = profile;
     }
 
@@ -138,14 +141,10 @@ public class ProcessamentoConversaExistenteUseCase {
 
         Conversa conversa = conversaUseCase.consultarPorCliente(cliente);
 
-        if(conversa.getInativa()) {
-
-            try {
-                processamentoConversaInativaUseCase.processar(cliente, conversa, mensagem);
-            } catch (EscolhaNaoIdentificadoException ex) {
-                processaOpcaoInvalida(conversa, cliente);
-            }
-
+        if(conversa.getInativo() != null) {
+            conversa.setFinalizada(true);
+            crmUseCase.atualizarCrm(conversa.getVendedor(), cliente, conversa);
+            conversaUseCase.salvar(conversa);
         } else if (!conversa.getFinalizada()) {
             this.processarConversaNaoFinalizada(conversa, cliente, mensagem);
         } else {

@@ -2,6 +2,7 @@ package com.gumeinteligencia.gateway_leads.infrastructure.repository.entity;
 
 import com.gumeinteligencia.gateway_leads.domain.conversa.EstadoColeta;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
+import com.gumeinteligencia.gateway_leads.domain.conversa.TipoInativo;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,6 +48,9 @@ public class ConversaEntity {
     private Boolean encerrada;
 
     private Boolean inativa;
+
+    @Enumerated(EnumType.ORDINAL)
+    private TipoInativo inativo;
 
     @Enumerated(EnumType.ORDINAL)
     private TipoMensagem tipoUltimaMensagem;

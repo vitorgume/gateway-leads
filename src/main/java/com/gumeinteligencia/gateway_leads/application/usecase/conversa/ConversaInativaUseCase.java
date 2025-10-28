@@ -8,6 +8,7 @@ import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens
 import com.gumeinteligencia.gateway_leads.application.usecase.vendedor.VendedorUseCase;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
+import com.gumeinteligencia.gateway_leads.domain.conversa.TipoInativo;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +50,7 @@ public class ConversaInativaUseCase {
     @Scheduled(cron = "${neoprint.cron.conversa.inativa}")
     public void verificaAusenciaDeMensagem() {
         List<Conversa> conversas = conversaUseCase.listarNaoFinalizados();
-        log.info("Verificando se existe alguma mensagem inativa por mais de 30 minutos. Conversas: {}", conversas);
+        log.info("Verificando se existe alguma mensagem inativa por mais do tempo determinado. Conversas: {}", conversas);
         
 
         LocalDateTime agora = LocalDateTime.now();
@@ -57,10 +58,17 @@ public class ConversaInativaUseCase {
 
         List<Conversa> conversasAtrasadas = conversas.stream()
                 .filter(conversa -> {
-                            if(conversa.getUltimaMensagem() != null)
-                                return profile.equals("prod")
-                                        ? conversa.getUltimaMensagem().plusMinutes(30).isBefore(agora)
-                                        : conversa.getUltimaMensagem().plusSeconds(10).isBefore(agora);
+                            if(conversa.getUltimaMensagem() != null) {
+                                if (conversa.getInativo() == null) {
+                                    return profile.equals("prod")
+                                            ? conversa.getUltimaMensagem().plusHours(1).plusMinutes(30).isBefore(agora)
+                                            : conversa.getUltimaMensagem().plusSeconds(10).isBefore(agora);
+                                } else {
+                                    return profile.equals("prod")
+                                            ? conversa.getUltimaMensagem().plusHours(12).isBefore(agora)
+                                            : conversa.getUltimaMensagem().plusSeconds(20).isBefore(agora);
+                                }
+                            }
 
                             return false;
                         }
@@ -70,14 +78,20 @@ public class ConversaInativaUseCase {
 
         if(!conversasAtrasadas.isEmpty()) {
             conversasAtrasadas.forEach(conversa -> {
-                conversa.setFinalizada(true);
-                Vendedor vendedor = vendedorUseCase.roletaVendedoresConversaInativa(conversa.getCliente());
-                conversa.setVendedor(vendedor);
-                conversa.setInativa(true);
-                crmUseCase.atualizarCrm(vendedor, conversa.getCliente(), conversa);
 
-                if(vendedor.getNome().equals("Nilza")) {
-                    mensagemUseCase.enviarContatoVendedor(vendedor, conversa.getCliente());
+                if(conversa.getInativo() == null) {
+                    conversa.setInativo(TipoInativo.INATIVO_G1);
+                    mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.RECONTATO_INATIVO_G1, null, null), conversa.getCliente().getTelefone(), conversa);
+                } else {
+                    conversa.setInativo(TipoInativo.INATIVO_G2);
+                    conversa.setFinalizada(true);
+                    Vendedor vendedor = vendedorUseCase.roletaVendedoresConversaInativa(conversa.getCliente());
+                    conversa.setVendedor(vendedor);
+                    crmUseCase.atualizarCrm(vendedor, conversa.getCliente(), conversa);
+
+                    if(vendedor.getNome().equals("Nilza")) {
+                        mensagemUseCase.enviarContatoVendedor(vendedor, conversa.getCliente());
+                    }
                 }
 
                 conversaUseCase.salvar(conversa);

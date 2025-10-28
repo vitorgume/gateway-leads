@@ -22,7 +22,8 @@ public enum TipoMensagem {
     DIRECIONAR_OUTRO_CONTATO_LOGISTICA(13, "Mensagem de direcionamento de outro contato da logistica."),
     CONTATO_INATIVO(14, "Mensgem de contato inativo."),
     SEPARACAO_CONTATOS(15, "Mensagem de separação entre os contatos enviados para o vendedor."),
-    RECONTATO(16, "Mensagem para avisar que o cliente fez recontato");
+    RECONTATO(16, "Mensagem para avisar que o cliente fez recontato"),
+    RECONTATO_INATIVO_G1(17, "Mensagem padrão de recontato quando conversa inativa do tipo G1");
 
     private final Integer codigo;
     private final String descricao;

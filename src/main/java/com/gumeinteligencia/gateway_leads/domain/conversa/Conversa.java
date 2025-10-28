@@ -27,5 +27,6 @@ public class Conversa {
     private Boolean finalizada;
     private Boolean encerrada;
     private Boolean inativa;
+    private TipoInativo inativo;
     private TipoMensagem tipoUltimaMensagem;
 }
