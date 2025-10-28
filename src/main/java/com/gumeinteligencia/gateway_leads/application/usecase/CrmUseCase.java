@@ -52,7 +52,9 @@ public class CrmUseCase {
                     ? Map.of("id", 111143)
                     : Map.of("id", 117527);
 
-            Map<String, Object> embedded = Map.of("tags", List.of(tagItem));
+            Map<String, Integer> tagIdentificador = Map.of("id",126470);
+
+            Map<String, Object> embedded = Map.of("tags", List.of(tagItem, tagIdentificador));
 
             CardDto cardDto = CardDto.builder()
                     .responsibleUserId(vendedor.getIdVendedorCrm())
