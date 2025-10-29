@@ -16,6 +16,8 @@ import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processam
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.ProcessoNaoFinalizadoFactory;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoNaoFinalizado.ProcessoNaoFinalizadoType;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
+import com.gumeinteligencia.gateway_leads.application.usecase.vendedor.VendedorUseCase;
+import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
@@ -40,8 +42,8 @@ public class ProcessamentoConversaExistenteUseCase {
     private final ProcessoFinalizadoFactory processoFinalizadoFactory;
     private final MensagemBuilder mensagemBuilder;
     private final MensagemOrquestradora mensagemOrquestradora;
-    private final ProcessamentoConversaInativaUseCase processamentoConversaInativaUseCase;
     private final OutroContatoUseCase outroContatoUseCase;
+    private final VendedorUseCase vendedorUseCase;
     private final CrmUseCase crmUseCase;
 
     @Value("${spring.profiles.active}")
@@ -56,7 +58,7 @@ public class ProcessamentoConversaExistenteUseCase {
             ProcessoFinalizadoFactory processoFinalizadoFactory,
             MensagemBuilder mensagemBuilder,
             MensagemOrquestradora mensagemOrquestradora,
-            ProcessamentoConversaInativaUseCase processamentoConversaInativaUseCase,
+            VendedorUseCase vendedorUseCase,
             OutroContatoUseCase outroContatoUseCase,
             CrmUseCase crmUseCase,
             @Value("${spring.profiles.active}") String profile) {
@@ -68,7 +70,7 @@ public class ProcessamentoConversaExistenteUseCase {
         this.processoFinalizadoFactory = processoFinalizadoFactory;
         this.mensagemBuilder = mensagemBuilder;
         this.mensagemOrquestradora = mensagemOrquestradora;
-        this.processamentoConversaInativaUseCase = processamentoConversaInativaUseCase;
+        this.vendedorUseCase = vendedorUseCase;
         this.outroContatoUseCase = outroContatoUseCase;
         this.crmUseCase = crmUseCase;
         this.profile = profile;
@@ -143,7 +145,11 @@ public class ProcessamentoConversaExistenteUseCase {
 
         if(conversa.getInativo() != null) {
             conversa.setFinalizada(true);
+            Vendedor vendedor = vendedorUseCase.roletaVendedoresConversaInativa(cliente);
+            conversa.setVendedor(vendedor);
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.RECONTATO_INATIVO_G1_DIRECIONAR_VENDEDOR, conversa.getVendedor().getNome(), cliente), cliente.getTelefone(), conversa);
             crmUseCase.atualizarCrm(conversa.getVendedor(), cliente, conversa);
+            mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente);
             conversaUseCase.salvar(conversa);
         } else if (!conversa.getFinalizada()) {
             this.processarConversaNaoFinalizada(conversa, cliente, mensagem);

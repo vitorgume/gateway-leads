@@ -50,10 +50,7 @@ public class FinalizaColeta implements ColetaType{
             conversa.setUltimaMensagemConversaFinalizada(LocalDateTime.now());
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, vendedor.getNome(), null), cliente.getTelefone(), conversa);
             crmUseCase.atualizarCrm(vendedor, cliente, conversa);
-
-            if(vendedor.getNome().equals("Nilza")) {
-                mensagemUseCase.enviarContatoVendedor(vendedor, cliente);
-            }
+            mensagemUseCase.enviarContatoVendedor(vendedor, cliente);
 
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);

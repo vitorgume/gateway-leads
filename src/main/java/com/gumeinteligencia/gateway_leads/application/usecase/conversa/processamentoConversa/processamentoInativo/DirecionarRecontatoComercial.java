@@ -29,14 +29,12 @@ public class DirecionarRecontatoComercial implements ProcessamentoConversaInativ
                 ), cliente.getTelefone(), conversa
         );
 
-        if(conversa.getVendedor().getNome().equals("Nilza")) {
-            mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente);
-        }
+        mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente);
+
 
         mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.RECONTATO, conversa.getVendedor().getNome(), cliente), outroContatoUseCase.consultarPorNome("Ana").getTelefone(), null);
         conversa.getMensagemDirecionamento().add(MensagemDirecionamento.ESCOLHA_COMERCIAL);
         conversa.getMensagemDirecionamento().remove(MensagemDirecionamento.MENSAGEM_INICIAL);
-        conversa.setInativa(false);
         conversaUseCase.salvar(conversa);
     }
 

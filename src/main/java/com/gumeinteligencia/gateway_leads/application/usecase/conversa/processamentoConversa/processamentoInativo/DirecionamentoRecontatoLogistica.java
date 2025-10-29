@@ -33,7 +33,6 @@ public class DirecionamentoRecontatoLogistica implements ProcessamentoConversaIn
         mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);
         conversa.getMensagemDirecionamento().add(MensagemDirecionamento.ESCOLHA_LOGISTICA);
         conversa.getMensagemDirecionamento().remove(MensagemDirecionamento.MENSAGEM_INICIAL);
-        conversa.setInativa(false);
         conversaUseCase.salvar(conversa);
     }
 

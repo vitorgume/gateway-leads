@@ -26,7 +26,6 @@ public class Conversa {
     private List<MensagemDirecionamento> mensagemDirecionamento;
     private Boolean finalizada;
     private Boolean encerrada;
-    private Boolean inativa;
     private TipoInativo inativo;
     private TipoMensagem tipoUltimaMensagem;
 }

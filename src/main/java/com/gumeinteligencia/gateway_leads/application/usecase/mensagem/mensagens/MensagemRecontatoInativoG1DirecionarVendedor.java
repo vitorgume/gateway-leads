@@ -5,14 +5,15 @@ import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MensagemRecontatoInativoG1 implements MensagemType {
+public class MensagemRecontatoInativoG1DirecionarVendedor implements MensagemType {
+
     @Override
     public String getMensagem(String nomeVendedor, Cliente cliente) {
-        return "Oii! Aqui é da Gráfica Neoprint! Você nos enviou mensagem, mas não deu continuidade no atendimento! Se você quiser que eu te conecte com um vendedor, é só me responder essa mensagem, ok?";
+        return "Perfeito, estou te redirecionando para o vendedor(a) " + nomeVendedor + " que logo entrará em contato. Muito obrigado ! Até...";
     }
 
     @Override
     public Integer getTipoMensagem() {
-        return TipoMensagem.RECONTATO_INATIVO_G1.getCodigo();
+        return TipoMensagem.RECONTATO_INATIVO_G1_DIRECIONAR_VENDEDOR.getCodigo();
     }
 }

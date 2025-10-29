@@ -47,8 +47,6 @@ public class ConversaEntity {
 
     private Boolean encerrada;
 
-    private Boolean inativa;
-
     @Enumerated(EnumType.ORDINAL)
     private TipoInativo inativo;
 

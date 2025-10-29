@@ -33,7 +33,6 @@ public class DirecionamentoRecontatoFinanceiro implements ProcessamentoConversaI
         mensagemUseCase.enviarContatoOutroSetor(cliente, outroContato);
         conversa.getMensagemDirecionamento().add(MensagemDirecionamento.ESCOLHA_FINANCEIRO);
         conversa.getMensagemDirecionamento().remove(MensagemDirecionamento.MENSAGEM_INICIAL);
-        conversa.setInativa(false);
         conversaUseCase.salvar(conversa);
     }
 
