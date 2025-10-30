@@ -6,6 +6,7 @@ import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens
 import com.gumeinteligencia.gateway_leads.application.usecase.vendedor.VendedorUseCase;
 import com.gumeinteligencia.gateway_leads.domain.conversa.EstadoColeta;
 import com.gumeinteligencia.gateway_leads.domain.conversa.MensagemDirecionamento;
+import com.gumeinteligencia.gateway_leads.domain.conversa.StatusConversa;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
@@ -49,8 +50,9 @@ public class FinalizaColeta implements ColetaType{
             conversa.setFinalizada(true);
             conversa.setUltimaMensagemConversaFinalizada(LocalDateTime.now());
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, vendedor.getNome(), null), cliente.getTelefone(), conversa);
-            crmUseCase.atualizarCrm(vendedor, cliente, conversa);
             mensagemUseCase.enviarContatoVendedor(vendedor, cliente);
+            crmUseCase.atualizarCrm(vendedor, cliente, conversa);
+            conversa.setStatus(StatusConversa.ATIVO);
 
             conversaUseCase.salvar(conversa);
             clienteUseCase.salvar(cliente);
