@@ -7,7 +7,7 @@ import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens
 import com.gumeinteligencia.gateway_leads.application.usecase.vendedor.VendedorUseCase;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
-import com.gumeinteligencia.gateway_leads.domain.conversa.TipoInativo;
+import com.gumeinteligencia.gateway_leads.domain.conversa.StatusConversa;
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -79,10 +79,10 @@ public class ConversaInativaUseCase {
             conversasAtrasadas.forEach(conversa -> {
 
                 if(!conversa.getFinalizada() && !conversa.getStatus().getCodigo().equals(0)) {
-                    conversa.setStatus(TipoInativo.INATIVO_G1);
+                    conversa.setStatus(StatusConversa.INATIVO_G1);
                     mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.RECONTATO_INATIVO_G1, null, null), conversa.getCliente().getTelefone(), conversa);
                 } else {
-                    conversa.setStatus(TipoInativo.INATIVO_G2);
+                    conversa.setStatus(StatusConversa.INATIVO_G2);
                     conversa.setFinalizada(true);
                     Vendedor vendedor = vendedorUseCase.roletaVendedoresConversaInativa(conversa.getCliente());
                     conversa.setVendedor(vendedor);

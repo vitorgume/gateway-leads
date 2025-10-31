@@ -147,8 +147,8 @@ public class ProcessamentoConversaExistenteUseCase {
             Vendedor vendedor = vendedorUseCase.roletaVendedoresConversaInativa(cliente);
             conversa.setVendedor(vendedor);
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.RECONTATO_INATIVO_G1_DIRECIONAR_VENDEDOR, conversa.getVendedor().getNome(), cliente), cliente.getTelefone(), conversa);
-            crmUseCase.atualizarCrm(conversa.getVendedor(), cliente, conversa);
             mensagemUseCase.enviarContatoVendedor(conversa.getVendedor(), cliente);
+            crmUseCase.atualizarCrm(conversa.getVendedor(), cliente, conversa);
             conversaUseCase.salvar(conversa);
         } else if (!conversa.getFinalizada()) {
             this.processarConversaNaoFinalizada(conversa, cliente, mensagem);
