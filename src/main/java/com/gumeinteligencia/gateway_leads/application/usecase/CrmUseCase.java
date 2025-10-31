@@ -9,7 +9,6 @@ import com.gumeinteligencia.gateway_leads.application.usecase.dto.CustomFieldVal
 import com.gumeinteligencia.gateway_leads.domain.Cliente;
 import com.gumeinteligencia.gateway_leads.domain.Vendedor;
 import com.gumeinteligencia.gateway_leads.domain.conversa.Conversa;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -48,7 +47,7 @@ public class CrmUseCase {
 
             customFieldDtos.add(selectField(1486845, cliente.getRegiao() == null ? 1242469 : cliente.getRegiao().getIdCrm()));
 
-            Map<String, Integer> tagItem = conversa.getInativo() == null || conversa.getInativo().getCodigo().equals(0)
+            Map<String, Integer> tagItem = conversa.getStatus().getCodigo().equals(2) || conversa.getStatus().getCodigo().equals(0)
                     ? Map.of("id", 117527)
                     : Map.of("id", 111143);
 
@@ -56,7 +55,7 @@ public class CrmUseCase {
 
             Map<String, Object> embedded = Map.of("tags", List.of(tagItem, tagIdentificador));
 
-            Integer statusId = conversa.getInativo().getCodigo().equals(1) ? 95198915 : 93572343;
+            Integer statusId = conversa.getStatus().getCodigo().equals(1) ? 95198915 : 93572343;
 
             CardDto cardDto = CardDto.builder()
                     .responsibleUserId(vendedor.getIdVendedorCrm())

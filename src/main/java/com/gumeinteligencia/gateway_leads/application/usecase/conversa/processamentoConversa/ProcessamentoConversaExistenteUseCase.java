@@ -5,7 +5,6 @@ import com.gumeinteligencia.gateway_leads.application.usecase.ClienteUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.CrmUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.OutroContatoUseCase;
-import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.processamentoInativo.ProcessamentoConversaInativaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.janelaInicial.MensagemOrquestradora;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.conversa.processamentoConversa.coletaInformacoes.ColetaInformacoesUseCase;
@@ -143,7 +142,7 @@ public class ProcessamentoConversaExistenteUseCase {
 
         Conversa conversa = conversaUseCase.consultarPorCliente(cliente);
 
-        if(conversa.getInativo() != null) {
+        if(conversa.getStatus().getCodigo().equals(0) || conversa.getStatus().getCodigo().equals(1)) {
             conversa.setFinalizada(true);
             Vendedor vendedor = vendedorUseCase.roletaVendedoresConversaInativa(cliente);
             conversa.setVendedor(vendedor);

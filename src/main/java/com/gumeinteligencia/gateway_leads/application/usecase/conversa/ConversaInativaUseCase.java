@@ -2,7 +2,6 @@ package com.gumeinteligencia.gateway_leads.application.usecase.conversa;
 
 import com.gumeinteligencia.gateway_leads.application.usecase.ConversaUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.CrmUseCase;
-import com.gumeinteligencia.gateway_leads.application.usecase.RelatorioUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.MensagemUseCase;
 import com.gumeinteligencia.gateway_leads.application.usecase.mensagem.mensagens.MensagemBuilder;
 import com.gumeinteligencia.gateway_leads.application.usecase.vendedor.VendedorUseCase;
@@ -59,7 +58,7 @@ public class ConversaInativaUseCase {
         List<Conversa> conversasAtrasadas = conversas.stream()
                 .filter(conversa -> {
                             if(conversa.getUltimaMensagem() != null) {
-                                if (conversa.getInativo() == null) {
+                                if (conversa.getStatus() == null) {
                                     return profile.equals("prod")
                                             ? conversa.getUltimaMensagem().plusHours(1).plusMinutes(30).isBefore(agora)
                                             : conversa.getUltimaMensagem().plusSeconds(10).isBefore(agora);
@@ -79,11 +78,11 @@ public class ConversaInativaUseCase {
         if(!conversasAtrasadas.isEmpty()) {
             conversasAtrasadas.forEach(conversa -> {
 
-                if(conversa.getInativo() == null) {
-                    conversa.setInativo(TipoInativo.INATIVO_G1);
+                if(!conversa.getFinalizada() && !conversa.getStatus().getCodigo().equals(0)) {
+                    conversa.setStatus(TipoInativo.INATIVO_G1);
                     mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.RECONTATO_INATIVO_G1, null, null), conversa.getCliente().getTelefone(), conversa);
                 } else {
-                    conversa.setInativo(TipoInativo.INATIVO_G2);
+                    conversa.setStatus(TipoInativo.INATIVO_G2);
                     conversa.setFinalizada(true);
                     Vendedor vendedor = vendedorUseCase.roletaVendedoresConversaInativa(conversa.getCliente());
                     conversa.setVendedor(vendedor);
