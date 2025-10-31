@@ -1,10 +1,6 @@
 package com.gumeinteligencia.gateway_leads.infrastructure.repository.entity;
 
-<<<<<<< HEAD
-import com.gumeinteligencia.gateway_leads.domain.conversa.TipoInativo;
-=======
 import com.gumeinteligencia.gateway_leads.domain.conversa.StatusConversa;
->>>>>>> development
 import com.gumeinteligencia.gateway_leads.domain.mensagem.TipoMensagem;
 import jakarta.persistence.*;
 import lombok.*;
