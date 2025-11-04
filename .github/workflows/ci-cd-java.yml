@@ -1,0 +1,90 @@
+name: CI → Build & Push (ECR) - spring-api-sem-testes
+
+on:
+  push:
+    branches: ["main"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION:       ${{ vars.AWS_REGION || 'us-east-1' }}
+  AWS_ACCOUNT_ID:   ${{ vars.AWS_ACCOUNT_ID }}
+  ECR_REPOSITORY:   ${{ vars.ECR_REPOSITORY || 'spring-api-sem-testes' }}
+  JAVA_VERSION:     "21"
+
+jobs:
+  build_and_push:
+    name: Build (Maven) + Build & Push (ECR)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Compila e empacota o JAR sem rodar testes
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+          cache: maven
+
+      - name: Maven package (sem testes)
+        run: |
+          mvn -B -ntp \
+            -DskipTests \
+            -Duser.timezone=America/Sao_Paulo \
+            clean package
+
+      # Autentica na AWS via OIDC
+      - name: AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # Garante que o repositório existe
+      - name: Garantir repositório no ECR
+        run: |
+          set -e
+          aws ecr describe-repositories --repository-names "${ECR_REPOSITORY}" >/dev/null 2>&1 \
+            || aws ecr create-repository --repository-name "${ECR_REPOSITORY}" >/dev/null
+
+      # Login no ECR
+      - name: Login no ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # Metadados para tags/labels
+      - name: Tags/labels da imagem
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}
+          tags: |
+            type=raw,value=latest
+            type=sha
+          labels: |
+            org.opencontainers.image.source=${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      # Buildx
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Build & Push (Docker)
+      - name: Build & Push (Docker)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
