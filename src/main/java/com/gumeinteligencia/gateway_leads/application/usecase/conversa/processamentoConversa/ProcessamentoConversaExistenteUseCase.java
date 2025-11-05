@@ -142,7 +142,7 @@ public class ProcessamentoConversaExistenteUseCase {
 
         Conversa conversa = conversaUseCase.consultarPorCliente(cliente);
 
-        if(conversa.getStatus().getCodigo().equals(0) || conversa.getStatus().getCodigo().equals(1)) {
+        if((conversa.getStatus().getCodigo().equals(0) || conversa.getStatus().getCodigo().equals(1)) && !conversa.getFinalizada()) {
             conversa.setFinalizada(true);
             Vendedor vendedor = vendedorUseCase.roletaVendedoresConversaInativa(cliente);
             conversa.setVendedor(vendedor);
