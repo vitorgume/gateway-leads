@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Order(3)
+@Transactional
 public class FinalizaColeta implements ColetaType{
 
     private final VendedorUseCase vendedorUseCase;
@@ -52,6 +54,7 @@ public class FinalizaColeta implements ColetaType{
             conversa.setStatus(StatusConversa.ATIVO);
 
             mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.DIRECIONAR_PRIMEIRO_CONTATO, vendedor.getNome(), null), cliente.getTelefone(), conversa);
+            mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.MENSAGEM_INFORMACOES_CLIENTE, null, null), cliente.getTelefone(), conversa);
             mensagemUseCase.enviarContatoVendedor(vendedor, cliente);
             crmUseCase.atualizarCrm(vendedor, cliente, conversa);
 
