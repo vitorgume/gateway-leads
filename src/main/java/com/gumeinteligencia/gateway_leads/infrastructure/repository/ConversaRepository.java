@@ -14,6 +14,9 @@ import java.util.UUID;
 public interface ConversaRepository extends JpaRepository<ConversaEntity, UUID> {
     Optional<ConversaEntity> findByCliente(ClienteEntity clienteEntity);
 
-    @Query("SELECT c FROM Conversa c WHERE c.finalizada = false")
+    @Query("SELECT c FROM Conversa c " +
+            "LEFT JOIN FETCH c.cliente " +
+            "LEFT JOIN FETCH c.vendedor " +
+            "WHERE c.finalizada = false")
     List<ConversaEntity> listarNaoFinalizados();
 }
