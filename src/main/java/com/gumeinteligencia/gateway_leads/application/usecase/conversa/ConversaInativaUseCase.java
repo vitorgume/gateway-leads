@@ -78,8 +78,16 @@ public class ConversaInativaUseCase {
         log.info("Conversas atrasadas: {}", conversasAtrasadas);
 
 
-        if(!conversasAtrasadas.isEmpty()) {
-            conversasAtrasadas.forEach(this::processarConversaAtrasada);
+        if (!conversasAtrasadas.isEmpty()) {
+            conversasAtrasadas.forEach(conversa -> {
+                try {
+                    log.info("Processando conversa atrasada {}", conversa);
+                    processarConversaAtrasada(conversa);
+                    log.info("Processamento concluido com sucesso");
+                } catch (Exception e) {
+                    log.error("Erro ao processar conversa atrasada {}: {}", conversa.getId(), e.getMessage(), e);
+                }
+            });
         }
 
         log.info("Verificação concluida com sucesso.");
@@ -102,7 +110,7 @@ public class ConversaInativaUseCase {
             atualizarStatusConversa(conversa, StatusConversa.INATIVO_G2, true, vendedor);
             crmUseCase.atualizarCrm(vendedor, conversa.getCliente(), conversa);
         }
-        log.info("Processamento concluido com sucesso. Conversa: {}", conversa);
+        ;
     }
 
     @Transactional
