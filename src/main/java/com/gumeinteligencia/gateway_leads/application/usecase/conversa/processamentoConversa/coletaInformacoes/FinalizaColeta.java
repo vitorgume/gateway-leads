@@ -26,7 +26,7 @@ import java.util.List;
 @Slf4j
 @Order(3)
 @Transactional
-public class FinalizaColeta implements ColetaType{
+public class FinalizaColeta implements ColetaType {
 
     private final VendedorUseCase vendedorUseCase;
     private final MensagemUseCase mensagemUseCase;

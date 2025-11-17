@@ -75,6 +75,8 @@ public class ConversaInativaUseCase {
                 )
                 .toList();
 
+        log.info("Conversas atrasadas: {}", conversasAtrasadas);
+
 
         if(!conversasAtrasadas.isEmpty()) {
             conversasAtrasadas.forEach(this::processarConversaAtrasada);
