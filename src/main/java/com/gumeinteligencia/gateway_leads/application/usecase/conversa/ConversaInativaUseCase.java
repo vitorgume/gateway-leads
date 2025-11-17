@@ -86,6 +86,7 @@ public class ConversaInativaUseCase {
     }
 
     public void processarConversaAtrasada(Conversa conversa) {
+        log.info("Processando conversa atrasada. Conversa: {}", conversa);
         boolean vaiParaG1 = !conversa.getFinalizada() && !conversa.getStatus().getCodigo().equals(0);
 
         if (vaiParaG1) {
@@ -101,6 +102,7 @@ public class ConversaInativaUseCase {
             atualizarStatusConversa(conversa, StatusConversa.INATIVO_G2, true, vendedor);
             crmUseCase.atualizarCrm(vendedor, conversa.getCliente(), conversa);
         }
+        log.info("Processamento concluido com sucesso. Conversa: {}", conversa);
     }
 
     @Transactional
