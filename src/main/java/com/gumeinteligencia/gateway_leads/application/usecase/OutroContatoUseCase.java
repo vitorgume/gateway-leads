@@ -5,6 +5,7 @@ import com.gumeinteligencia.gateway_leads.application.gateways.OutroContatoGatew
 import com.gumeinteligencia.gateway_leads.domain.outroContato.OutroContato;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,4 +30,10 @@ public class OutroContatoUseCase {
     public List<OutroContato> listar() {
         return gateway.listar();
     }
+
+    @Transactional(readOnly = true)
+    public boolean existeTelefone(String telefone) {
+        return gateway.existeTelefone(telefone);
+    }
+
 }

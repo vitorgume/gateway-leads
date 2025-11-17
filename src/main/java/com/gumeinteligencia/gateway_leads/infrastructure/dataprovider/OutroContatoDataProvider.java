@@ -21,6 +21,7 @@ public class OutroContatoDataProvider implements OutroContatoGateway {
     private final OutroContatoRepository repository;
     private final String MENSAGEM_ERRO_CONSULTAR_POR_NOME_OUTRO_CONTATO = "Erro ao consultar por nome outro contato.";
     private final String MENSAGEM_ERRO_LISTAR_OUTROS_CONTATOS = "Erro ao listar outros contatos.";
+    private final String MENSAGEM_ERRO_VERIFICACAO_TELEFONE_EXISTE = "Erro ao verificar telefone outros contatos.";
 
     @Override
     public Optional<OutroContato> consultarPorNome(String nome) {
@@ -48,5 +49,15 @@ public class OutroContatoDataProvider implements OutroContatoGateway {
         }
 
         return outrosContatos.stream().map(OutroContatoMapper::paraDomain).toList();
+    }
+
+    @Override
+    public boolean existeTelefone(String telefone) {
+        try {
+            return repository.existsByTelefone(telefone);
+        } catch (Exception ex) {
+            log.error(MENSAGEM_ERRO_VERIFICACAO_TELEFONE_EXISTE, ex);
+            throw new DataProviderException(MENSAGEM_ERRO_VERIFICACAO_TELEFONE_EXISTE, ex.getCause());
+        }
     }
 }

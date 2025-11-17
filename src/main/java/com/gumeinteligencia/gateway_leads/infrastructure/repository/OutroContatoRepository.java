@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface OutroContatoRepository extends JpaRepository<OutroContatoEntity, Long> {
     Optional<OutroContatoEntity> findByNome(String nome);
+    boolean existsByTelefone(String telefone);
 }

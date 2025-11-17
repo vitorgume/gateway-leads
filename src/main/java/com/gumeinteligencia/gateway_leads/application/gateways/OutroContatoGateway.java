@@ -9,4 +9,6 @@ public interface OutroContatoGateway {
     Optional<OutroContato> consultarPorNome(String nome);
 
     List<OutroContato> listar();
+
+    boolean existeTelefone(String telefone);
 }

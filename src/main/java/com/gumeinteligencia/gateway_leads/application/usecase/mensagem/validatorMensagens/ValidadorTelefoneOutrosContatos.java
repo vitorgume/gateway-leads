@@ -14,6 +14,6 @@ public class ValidadorTelefoneOutrosContatos implements MensagemValidator {
 
     @Override
     public boolean deveIgnorar(Mensagem mensagem) {
-        return outroContatoUseCase.listar().stream().map(OutroContato::getTelefone).toList().contains(mensagem.getTelefone());
+        return outroContatoUseCase.existeTelefone(mensagem.getTelefone());
     }
 }
