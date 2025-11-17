@@ -96,25 +96,40 @@ public class ConversaInativaUseCase {
     public void processarConversaAtrasada(Conversa conversa) {
         log.info("Processando conversa atrasada. Conversa: {}", conversa);
         boolean vaiParaG1 = !conversa.getFinalizada() && !conversa.getStatus().getCodigo().equals(0);
+        log.info("vaiParaG1: {}", vaiParaG1);
 
         if (vaiParaG1) {
+            log.info("Antes de atualizarStatusConversa (G1) - conversa {}", conversa.getId());
             atualizarStatusConversa(conversa, StatusConversa.INATIVO_G1, false, null);
+            log.info("Depois de atualizarStatusConversa (G1) - conversa {}", conversa.getId());
+
+            log.info("Antes de enviarMensagem (G1) - conversa {}", conversa.getId());
             mensagemUseCase.enviarMensagem(
                     mensagemBuilder.getMensagem(TipoMensagem.RECONTATO_INATIVO_G1, null, null),
                     conversa.getCliente().getTelefone(),
                     conversa
             );
+            log.info("Depois de enviarMensagem (G1) - conversa {}", conversa.getId());
 
         } else {
+            log.info("Antes de roletaVendedoresConversaInativa - conversa {}", conversa.getId());
             Vendedor vendedor = vendedorUseCase.roletaVendedoresConversaInativa(conversa.getCliente());
+            log.info("Depois de roletaVendedoresConversaInativa - vendedor {}", vendedor != null ? vendedor.getId() : null);
+
+            log.info("Antes de atualizarStatusConversa (G2) - conversa {}", conversa.getId());
             atualizarStatusConversa(conversa, StatusConversa.INATIVO_G2, true, vendedor);
+            log.info("Depois de atualizarStatusConversa (G2) - conversa {}", conversa.getId());
+
+            log.info("Antes de crmUseCase.atualizarCrm - conversa {}", conversa.getId());
             crmUseCase.atualizarCrm(vendedor, conversa.getCliente(), conversa);
+            log.info("Depois de crmUseCase.atualizarCrm - conversa {}", conversa.getId());
         }
-        ;
     }
+
 
     @Transactional
     public void atualizarStatusConversa(Conversa conversa, StatusConversa novoStatus, boolean finalizada, Vendedor vendedorOuNull) {
+        log.info("Entrou em atualizarStatusConversa - conversa {}", conversa.getId());
         conversa.setStatus(novoStatus);
         conversa.setFinalizada(finalizada);
 
@@ -122,7 +137,10 @@ public class ConversaInativaUseCase {
             conversa.setVendedor(vendedorOuNull);
         }
 
+        log.info("Antes de conversaUseCase.salvar - conversa {}", conversa.getId());
         conversaUseCase.salvar(conversa);
+        log.info("Depois de conversaUseCase.salvar - conversa {}", conversa.getId());
     }
+
 
 }
