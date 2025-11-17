@@ -32,7 +32,6 @@ import java.util.List;
 
 @Service
 @Slf4j
-@Transactional
 public class ProcessamentoConversaExistenteUseCase {
 
     private final ClienteUseCase clienteUseCase;
@@ -77,6 +76,7 @@ public class ProcessamentoConversaExistenteUseCase {
         this.profile = profile;
     }
 
+    @Transactional
     public void processarConversaNaoFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando mensagem de uma conversa não finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
         if (!conversa.getMensagemDirecionamento().contains(MensagemDirecionamento.COLETA_NOME)) {
@@ -102,6 +102,7 @@ public class ProcessamentoConversaExistenteUseCase {
         log.info("Mensagem de uma conversa não finalizada processada com sucesso.");
     }
 
+    @Transactional
     public void processarConversaFinalizada(Conversa conversa, Cliente cliente, Mensagem mensagem) {
         log.info("Processando uma mensagem de uma conversa finalizada. Conversa: {}, Cliente: {}, Mensagem: {}", conversa, cliente, mensagem);
 
@@ -139,6 +140,7 @@ public class ProcessamentoConversaExistenteUseCase {
         log.info("Mensagem de uma conversa finalizada processada com sucesso.");
     }
 
+    @Transactional
     public void processarConversaExistente(Cliente cliente, Mensagem mensagem) {
         log.info("Processando mensagem de uma conversa já existente. Cliente: {}, Mensagem: {}", cliente, mensagem);
 

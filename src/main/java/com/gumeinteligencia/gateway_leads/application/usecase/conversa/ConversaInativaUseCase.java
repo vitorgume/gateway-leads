@@ -20,7 +20,6 @@ import java.util.List;
 
 @Service
 @Slf4j
-@Transactional
 public class ConversaInativaUseCase {
 
     private final ConversaUseCase conversaUseCase;
@@ -78,23 +77,40 @@ public class ConversaInativaUseCase {
 
 
         if(!conversasAtrasadas.isEmpty()) {
-            conversasAtrasadas.forEach(conversa -> {
-
-                if(!conversa.getFinalizada() && !conversa.getStatus().getCodigo().equals(0)) {
-                    conversa.setStatus(StatusConversa.INATIVO_G1);
-                    mensagemUseCase.enviarMensagem(mensagemBuilder.getMensagem(TipoMensagem.RECONTATO_INATIVO_G1, null, null), conversa.getCliente().getTelefone(), conversa);
-                } else {
-                    conversa.setStatus(StatusConversa.INATIVO_G2);
-                    conversa.setFinalizada(true);
-                    Vendedor vendedor = vendedorUseCase.roletaVendedoresConversaInativa(conversa.getCliente());
-                    conversa.setVendedor(vendedor);
-                    crmUseCase.atualizarCrm(vendedor, conversa.getCliente(), conversa);
-                }
-
-                conversaUseCase.salvar(conversa);
-            });
+            conversasAtrasadas.forEach(this::processarConversaAtrasada);
         }
 
         log.info("Verificação concluida com sucesso.");
     }
+
+    public void processarConversaAtrasada(Conversa conversa) {
+        boolean vaiParaG1 = !conversa.getFinalizada() && !conversa.getStatus().getCodigo().equals(0);
+
+        if (vaiParaG1) {
+            atualizarStatusConversa(conversa, StatusConversa.INATIVO_G1, false, null);
+            mensagemUseCase.enviarMensagem(
+                    mensagemBuilder.getMensagem(TipoMensagem.RECONTATO_INATIVO_G1, null, null),
+                    conversa.getCliente().getTelefone(),
+                    conversa
+            );
+
+        } else {
+            Vendedor vendedor = vendedorUseCase.roletaVendedoresConversaInativa(conversa.getCliente());
+            atualizarStatusConversa(conversa, StatusConversa.INATIVO_G2, true, vendedor);
+            crmUseCase.atualizarCrm(vendedor, conversa.getCliente(), conversa);
+        }
+    }
+
+    @Transactional
+    public void atualizarStatusConversa(Conversa conversa, StatusConversa novoStatus, boolean finalizada, Vendedor vendedorOuNull) {
+        conversa.setStatus(novoStatus);
+        conversa.setFinalizada(finalizada);
+
+        if (vendedorOuNull != null) {
+            conversa.setVendedor(vendedorOuNull);
+        }
+
+        conversaUseCase.salvar(conversa);
+    }
+
 }
